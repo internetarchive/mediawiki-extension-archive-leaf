@@ -1,0 +1,18 @@
+<form method="post" class="archive-leaf-form">
+
+    {{#error}}
+        <div class="archive-leaf-form-error">
+            {{& . }}
+        </div>
+    {{/error}}
+
+    <input type="text" name="import_id" id="import_id" autocomplete="off" class="awdawdawda-search"
+           required placeholder="some-page-id" value="{{ value }}" />
+    <input type="submit" value="Create Page" id="import_submit" />
+
+    <div id="loading_form">
+        {{ loading_message }}
+        <div class="loader"></div>
+    </div>
+
+</form>

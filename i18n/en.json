@@ -1,0 +1,21 @@
+{
+    "@metadata": {
+        "authors": [
+            "Alexey",
+            "David Kamholz"
+        ]
+    },
+    "archiveleaf": "Import pages from Archive.org",
+    "archiveleaf-desc": "Integrates Archive.org leafs database with Mediawiki",
+    "archiveleaf-special-title": "Generate page from Archive.org",
+    "archiveleaf-special-text": "Emitter of a greatly exaggerated alignment, unite the plasma! Red alert, metamorphosis! Surprisingly, indeed, biological modification! This mineral has only been beamed by a real crew. Parasites yell with mystery! Twisted, united crewmates pedantically disrupt a cold, human machine.",
+    "archiveleaf-special-input-label": "Page ID",
+    "archiveleaf-special-input-submit": "Create Page",
+    "archiveleaf-special-page-exists-error": "Page with given ID already exists, see [[$1]]",
+    "archiveleaf-special-page-remote-not-exists-error": "Resource with given ID does not exists at Archive.org, please check for typos",
+    "archiveleaf-special-page-success-text": "Page was successfully created, visit <a href='$1'>$2</a> or <a href='$3'>import more</a> pages.",
+    "archiveleaf-special-page-error-config": "This extension is not configured properly. Please see README.md file for information about configuration process.",
+    "archiveleaf-special-page-error-template": "It seems that you did not import supplied with the extension templates yet or templates names specified in configuration variables are not exist yet ( [[:Template:$1]] or [[:Template:$2]] is missing ). Please fix these issues before importing pages. See README.md for details.",
+    "archiveleaf-special-page-error-upload-disabled": "Please enable file uploads in your wiki by setting <b>$wgEnableUploads = true;</b> and <b>$wgAllowCopyUploads = true;</b> in LocalSettings.php",
+    "archiveleaf-special-page-loading-message": "Page being imported and it may take a while (3-5 minutes in average), please do no close the page.."
+}

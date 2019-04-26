@@ -1,0 +1,79 @@
+{
+    "name": "ArchiveLeaf",
+    "version": "0.0.4",
+    "author": [
+        "Alexey",
+        "David Kamholz"
+    ],
+    "url": "https://www.mediawiki.org/wiki/Extension:ArchiveLeaf",
+    "descriptionmsg": "archiveleaf-desc",
+    "license-name": "MIT",
+    "type": "other",
+    "AutoloadClasses": {
+        "ArchiveLeaf": "ArchiveLeaf.class.php",
+        "ArchiveLeafHooks": "ArchiveLeaf.hooks.php",
+        "SpecialArchiveLeaf": "specials/SpecialArchiveLeaf.php"
+    },
+    "config": {
+        "ArchiveLeafBaseURL": "https://archive.org",
+        "ArchiveLeafApiURL": "https://api.archivelab.org",
+        "ArchiveLeafTemplateName": "Entry",
+        "ArchiveLeafTemplateImageName": "EntryImage"
+    },
+    "callback": "ArchiveLeafHooks::onExtensionLoad",
+    "ExtensionMessagesFiles": {
+        "ArchiveLeafAlias": "ArchiveLeaf.i18n.alias.php",
+        "ArchiveLeafMagic": "ArchiveLeaf.i18n.magic.php"
+    },
+    "Hooks": {
+        "ParserFirstCallInit": [
+            "ArchiveLeafHooks::onParserFirstCallInit"
+        ],
+        "DoEditSectionLink": [
+            "ArchiveLeafHooks::onDoEditSectionLink"
+        ],
+        "BeforePageDisplay": [
+            "ArchiveLeafHooks::onBeforePageDisplay"
+        ]
+    },
+    "MessagesDirs": {
+        "ArchiveLeaf": [
+            "i18n"
+        ]
+    },
+    "ResourceModules": {
+        "ext.archiveleaf.special": {
+            "scripts": [
+                "modules/ext.archiveleaf.special.js"
+            ],
+            "styles": [
+                "modules/ext.archiveleaf.special.css"
+            ],
+            "position": "top"
+        },
+        "ext.archiveleaf.font": {
+            "scripts": [
+            ],
+            "styles": [
+                "modules/ext.archiveleaf.font.css"
+            ],
+            "position": "top"
+        }
+    },
+    "ResourceFileModulePaths": {
+        "localBasePath": "",
+        "remoteExtPath": "ArchiveLeaf"
+    },
+    "SpecialPages": {
+        "ArchiveLeaf": "SpecialArchiveLeaf"
+    },
+    "AvailableRights": [
+        "archiveleaf"
+    ],
+    "GroupPermissions": {
+        "sysop": {
+            "archiveleaf": true
+        }
+    },
+    "manifest_version": 1
+}

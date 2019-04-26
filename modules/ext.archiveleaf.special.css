@@ -1,0 +1,56 @@
+.archive-leaf-form {
+    padding: 10px 0;
+}
+
+.archive-leaf-form input[type="text"] {
+    padding: 6px;
+    min-width: 300px;
+}
+
+.archive-leaf-form input[type="submit"] {
+    padding: 6px;
+    cursor: pointer;
+}
+
+.archive-leaf-form-error {
+    margin: 0 0 20px 0;
+    padding: 4px 10px;
+    background-color: #ce2929;
+    color: white;
+    border-radius: 4px;
+}
+
+.archive-leaf-form-error a,
+.archive-leaf-form-error a:visited,
+.archive-leaf-form-error a:hover {
+    color: white;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+#loading_form {
+    display: none;
+}
+
+.loader {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+    background-color: dodgerblue;
+    opacity: 1.0;
+    animation: loader_animate 1s infinite;
+    position: relative;
+}
+
+@keyframes loader_animate {
+    0% {
+        opacity: 1.0;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1.0;
+    }
+}
