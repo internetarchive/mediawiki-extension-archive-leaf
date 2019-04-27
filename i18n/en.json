@@ -17,5 +17,5 @@
     "archiveleaf-special-page-error-config": "This extension is not configured properly. Please see README.md file for information about configuration process.",
     "archiveleaf-special-page-error-template": "It seems that you did not import supplied with the extension templates yet or templates names specified in configuration variables are not exist yet ( [[:Template:$1]] or [[:Template:$2]] is missing ). Please fix these issues before importing pages. See README.md for details.",
     "archiveleaf-special-page-error-upload-disabled": "Please enable file uploads in your wiki by setting <b>$wgEnableUploads = true;</b> and <b>$wgAllowCopyUploads = true;</b> in LocalSettings.php",
-    "archiveleaf-special-page-loading-message": "Page being imported and it may take a while (3-5 minutes in average), please do no close the page.."
+    "archiveleaf-special-page-loading-message": "Page being imported and it may take a while (3-5 minutes in average), please do not close the page..."
 }

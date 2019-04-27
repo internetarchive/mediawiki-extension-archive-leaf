@@ -17,7 +17,6 @@ class ArchiveLeaf {
 
         global $wgArchiveLeafApiURL;
 
-        //TODO: replace with configuration variable for URL base
         $response = @file_get_contents( $wgArchiveLeafApiURL.'/books/' . $id . '/ia_manifest' );
 
         if ( $response === false ) {
@@ -59,7 +58,6 @@ class ArchiveLeaf {
         // Sub-preifx for browse url
         $subPrefix = $response['subPrefix'];
 
-        // TODO: Extract template name into config variable
         // Build up the template
         $template = "{{".$wgArchiveLeafTemplateName;
         $template .= "\n|Description=<!-- put your general description text here -->";
@@ -84,30 +82,39 @@ class ArchiveLeaf {
             try {
                 $uploader->initialize( $id . '_' . $leaf, $imageUrlFull );
                 $downloadStatus = $uploader->fetchFile();
+
                 if ( $downloadStatus->isOK() ) {
                     $verification = $uploader->verifyUpload();
                     if ( $verification['status'] === UploadBase::OK ) {
+                        $localFile = $uploader->getLocalFile();
 
-                        $imageText = "Original page: {$remoteUrl}\nOriginal file: [{$imageUrlFull} see]";
-
-                        $uploadStatus = $uploader->performUpload( 'imported by ArchiveLeaf', $imageText, false, $wgUser );
-
-                        if ( $uploadStatus->isOK() ) {
-
-                            $localFile = $uploader->getLocalFile();
+                        // check if exact file already exists
+                        if ( $localFile && $localFile->getSha1() === $uploader->getTempFileSha1Base36() ) {
                             $localFileName = $localFile->getName();
+                            $uploader->cleanupTempFile();
 
-                            // Pre-generate thumb for 400px to be used in page template
-                            $localFile->createThumb(400);
-
-                            //TODO: apparently thumb being purged during deffered update for uploaded files
-                            DeferredUpdates::clearPendingUpdates();
-
-                            $log[] = "Image was imported successfully.";
+                            $log[] = "Exact image already exists so it was not re-imported.";
                         } else {
-                            $log[] = "Error importing image: {$uploadStatus->getMessage()}";
-                        }
+                            $imageText = "Original page: {$remoteUrl}\nOriginal file: [{$imageUrlFull} see]";
 
+                            $uploadStatus = $uploader->performUpload( 'imported by ArchiveLeaf', $imageText, false, $wgUser );
+
+                            if ( $uploadStatus->isOK() ) {
+
+                                $localFile = $uploader->getLocalFile();
+                                $localFileName = $localFile->getName();
+
+                                // Pre-generate thumb for 400px to be used in page template
+                                $localFile->createThumb(400);
+
+                                //TODO: apparently thumb being purged during deferred update for uploaded files
+                                DeferredUpdates::clearPendingUpdates();
+
+                                $log[] = "Image was imported successfully.";
+                            } else {
+                                $log[] = "Error importing image: {$uploadStatus->getMessage()}";
+                            }
+                        }
                     }
                 } else {
                     $log[] = "Error downloading file from url.";
@@ -131,8 +138,10 @@ class ArchiveLeaf {
             //$template .= "\n|ImageBig=" . $wgArchiveLeafBaseURL.'/download/'.$id.'/page/leaf'.$leaf.'_w800.jpg';
             $template .= "\n|ImageBrowse=" . $leafBrowseUrl;
             $template .= "\n|LocalFileName=" . $localFileName;
-            $template .= "\n|Description=<!-- put your text here -->";
+            //$template .= "\n|Description=<!-- put your text here -->";
             $template .= "\n}}";
+
+            $template .= "\n\n<transcription type=original>\n\n</transcription>";
 
             $log[] = "Template generated successfully.";
 

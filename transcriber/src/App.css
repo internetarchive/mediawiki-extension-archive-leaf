@@ -1,0 +1,8 @@
+.text {
+  font-size: 32pt;
+  width: 100vw;
+}
+
+.buffer {
+  text-decoration: underline;
+}

@@ -3,8 +3,5 @@
     src: url(https://archive.org/cors/NotoFonts/NotoSerifBalinese-Regular.woff2) format('woff2'),
          url(https://archive.org/cors/NotoFonts/NotoSerifBalinese-Regular.woff) format('woff'),
          url(https://archive.org/cors/NotoFonts/NotoSerifBalinese-Regular.ttf) format('truetype');
-}
-
-.script-bali {
-    font-family: "Noto Serif Balinese";
+    unicode-range: U+1B00-1B7F;
 }

@@ -1,0 +1,37 @@
+.keyboard {
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  bottom: 0%;
+  width: 100vw;
+  font-size: 4vh;
+  user-select: none;
+  background-color: white;
+  /* transform: scale(1.5);
+  transform-origin: bottom left; */
+}
+
+.vowels {
+  display: flex;
+  flex-direction: row;
+}
+
+.independent-vowels {
+  display: flex;
+  flex-direction: column;
+}
+
+.dependent-vowels {
+  display: flex;
+  flex-direction: column;
+  color: darkgrey;
+}
+
+.key-row {
+  display: flex;
+}
+
+.key {
+  text-align: center;
+  inline-size: 10vw;
+}

@@ -8,9 +8,6 @@
  */
 class ArchiveLeafHooks {
 
-    public static function onExtensionLoad() {
-    }
-
     /**
      * Registers parser function hook
      * @param Parser $parser
@@ -22,40 +19,26 @@ class ArchiveLeafHooks {
     }
 
     public static function renderTagTranscription( $input, array $args, Parser $parser, PPFrame $frame ) {
-        $script = strtolower( detectScript( $input ) );
         $output = $parser->recursiveTagParse( $input, $frame );
-        return '<div class="transcription script-' . $script . '">' . $output . '</div>';
+        return $output;
     }
 
-    public static function onDoEditSectionLink( $skin, $title, $section, $tooltip, &$result, $lang = false ) {
-        //$result = '';
+    public static function onBeforePageDisplay( OutputPage &$out, Skin &$skin ) {
+        $out->addModules( 'ext.archiveleaf.font' );
     }
 
-    public static function onBeforePageDisplay( OutputPage &$outputPage, Skin &$skin ) {
-        $outputPage->addModules( 'ext.archiveleaf.font' );
-    }
+    public static function onShowEditForm( EditPage &$editor, OutputPage &$out ) {
+        if ( preg_match( '/\{\{EntryImage/', $editor->textbox1 )
+          && preg_match( '/LocalFileName=(.+?)\s*\n/', $editor->textbox1, $matches ) ) {
 
-}
+            $file = wfFindFile( $matches[1] );
 
-function detectScript( $text ) {
-    $value_name = array();
-
-    $len = min( mb_strlen($text), 10 );
-
-    for ($i = 0; $i < $len; $i++) {
-        $script = IntlChar::getIntPropertyValue( mb_substr( $text, $i, 1 ), IntlChar::PROPERTY_SCRIPT );
-
-        if ( !array_key_exists( $script, $value_name ) ) {
-            $value_name[ $script ] = IntlChar::getPropertyValueName( IntlChar::PROPERTY_SCRIPT, $script, IntlChar::SHORT_PROPERTY_NAME );
-        }
-
-        $script = $value_name[ $script ];
-
-        # ignore Latin, Common, Inherited
-        if ( $script !== 'Latn' && $script !== 'Zyyy' && $script !== 'Zinh' ) {
-            return $script;
+            if ( $file && $file->exists() ) {
+                $out->addModules( 'ext.archiveleaf.transcriber' );
+                $out->addHTML( '<script>var entryImageUrl = "' . $file->getUrl() . '";</script>' );
+                $out->addHTML( '<div id="transcriber"></div>' );
+            }
         }
     }
 
-    return 'Latn';
 }
