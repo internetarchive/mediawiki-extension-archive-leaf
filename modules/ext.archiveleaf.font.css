@@ -5,3 +5,11 @@
          url(https://archive.org/cors/NotoFonts/NotoSerifBalinese-Regular.ttf) format('truetype');
     unicode-range: U+1B00-1B7F;
 }
+
+@font-face {
+    font-family: "Noto Sans Sinhala";
+    src: url(https://archive.org/cors/NotoFonts/NotoSansSinhala-Regular.woff2) format('woff2'),
+         url(https://archive.org/cors/NotoFonts/NotoSansSinhala-Regular.woff) format('woff'),
+         url(https://archive.org/cors/NotoFonts/NotoSansSinhala-Regular.ttf) format('truetype');
+    unicode-range: U+0D80-0DFF;
+}

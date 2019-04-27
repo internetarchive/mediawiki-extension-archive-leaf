@@ -11,7 +11,7 @@ cd ..
 js=("transcriber/build/static/js/runtime*.js" "transcriber/build/static/js/[0-9]*.js" "transcriber/build/static/js/main*.js")
 css=("transcriber/build/static/css/main*.css")
 
-jq  '.ResourceModules."ext.archiveleaf.transcriber".scripts = '"$(to_json ${js[@]})"' | .ResourceModules."ext.archiveleaf.transcriber".styles = '"$(to_json ${css[@]})" < extension.json > extension.json.new
+jq '.ResourceModules."ext.archiveleaf.transcriber".scripts = '"$(to_json ${js[@]})"' | .ResourceModules."ext.archiveleaf.transcriber".styles = '"$(to_json ${css[@]})" < extension.json > extension.json.new
 
 if [ $? -eq 0 ]
 then
