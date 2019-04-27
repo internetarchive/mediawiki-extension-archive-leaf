@@ -34,7 +34,6 @@ class ArchiveLeafHooks {
             $file = wfFindFile( $matches[1] );
 
             if ( $file && $file->exists() ) {
-                $out->addModules( 'ext.archiveleaf.transcriber' );
                 $out->addHTML( '<script>var entryImageUrl = "' . $file->getUrl() . '";</script>' );
                 $out->addHTML( '<div id="transcriber"></div>' );
             }
