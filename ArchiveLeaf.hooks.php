@@ -36,6 +36,7 @@ class ArchiveLeafHooks {
             if ( $file && $file->exists() ) {
                 $out->addHTML( '<script>var entryImageUrl = "' . $file->getUrl() . '";</script>' );
                 $out->addHTML( '<div id="transcriber"></div>' );
+                $out->addModules( 'ext.archiveleaf.transcriber' );
             }
         }
     }
