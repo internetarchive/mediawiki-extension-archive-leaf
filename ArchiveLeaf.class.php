@@ -146,7 +146,7 @@ class ArchiveLeaf {
             $template .= "\n|LocalFileName=" . $localFileName;
             $template .= "\n}}";
 
-            $template .= "\n\n<transcription type=original>\n\n</transcription>";
+            $template .= "\n\n<transcription>\n\n</transcription>";
 
             //$log[] = "Template generated successfully.";
 

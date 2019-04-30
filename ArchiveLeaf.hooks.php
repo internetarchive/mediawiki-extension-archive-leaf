@@ -12,6 +12,8 @@ class ArchiveLeafHooks {
         $parser->setFunctionHook('sanitize_leaf_title', 'ArchiveLeaf::parserSanitize');
 
         $parser->setHook( 'transcription', [ self::class, 'renderTagTranscription' ] );
+        $parser->setHook( 'transliteration', [ self::class, 'renderTagTransliteration' ] );
+        $parser->setHook( 'translation', [ self::class, 'renderTagTranslation' ] );
     }
 
     public static function renderTagTranscription( $input, array $args, Parser $parser, PPFrame $frame ) {
@@ -19,9 +21,19 @@ class ArchiveLeafHooks {
         return $parser->recursiveTagParse( $input, $frame );
     }
 
+    public static function renderTagTransliteration( $input, array $args, Parser $parser, PPFrame $frame ) {
+        $input = trim( $input );
+        return $parser->recursiveTagParse( $input, $frame );
+    }
+
+    public static function renderTagTranslation( $input, array $args, Parser $parser, PPFrame $frame ) {
+        $input = trim( $input );
+        return $parser->recursiveTagParse( $input, $frame );
+    }
+
     public static function onParserBeforeInternalParse( Parser &$parser, &$text, StripState &$stripState ) {
-        $text = preg_replace( '/\n{2,}(<transcription[> ])/', "\n$1", $text );
-        $text = preg_replace( '/(<\/transcription>)\n{2,}/', "$1\n", $text );
+        $text = preg_replace( '/\n{2,}(<(?:transcription|transliteration|translation)[> ])/', "\n$1", $text );
+        $text = preg_replace( '/(<\/(?:transcription|transliteration|translation)>)\n{2,}/', "$1\n", $text );
         return true;
     }
 
