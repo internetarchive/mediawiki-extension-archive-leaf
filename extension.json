@@ -25,15 +25,10 @@
     "ArchiveLeafMagic": "ArchiveLeaf.i18n.magic.php"
   },
   "Hooks": {
-    "ParserFirstCallInit": [
-      "ArchiveLeafHooks::onParserFirstCallInit"
-    ],
-    "BeforePageDisplay": [
-      "ArchiveLeafHooks::onBeforePageDisplay"
-    ],
-    "EditPage::showEditForm:initial": [
-      "ArchiveLeafHooks::onShowEditForm"
-    ]
+    "ParserFirstCallInit": "ArchiveLeafHooks::onParserFirstCallInit",
+    "ParserBeforeInternalParse": "ArchiveLeafHooks::onParserBeforeInternalParse",
+    "BeforePageDisplay": "ArchiveLeafHooks::onBeforePageDisplay",
+    "EditPage::showEditForm:initial": "ArchiveLeafHooks::onShowEditForm"
   },
   "MessagesDirs": {
     "ArchiveLeaf": [

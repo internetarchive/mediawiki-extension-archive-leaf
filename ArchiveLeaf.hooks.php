@@ -8,11 +8,7 @@
  */
 class ArchiveLeafHooks {
 
-    /**
-     * Registers parser function hook
-     * @param Parser $parser
-     */
-    public static function onParserFirstCallInit( $parser ) {
+    public static function onParserFirstCallInit( Parser &$parser ) {
         $parser->setFunctionHook('sanitize_leaf_title', 'ArchiveLeaf::parserSanitize');
 
         $parser->setHook( 'transcription', [ self::class, 'renderTagTranscription' ] );
@@ -21,6 +17,12 @@ class ArchiveLeafHooks {
     public static function renderTagTranscription( $input, array $args, Parser $parser, PPFrame $frame ) {
         $input = trim( $input );
         return $parser->recursiveTagParse( $input, $frame );
+    }
+
+    public static function onParserBeforeInternalParse( Parser &$parser, &$text, StripState &$stripState ) {
+        $text = preg_replace( '/\n{2,}(<transcription[> ])/', "\n$1", $text );
+        $text = preg_replace( '/(<\/transcription>)\n{2,}/', "$1\n", $text );
+        return true;
     }
 
     public static function onBeforePageDisplay( OutputPage &$out, Skin &$skin ) {
