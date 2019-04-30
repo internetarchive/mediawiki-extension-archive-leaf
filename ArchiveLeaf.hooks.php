@@ -19,7 +19,7 @@ class ArchiveLeafHooks {
         return $parser->recursiveTagParse( $input, $frame );
     }
 
-    public static function onParserBeforeInternalParse( Parser &$parser, &$text, StripState &$stripState ) {
+    public static function onInternalParseBeforeSanitize( Parser &$parser, &$text, StripState &$stripState ) {
         $text = preg_replace( '/\n{2,}(<transcription[> ])/', "\n$1", $text );
         $text = preg_replace( '/(<\/transcription>)\n{2,}/', "$1\n", $text );
         return true;
