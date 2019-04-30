@@ -58,25 +58,30 @@ class ArchiveLeaf {
         // Sub-preifx for browse url
         $subPrefix = $response['subPrefix'];
 
+        $template = '';
+
         // language
         if ( $response['language'] ) {
             $iso639 = file_get_contents( 'extensions/ArchiveLeaf/iso-639-3.json' );
             $iso639 = json_decode( $iso639, true );
             $language = $iso639[ $response['language'] ];
+
+            if ( $language ) {
+                $template .= "[[Category:" . $language . "]]\n\n";
+            }
         }
 
-        // Build up the template
-        $template = "{{".$wgArchiveLeafTemplateName;
+        $template .= "{{" . $wgArchiveLeafTemplateName;
         $template .= "\n|Description=<!-- put your general description text here -->";
-        $template .= "\n|Title=".$id;
-        $template .= "\n|Url=".$remoteUrl;
+        $template .= "\n|Title=" . $id;
+        $template .= "\n|Url=" . $remoteUrl;
         $template .= "\n}}";
 
         $log[] = "Parsing item '{$remoteUrl}' ...";
 
         foreach ($leafs as $imageNum => $leaf) {
 
-            $log[] = "Generating template for leaf #{$leaf}";
+            //$log[] = "Generating template for leaf #{$leaf}";
 
             $leafBrowseUrl = $wgArchiveLeafBaseURL.'/stream/'.$id.'/'.$subPrefix.'#page/n'.$imageNum.'/mode/1up';
 
@@ -138,24 +143,19 @@ class ArchiveLeaf {
                 $template .= "\n==== Page {$imageNum} ====";
             }
 
-            $template .= "\n{{".$wgArchiveLeafTemplateImageName;
+            $template .= "\n{{" . $wgArchiveLeafTemplateImageName;
             $template .= "\n|EntryID=" . $id;
             $template .= "\n|Title=" . $imageNum;
             //$template .= "\n|Image=" . $wgArchiveLeafBaseURL.'/download/'.$id.'/page/leaf'.$leaf.'_w400.jpg';
             //$template .= "\n|ImageBig=" . $wgArchiveLeafBaseURL.'/download/'.$id.'/page/leaf'.$leaf.'_w800.jpg';
             $template .= "\n|ImageBrowse=" . $leafBrowseUrl;
             $template .= "\n|LocalFileName=" . $localFileName;
-            //$template .= "\n|Description=<!-- put your text here -->";
             $template .= "\n}}";
 
             $template .= "\n\n<transcription type=original>\n\n</transcription>";
 
-            $log[] = "Template generated successfully.";
+            //$log[] = "Template generated successfully.";
 
-        }
-
-        if ($language) {
-            $template .= "\n\n[[Category:" . $language . "]]";
         }
 
         $title = Title::newFromText($id);
@@ -200,7 +200,7 @@ class ArchiveLeaf {
     public static function parserSanitize( $parser, $value ) {
         global $wgOut, $wgSitename;
         $sanitized = self::sanitizeValue($value);
-        $wgOut->setHTMLTitle( $sanitized .' - '.$wgSitename );
+        $wgOut->setHTMLTitle( $sanitized .' - ' . $wgSitename );
         return $sanitized;
     }
 
