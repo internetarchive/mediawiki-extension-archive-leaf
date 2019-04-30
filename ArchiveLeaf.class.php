@@ -60,9 +60,11 @@ class ArchiveLeaf {
 
         // language
         if ( $response['language'] ) {
+            wfDebug( 'GOT LANGUAGE' );
             $iso639 = file_get_contents( 'extensions/ArchiveLeaf/iso-639-3.json' );
             $iso639 = json_decode( $json, true );
             $language = $iso639[ $response['language'] ];
+            wfDebug( 'LANGUAGE IS ' . $language );
         }
 
         // Build up the template
