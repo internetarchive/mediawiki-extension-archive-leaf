@@ -45,7 +45,7 @@ class ArchiveLeaf {
 
         //TODO: remove duplication, merge maybe with above
         $response = @file_get_contents( $wgArchiveLeafApiURL.'/books/' . $id . '/ia_manifest' );
-        $response = json_decode($response, true);
+        $response = json_decode( $response, true );
 
         if ( !array_key_exists('leafNums', $response) || !count($response['leafNums']) ) {
             return false;
@@ -57,6 +57,13 @@ class ArchiveLeaf {
         $leafs = $response['leafNums'];
         // Sub-preifx for browse url
         $subPrefix = $response['subPrefix'];
+
+        // language
+        if ( $response['language'] ) {
+            $iso639 = file_get_contents( 'extensions/ArchiveLeaf/iso-639-3.json' );
+            $iso639 = json_decode( $json, true );
+            $language = $iso639[ $response['language'] ];
+        }
 
         // Build up the template
         $template = "{{".$wgArchiveLeafTemplateName;
@@ -145,6 +152,10 @@ class ArchiveLeaf {
 
             $log[] = "Template generated successfully.";
 
+        }
+
+        if ($language) {
+            $template .= "\n\n[[Category:" . $language . "]]";
         }
 
         $title = Title::newFromText($id);
