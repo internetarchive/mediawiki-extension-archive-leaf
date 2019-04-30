@@ -58,20 +58,14 @@ class ArchiveLeaf {
         // Sub-preifx for browse url
         $subPrefix = $response['subPrefix'];
 
-        $template = '';
-
         // language
         if ( $response['language'] ) {
             $iso639 = file_get_contents( 'extensions/ArchiveLeaf/iso-639-3.json' );
             $iso639 = json_decode( $iso639, true );
             $language = $iso639[ $response['language'] ];
-
-            if ( $language ) {
-                $template .= "[[Category:" . $language . "]]\n\n";
-            }
         }
 
-        $template .= "{{" . $wgArchiveLeafTemplateName;
+        $template = "{{" . $wgArchiveLeafTemplateName;
         $template .= "\n|Description=<!-- put your general description text here -->";
         $template .= "\n|Title=" . $id;
         $template .= "\n|Url=" . $remoteUrl;
@@ -156,6 +150,10 @@ class ArchiveLeaf {
 
             //$log[] = "Template generated successfully.";
 
+        }
+
+        if ( $language ) {
+            $template .= "\n\n[[Category:" . $language . "]]";
         }
 
         $title = Title::newFromText($id);
