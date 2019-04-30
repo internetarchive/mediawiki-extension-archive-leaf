@@ -8,6 +8,11 @@ clean
 
 wget https://iso639-3.sil.org/sites/iso639-3/files/downloads/iso-639-3.tab
 
-tail -n +2 iso-639-3.tab | awk -F'\t' 'BEGIN { OFS="\t" } { print $1,$7 }' | jq -R 'split("\t")' | jq -s . | jq 'reduce .[] as $item ({}; . + {($item[0]): $item[1]})' > iso-639-3.json
+tail -n +2 iso-639-3.tab \
+  | awk -F'\t' 'BEGIN { OFS="\t" } { print $1,$7 }' \
+  | jq -R 'split("\t")' \
+  | jq -s . \
+  | jq 'reduce .[] as $item ({}; . + {($item[0]): $item[1]})' \
+  > iso-639-3.json
 
 clean
