@@ -19,8 +19,8 @@ class ArchiveLeafHooks {
     }
 
     public static function renderTagTranscription( $input, array $args, Parser $parser, PPFrame $frame ) {
-        $output = $parser->recursiveTagParse( $input, $frame );
-        return $output;
+        $input = trim( $input );
+        return $parser->recursiveTagParse( $input, $frame );
     }
 
     public static function onBeforePageDisplay( OutputPage &$out, Skin &$skin ) {
