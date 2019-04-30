@@ -123,7 +123,12 @@ class SpecialArchiveLeaf extends SpecialPage {
             } else {
                 // Process
                 $title = ArchiveLeaf::importPageByID( $id );
-                $this->printSuccess( $title );
+
+                if ( $title ) {
+                    $this->printSuccess( $title );
+                } else {
+                    $this->printNormal( $id, $this->msg('archiveleaf-special-page-unknown-error')->plain() );
+                }
             }
         }
     }

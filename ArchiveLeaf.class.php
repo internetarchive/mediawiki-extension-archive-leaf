@@ -17,17 +17,9 @@ class ArchiveLeaf {
 
         global $wgArchiveLeafApiURL;
 
-        $response = @file_get_contents( $wgArchiveLeafApiURL.'/books/' . $id . '/ia_manifest' );
+        $response = @file_get_contents( $wgArchiveLeafApiURL.'/books/'.$id.'/ia_manifest' );
 
-        if ( $response === false ) {
-            return false;
-        }
-
-        $response = json_decode($response, true);
-        if ( !$response ) {
-            return false;
-        }
-        return true;
+        return $response ? true : false;
 
     }
 
@@ -43,11 +35,15 @@ class ArchiveLeaf {
 
         $log = array();
 
-        //TODO: remove duplication, merge maybe with above
-        $response = @file_get_contents( $wgArchiveLeafApiURL.'/books/' . $id . '/ia_manifest' );
+        $response = @file_get_contents( $wgArchiveLeafApiURL.'/books/'.$id.'/ia_manifest' );
+
+        if ( !$response ) {
+            return false;
+        }
+
         $response = json_decode( $response, true );
 
-        if ( !array_key_exists('leafNums', $response) || !count($response['leafNums']) ) {
+        if ( !$response || !array_key_exists('leafNums', $response) || !count($response['leafNums']) ) {
             return false;
         }
 
