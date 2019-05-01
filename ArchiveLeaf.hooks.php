@@ -9,11 +9,41 @@
 class ArchiveLeafHooks {
 
     public static function onParserFirstCallInit( Parser &$parser ) {
-        $parser->setFunctionHook('sanitize_leaf_title', 'ArchiveLeaf::parserSanitize');
+        $parser->setFunctionHook( 'sanitize_leaf_title', [ self::class, 'renderFunctionSanitize' ] );
 
         $parser->setHook( 'transcription', [ self::class, 'renderTagTranscription' ] );
         $parser->setHook( 'transliteration', [ self::class, 'renderTagTransliteration' ] );
         $parser->setHook( 'translation', [ self::class, 'renderTagTranslation' ] );
+    }
+
+    /**
+     * @param Parser $parser
+     * @param string $value
+     *
+     * @return mixed
+     */
+    public static function renderFunctionSanitize( $parser, $value ) {
+        global $wgOut, $wgSitename;
+        $sanitized = self::sanitizeValue($value);
+        $wgOut->setHTMLTitle( $sanitized .' - ' . $wgSitename );
+        return $sanitized;
+    }
+
+   /**
+     * Placeholder for title sanitation
+     *
+     * @param string $value
+     *
+     * @return mixed
+     */
+    public static function sanitizeValue( $value ) {
+        $result = array();
+        $value = str_replace('-', ' ', $value);
+        $value = explode(' ', $value);
+        foreach ($value as $word) {
+            $result[] = ucfirst( $word );
+        }
+        return join(' ', $result);
     }
 
     public static function renderTagTranscription( $input, array $args, Parser $parser, PPFrame $frame ) {
