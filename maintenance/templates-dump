@@ -1,0 +1,3 @@
+#!/bin/bash
+
+php ../../maintenance/dumpBackup.php --current --filter=namespace:10 > sources/templates.xml
