@@ -62,8 +62,8 @@ class ArchiveLeafHooks {
     }
 
     public static function onParserBeforeInternalParse( Parser &$parser, &$text, StripState &$stripState ) {
-        $text = preg_replace( '/\n{2,}(<(?:transcription|transliteration|translation)[> ])/', "\n$1", $text );
-        $text = preg_replace( '/(<\/(?:transcription|transliteration|translation)>)\n{2,}/', "$1\n", $text );
+        //$text = preg_replace( '/\n{2,}(<(?:transcription|transliteration|translation)[> ])/', "\n$1", $text );
+        //$text = preg_replace( '/(<\/(?:transcription|transliteration|translation)>)\n{2,}/', "$1\n", $text );
         return true;
     }
 
