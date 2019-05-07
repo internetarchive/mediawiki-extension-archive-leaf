@@ -8,7 +8,7 @@ cd transcriber
 yarn build
 cd ..
 
-js=("modules/ext.archiveleaf.transcriber.js" "transcriber/build/static/js/runtime*.js" "transcriber/build/static/js/[0-9]*.js" "transcriber/build/static/js/main*.js")
+js=("transcriber/build/static/js/runtime*.js" "transcriber/build/static/js/[0-9]*.js" "transcriber/build/static/js/main*.js")
 css=("transcriber/build/static/css/[0-9]*.css" "transcriber/build/static/css/main*.css")
 
 jq '.ResourceModules."ext.archiveleaf.transcriber".scripts = '"$(to_json ${js[@]})"' | .ResourceModules."ext.archiveleaf.transcriber".styles = '"$(to_json ${css[@]})" \
