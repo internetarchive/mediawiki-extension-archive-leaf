@@ -12,13 +12,12 @@
   top: 0;
   right: 0;
   margin: 10px;
-  inline-size: 32px;
   height: 32px;
-
 }
 
-.transcriber {
-  background-color: white;
+.close-button.closed {
+  top: unset;
+  bottom: 0;
 }
 
 .image-container {
@@ -27,6 +26,7 @@
   top: 0;
   left: 0;
   position: fixed;
+  background: white;
 }
 
 .text {
@@ -40,6 +40,7 @@
   position: fixed;
   top: 40vh;
   left: 0;
+  background: white;
 }
 
 #caret {

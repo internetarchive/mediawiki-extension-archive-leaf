@@ -75,7 +75,12 @@ export default class App extends Component {
             />
           </div>
         }
-        <button className="close-button" onClick={() => this.setState({ open: !this.state.open })}>x</button>
+        <button
+          className={"close-button" + (this.state.open ? "" : " closed")}
+          onClick={() => this.setState({ open: !this.state.open })}
+        >
+          {this.state.open ? "×" : "⌨"}
+        </button>
       </div>
     );
   }
