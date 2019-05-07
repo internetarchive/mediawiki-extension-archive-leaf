@@ -1,10 +1,24 @@
-body {
+/* body {
   margin-top: 100vh !important;
-}
+} */
 
 .App {
   z-index: 1000;
   position: absolute;
+}
+
+.close-button {
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin: 10px;
+  inline-size: 32px;
+  height: 32px;
+
+}
+
+.transcriber {
+  background-color: white;
 }
 
 .image-container {
@@ -26,7 +40,6 @@ body {
   position: fixed;
   top: 40vh;
   left: 0;
-  background-color: white;
 }
 
 #caret {

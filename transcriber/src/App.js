@@ -15,6 +15,7 @@ export default class App extends Component {
       preText: "",
       postText: "",
       caretPosition: 0,
+      open: true,
     };
   }
 
@@ -42,7 +43,7 @@ export default class App extends Component {
 
   scrollTextDown = () => {
     let caret = this.caretRef.current;
-    caret.scrollIntoView({block: "start", inline: "nearest", behavior: "smooth"})
+    caret.scrollIntoView({ block: "start", inline: "nearest", behavior: "smooth" })
   }
 
   bufferChange = buffer => {
@@ -54,22 +55,27 @@ export default class App extends Component {
   render() {
     return (
       <div className="App">
-        <meta name="viewport" content="width=device-width, user-scalable=no" />
-        <div className="image-container">
-          <PinchZoomPan maxScale={5} doubleTapBehavior="zoom">
-            <img alt="lontar" src={entryImageUrl} />
-          </PinchZoomPan>
-        </div>
-        <div className="text" onClick={this.handleCaretMove} ref={this.textRef}>
-          {this.state.preText}
-          <span id="caret" ref={this.caretRef}></span>
-          {this.state.postText}
-        </div>
-        <Keyboard
-          script="bali"
-          onBufferChange={this.bufferChange}
-          buffer={this.state.preText}
-        />
+        {this.state.open &&
+          <div className="transcriber">
+            <meta name="viewport" content="width=device-width, user-scalable=no" />
+            <div className="image-container">
+              <PinchZoomPan maxScale={5} doubleTapBehavior="zoom">
+                <img alt="lontar" src={entryImageUrl} />
+              </PinchZoomPan>
+            </div>
+            <div className="text" onClick={this.handleCaretMove} ref={this.textRef}>
+              {this.state.preText}
+              <span id="caret" ref={this.caretRef}></span>
+              {this.state.postText}
+            </div>
+            <Keyboard
+              script="bali"
+              onBufferChange={this.bufferChange}
+              buffer={this.state.preText}
+            />
+          </div>
+        }
+        <button className="close-button" onClick={() => this.setState({ open: !this.state.open })}>x</button>
       </div>
     );
   }
