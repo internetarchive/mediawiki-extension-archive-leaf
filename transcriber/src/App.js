@@ -1,50 +1,74 @@
 import React, { Component } from 'react';
-// import logo from './logo.svg';
+import PinchZoomPan from "react-responsive-pinch-zoom-pan";
 import './App.css';
 
 import Keyboard from './Keyboard';
 
+window.entryImageUrl = "https://archive.org/download/tutur-smara-bhuwana/page/leaf1.jpg";
+
 export default class App extends Component {
   constructor(props) {
     super(props);
+    this.textRef = React.createRef();
+    this.caretRef = React.createRef();
     this.state = {
-      text: "",
-      buffer: "",
+      preText: "",
+      postText: "",
+      caretPosition: 0,
     };
   }
 
-  handleKeyClick = (k) => {
+  handleCaretMove = () => {
+    let sel = window.getSelection();
+    if (!sel.isCollapsed) {
+      return;
+    }
+
+    let node = sel.anchorNode;
+    let offset = sel.anchorOffset;
+    while (node.previousSibling) {
+      node = node.previousSibling;
+      if (node.nodeType === 3) {
+        offset += node.nodeValue.length;
+      }
+    }
+
+    let text = this.state.preText + this.state.postText;
     this.setState({
-      text: this.state.text + k,
+      preText: text.slice(0, offset),
+      postText: text.slice(offset),
     })
   }
 
-  backspace = () => {
-    this.setState({
-      text: this.state.text.slice(0, -1),
-    })
+  scrollTextDown = () => {
+    let caret = this.caretRef.current;
+    caret.scrollIntoView({block: "start", inline: "nearest", behavior: "smooth"})
   }
 
   bufferChange = buffer => {
     this.setState({
-      buffer
-    })
+      preText: buffer
+    }, this.scrollTextDown);
   }
 
   render() {
     return (
       <div className="App">
-        <div>{window.entryImageUrl}</div>
-        <div className="text">
-          {this.state.text}
-          <span className="buffer">{this.state.buffer}</span>
+        <meta name="viewport" content="width=device-width, user-scalable=no" />
+        <div className="image-container">
+          <PinchZoomPan maxScale={5} doubleTapBehavior="zoom">
+            <img alt="lontar" src={window.entryImageUrl} />
+          </PinchZoomPan>
         </div>
-        {[...Array(50).keys()].map((_, i) => (
-          <div>blep{i}</div>
-        ))}
+        <div className="text" onClick={this.handleCaretMove} ref={this.textRef}>
+          {this.state.preText}
+          <span id="caret" ref={this.caretRef}></span>
+          {this.state.postText}
+        </div>
         <Keyboard
           script="bali"
-          bufferChange={this.bufferChange}
+          onBufferChange={this.bufferChange}
+          buffer={this.state.preText}
         />
       </div>
     );

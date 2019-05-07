@@ -1,8 +1,29 @@
-.text {
-  font-size: 32pt;
-  width: 100vw;
+body {
+  margin-top: 100vh !important;
 }
 
-.buffer {
-  text-decoration: underline;
+.image-container {
+  width: 100vw;
+  height: 40vh;
+  top: 0;
+  left: 0;
+  position: fixed;
+}
+
+.text {
+  font-size: 32pt;
+  white-space: pre-wrap;
+  font-family: "Noto Serif Balinese";
+  width: 100vw;
+  overflow: scroll;
+  height: 20vh;
+  overflow-wrap: anywhere;
+  position: fixed;
+  top: 40vh;
+  left: 0;
+}
+
+#caret {
+  block-size: 100%;
+  border-inline-start: 1px solid red;
 }
