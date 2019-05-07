@@ -4,7 +4,7 @@ import './App.css';
 
 import Keyboard from './Keyboard';
 
-window.entryImageUrl = "https://archive.org/download/tutur-smara-bhuwana/page/leaf1.jpg";
+// window.entryImageUrl = "https://archive.org/download/tutur-smara-bhuwana/page/leaf1.jpg";
 
 export default class App extends Component {
   constructor(props) {

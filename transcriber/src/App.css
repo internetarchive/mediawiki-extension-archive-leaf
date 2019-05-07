@@ -2,6 +2,10 @@ body {
   margin-top: 100vh !important;
 }
 
+.App {
+  z-index: 1000;
+}
+
 .image-container {
   width: 100vw;
   height: 40vh;
@@ -21,6 +25,7 @@ body {
   position: fixed;
   top: 40vh;
   left: 0;
+  background-color: white;
 }
 
 #caret {
