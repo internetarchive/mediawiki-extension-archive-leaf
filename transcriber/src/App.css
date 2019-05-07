@@ -4,6 +4,7 @@ body {
 
 .App {
   z-index: 1000;
+  position: absolute;
 }
 
 .image-container {
