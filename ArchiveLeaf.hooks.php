@@ -68,16 +68,25 @@ class ArchiveLeafHooks {
     }
 
     public static function onBeforePageDisplay( OutputPage &$out, Skin &$skin ) {
+        global $wgUsingTranscriber;
+
         $out->addModules( 'ext.archiveleaf.font' );
+
+        if ($wgUsingTranscriber) {
+            $out->addHTML( '<div id="transriber"></div>' );
+        }
     }
 
     public static function onShowEditForm( EditPage &$editor, OutputPage &$out ) {
+        global $wgUsingTranscriber;
+
         if ( preg_match( '/\{\{EntryImage/', $editor->textbox1 )
           && preg_match( '/LocalFileName=(.+?)\s*\n/', $editor->textbox1, $matches ) ) {
 
             $file = wfFindFile( $matches[1] );
 
             if ( $file && $file->exists() ) {
+                $wgUsingTranscriber = 1;
                 $out->addHTML( '<script>var entryImageUrl = "' . $file->getUrl() . '";</script>' );
                 $out->addModules( 'ext.archiveleaf.transcriber' );
             }
