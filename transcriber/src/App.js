@@ -4,7 +4,7 @@ import './App.css';
 
 import Keyboard from './Keyboard';
 
-// window.entryImageUrl = "https://archive.org/download/tutur-smara-bhuwana/page/leaf1.jpg";
+let entryImageUrl = window.entryImageUrl || "https://archive.org/download/tutur-smara-bhuwana/page/leaf1.jpg";
 
 export default class App extends Component {
   constructor(props) {
@@ -57,7 +57,7 @@ export default class App extends Component {
         <meta name="viewport" content="width=device-width, user-scalable=no" />
         <div className="image-container">
           <PinchZoomPan maxScale={5} doubleTapBehavior="zoom">
-            <img alt="lontar" src={window.entryImageUrl} />
+            <img alt="lontar" src={entryImageUrl} />
           </PinchZoomPan>
         </div>
         <div className="text" onClick={this.handleCaretMove} ref={this.textRef}>
