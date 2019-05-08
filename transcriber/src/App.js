@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import PinchZoomPan from "react-responsive-pinch-zoom-pan";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes, faKeyboard } from '@fortawesome/free-solid-svg-icons';
+
 import './App.css';
 
 import Keyboard from './Keyboard';
@@ -11,12 +14,11 @@ let iiifBaseUrl = 'https://iiif.archivelab.org/iiif/';
 export default class App extends Component {
   constructor(props) {
     super(props);
-    this.textRef = React.createRef();
     this.caretRef = React.createRef();
+    this.textbox = document.getElementById("wpTextbox1");
     this.state = {
       preText: "",
       postText: "",
-      caretPosition: 0,
       open: true,
     };
   }
@@ -43,7 +45,7 @@ export default class App extends Component {
     })
   }
 
-  scrollTextDown = () => {
+  scrollToCaret = () => {
     let caret = this.caretRef.current;
     caret.scrollIntoView({ block: "start", inline: "nearest", behavior: "smooth" })
   }
@@ -51,7 +53,7 @@ export default class App extends Component {
   bufferChange = buffer => {
     this.setState({
       preText: buffer
-    }, this.scrollTextDown);
+    }, this.scrollToCaret);
   }
 
   imageChange = state => {
@@ -82,34 +84,57 @@ export default class App extends Component {
     return `${iiifBaseUrl}${id}/pct:${xPct},${yPct},${widthPct},${heightPct}/full/0/default.jpg`;
   }
 
+  getTranscription = () => {
+    let matches = this.textbox.value.match(/(?:.*<transcription>)(.*?)(?:<\/transcription>.*)/s);
+    if (matches) {
+      this.setState({ preText: matches[1].trim(), postText: "" }, this.scrollToCaret);
+    }
+  }
+
+  setTranscription = () => {
+    let transcription = (this.state.preText + this.state.postText).trim();
+    let matches = this.textbox.value.match(/(.*<transcription>).*(<\/transcription>.*)/s);
+    if (matches) {
+      this.textbox.value = [matches[1], transcription, matches[2]].join("\n");
+    } else {
+      this.textbox.value = this.textbox.value + "<transcription>" + transcription + "</transcription>";
+    }
+  }
+
+  handleOpenClose = () => {
+    if (this.state.open) {
+      this.setState({ open: false }, this.setTranscription);
+    } else {
+      this.setState({ open: true }, this.getTranscription);
+    }
+  }
+
   render() {
     return (
       <div className="App">
-        {this.state.open &&
-          <div className="transcriber">
-            <meta name="viewport" content="width=device-width, user-scalable=no" />
-            <div id="image-container" className="image-container">
-              <PinchZoomPan maxScale={5} doubleTapBehavior="zoom" onChange={this.imageChange}>
-                <img id="lontar" alt="lontar" src={entryImageUrl} />
-              </PinchZoomPan>
-            </div>
-            <div className="text" onClick={this.handleCaretMove} ref={this.textRef}>
-              {this.state.preText}
-              <span id="caret" ref={this.caretRef}></span>
-              {this.state.postText}
-            </div>
-            <Keyboard
-              script="bali"
-              onBufferChange={this.bufferChange}
-              buffer={this.state.preText}
-            />
+        <div className={"transcriber " + (!this.state.open ? "closed" : "")}>
+          <meta name="viewport" content={"width=device-width, user-scalable=" + (this.state.open ? "no" : "yes")} />
+          <div id="image-container" className="image-container">
+            <PinchZoomPan maxScale={5} doubleTapBehavior="zoom" onChange={this.imageChange}>
+              <img id="lontar" alt="lontar" src={entryImageUrl} />
+            </PinchZoomPan>
           </div>
-        }
+          <div className="text" onClick={this.handleCaretMove}>
+            {this.state.preText}
+            <span id="caret" ref={this.caretRef}></span>
+            {this.state.postText}
+          </div>
+          <Keyboard
+            script="bali"
+            onBufferChange={this.bufferChange}
+            buffer={this.state.preText}
+          />
+        </div>
         <button
           className={"close-button" + (this.state.open ? "" : " closed")}
-          onClick={() => this.setState({ open: !this.state.open })}
+          onClick={this.handleOpenClose}
         >
-          {this.state.open ? "×" : "⌨"}
+          <FontAwesomeIcon icon={this.state.open ? faTimes : faKeyboard} />
         </button>
       </div>
     );

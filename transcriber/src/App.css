@@ -17,7 +17,13 @@
 
 .close-button.closed {
   top: unset;
+  right: unset;
   bottom: 0;
+  left: 0;
+}
+
+.transcriber.closed {
+  display: none;
 }
 
 .image-container {
