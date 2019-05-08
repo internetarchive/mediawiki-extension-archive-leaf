@@ -7918,9 +7918,10 @@ react-is@^16.8.1, react-is@^16.8.4:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.6.tgz#5bbc1e2d29141c9fbdfed456343fe2bc430a6a16"
   integrity sha512-aUk3bHfZ2bRSVFFbbeVS4i+lNPZr3/WM5jT2J5omUVV1zzcs1nAaf3l51ctA5FFvCRbhrH0bdAsRRQddFJZPtA==
 
-"react-responsive-pinch-zoom-pan@https://github.com/kamholz/react-responsive-pinch-zoom-pan.git":
+react-responsive-pinch-zoom-pan@^0.2.2:
   version "0.2.2"
-  resolved "https://github.com/kamholz/react-responsive-pinch-zoom-pan.git#c8239bceac118f655a510217542b2ed8cf36a0ba"
+  resolved "https://registry.yarnpkg.com/react-responsive-pinch-zoom-pan/-/react-responsive-pinch-zoom-pan-0.2.2.tgz#15dce9e945722dac1786d21f972998d027b19859"
+  integrity sha512-YfbWzFijKjVEr3guV6gHakyT/HeS2ayDonlvYNu2ldDxz827y4SNUn9ME8vp08d7EqsA84GtPI9COyQEuWXxLw==
   dependencies:
     "@fortawesome/fontawesome-svg-core" "^1.2.13"
     "@fortawesome/free-solid-svg-icons" "^5.7.0"
