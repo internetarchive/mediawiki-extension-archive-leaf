@@ -89,7 +89,7 @@ export default class App extends Component {
           <div className="transcriber">
             <meta name="viewport" content="width=device-width, user-scalable=no" />
             <div id="image-container" className="image-container">
-              <PinchZoomPan maxScale={5} doubleTapBehavior="zoom" onchange={this.imageChange}>
+              <PinchZoomPan maxScale={5} doubleTapBehavior="zoom" onChange={this.imageChange}>
                 <img id="lontar" alt="lontar" src={entryImageUrl} />
               </PinchZoomPan>
             </div>
