@@ -5,7 +5,7 @@
   "dependencies": {
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-responsive-pinch-zoom-pan": "^0.2.2"
+    "react-responsive-pinch-zoom-pan": "https://github.com/kamholz/react-responsive-pinch-zoom-pan.git"
   },
   "devDependencies": {
     "react-scripts": "3.0.0"
