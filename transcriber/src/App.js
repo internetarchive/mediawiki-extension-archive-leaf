@@ -54,35 +54,32 @@ export default class App extends Component {
     }, this.scrollTextDown);
   }
 
-  getRegionUrl = () => {
-    let url = iiifBaseUrl;
+  imageChange = state => {
+    this.imageState = state;
+  }
+
+  getIiifIdentifier = () => {
     let textbox = document.getElementById("wpTextbox1");
 
-    let matches = textbox.value.match(/EntryID=(.+)/);
-    if (!matches) return null;
-    url += matches[1];
+    let matches = textbox.value.match(/\bEntryID=(\S+).*\bTitle=(\S+)/s);
+    return matches
+      ? `${matches[1]}%24${matches[2]}`
+      : null;
+  }
 
-    matches = textbox.value.match(/Title=(.+)/);
-    if (!matches) return null;
-    url += `%24${matches[1]}/`;
+  getImageRegionUrl = () => {
+    if (!this.imageState) return null;
 
-    // TODO: do this properly through React
-    matches = img.getAttribute('style').match(/translate3d\(-([0-9.]+)px, -([0-9.]+)px, 0px\) scale\(([0-9.]+)\)/);
-    if (!matches) return null;
-    let xOffset = matches[1];
-    let yOffset = matches[2];
-    let scale = matches[3];
+    let id = this.getIiifIdentifier();
+    if (!id) return null;
 
-    let containerRect = document.getElementById("image-container").getBoundingClientRect();
-    let img = document.getElementById("lontar");
+    let { left, top, scale, containerDimensions, imageDimensions } = this.imageState;
+    let xPct = (-100 * left / (imageDimensions.width * scale)).toFixed(2);
+    let yPct = (-100 * top / (imageDimensions.height * scale)).toFixed(2);
+    let widthPct = (100 * containerDimensions.width / (imageDimensions.width * scale)).toFixed(2);
+    let heightPct = (100 * containerDimensions.height / (imageDimensions.height * scale)).toFixed(2);
 
-    let xPct = (100 * xOffset / (img.width * scale)).toFixed(2);
-    let yPct = (100 * yOffset / (img.height * scale)).toFixed(2);
-    let widthPct = (100 * containerRect.width / (img.width * scale)).toFixed(2);
-    let heightPct = (100 * containerRect.height / (img.height * scale)).toFixed(2);
-
-    url += `pct:${xPct},${yPct},${widthPct},${heightPct}/full/0/default.jpg`;
-    return url;
+    return `${iiifBaseUrl}${id}/pct:${xPct},${yPct},${widthPct},${heightPct}/full/0/default.jpg`;
   }
 
   render() {
@@ -92,7 +89,7 @@ export default class App extends Component {
           <div className="transcriber">
             <meta name="viewport" content="width=device-width, user-scalable=no" />
             <div id="image-container" className="image-container">
-              <PinchZoomPan maxScale={5} doubleTapBehavior="zoom">
+              <PinchZoomPan maxScale={5} doubleTapBehavior="zoom" onchange={this.imageChange}>
                 <img id="lontar" alt="lontar" src={entryImageUrl} />
               </PinchZoomPan>
             </div>
