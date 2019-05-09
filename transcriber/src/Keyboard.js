@@ -2,111 +2,153 @@ import React, { Component, useState } from 'react';
 import './Keyboard.css';
 
 const rx = {
-  cons: "([ᬓ-ᬳ]\u1b34?\u1b44)*[ᬓ-ᬳ]\u1b34?",
+  cons: "([ᬅᬓ-ᬳᭅ-ᭋ]\u1b34?\u1b44)*[ᬅᬓ-ᬳᭅ-ᭋ]\u1b34?",
 }
 
 const layouts = {
   "bali": {
-    style: {
-      gridTemplateAreas: `
-      "vowel0 vowel1 vowel2 vowel3 dvowel0 dvowel1 dvowel2 dvowel3 dvowel4 dvowel5"
-      "vowel4 vowel5 vowel6 vowel7 dvowel6 dvowel7 dvowel8 dvowel9 dvowel10 dvowel11"
-      "cons0 cons1 cons2 cons3 cons4 cons5 cons6 cons7 cons8 cons9"
-      "shift cons10 cons11 cons12 cons13 cons14 cons15 cons16 cons17 backspace"
-      "numbers danda space space space space space space doubledanda newline"
-    `,
+    letters: {
+      grid: [
+        ["vowel0", "vowel1", "vowel2", "vowel3", "dvowel0", "dvowel1", "dvowel2", "dvowel3", "dvowel4", "dvowel5"],
+        ["vowel4", "vowel5", "vowel6", "vowel7", "dvowel6", "dvowel7", "dvowel8", "dvowel9", "dvowel10", "dvowel11"],
+        ["cons0", "cons1", "cons2", "cons3", "cons4", "cons5", "cons6", "cons7", "cons8", "cons9"],
+        ["shift", "cons10", "cons11", "cons12", "cons13", "cons14", "cons15", "cons16", "cons17", "backspace"],
+        ["numbers", "numbers", "punc0", "space", "space", "space", "space", "punc1", "return", "return"]
+      ],
+      keys: {
+        vowel: [
+          [
+            [/$/, [
+              "ᬅ", "ᬇ", "ᬉ", "ᬏ",
+              "ᬐ", "ᬑ", "ᬋ", "ᬍ"
+            ]]
+          ]
+        ],
+        dvowel: [
+          [
+            [RegExp(rx.cons + "[\u1b35\u1b40\u1b37\u1b39\u1b41\u1b43]$"), [
+              "", "", "", "\u1b02", "\u1b03", "\u1b04",
+              "", "", "", "", "", ""
+            ]],
+            [RegExp(rx.cons + "\u1b3e$"), [
+              "\u0008\u1b40", "", "", "\u1b02", "\u1b03", "\u1b04",
+              "", "", "", "", "", ""
+            ]],
+            [RegExp(rx.cons + "\u1b36$"), [
+              "\u0008\u1b37", "", "", "\u1b02", "\u1b03", "\u1b04",
+              "", "", "", "", "", ""
+            ]],
+            [RegExp(rx.cons + "\u1b38$"), [
+              "\u0008\u1b39", "", "", "\u1b02", "\u1b03", "\u1b04",
+              "", "", "", "", "", ""
+            ]],
+            [RegExp(rx.cons + "\u1b3f$"), [
+              "\u0008\u1b41", "", "", "\u1b02", "\u1b03", "\u1b04",
+              "", "", "", "", "", ""
+            ]],
+            [RegExp(rx.cons + "\u1b42$"), [
+              "\u0008\u1b43", "", "", "\u1b02", "\u1b03", "\u1b04",
+              "", "", "", "", "", ""
+            ]],
+            [RegExp(rx.cons + "\u1b3a$"), [
+              "\u0008\u1b3b", "", "", "", "", "",
+              "", "", "", "", "", ""
+            ]],
+            [RegExp(rx.cons + "\u1b3c$"), [
+              "\u0008\u1b3d", "", "", "", "", "",
+              "", "", "", "", "", ""
+            ]],
+            [/ᬅ$/, [
+              "\u0008\u1b06", "", "", "", "", "",
+              "\u1b44", "", "", "", "", ""
+            ]],
+            [/ᬇ$/, [
+              "\u0008\u1b08", "", "", "", "", "",
+              "", "", "", "", "", ""
+            ]],
+            [/ᬉ$/, [
+              "\u0008\u1b0a", "", "", "", "", "",
+              "", "", "", "", "", ""
+            ]],
+            [/ᬑ$/, [
+              "\u0008\u1b12", "", "", "", "", "",
+              "", "", "", "", "", ""
+            ]],
+            [/ᬋ$/, [
+              "\u0008\u1b0c", "", "", "", "", "",
+              "", "", "", "", "", ""
+            ]],
+            [/ᬍ$/, [
+              "\u0008\u1b0e", "", "", "", "", "",
+              "", "", "", "", "", ""
+            ]],
+            [RegExp(rx.cons + "$"), [
+              "\u1b35", "\u1b3e", "\u1b36", "\u1b02", "\u1b03", "\u1b04",
+              "\u1b44", "\u1b38", "\u1b3f", "\u1b42", "\u1b3a", "\u1b3c"
+            ]],
+            [/$/, [
+              "", "", "", "", "", "",
+              "", "", "", "", "", ""
+            ]]
+          ]
+        ],
+        cons: [
+          [
+            [RegExp(rx.cons + "\u1b44$"), [
+              "ᬳ", "ᬦ", "ᬘ", "ᬭ", "ᬓ", "ᬤ", "ᬢ", "ᬲ", "ᬯ", "ᬮ",
+              "ᬫ", "ᬕ", "ᬩ", "ᬗ", "ᬧ", "ᬚ", "ᬬ", "ᬜ"
+            ]],
+            [/$/, [
+              "ᬳ", "ᬦ", "ᬘ", "ᬭ", "ᬓ", "ᬤ", "ᬢ", "ᬲ", "ᬯ", "ᬮ",
+              "ᬫ", "ᬕ", "ᬩ", "ᬗ", "ᬧ", "ᬚ", "ᬬ", "ᬜ"
+            ]]
+          ],
+          [
+            [RegExp(rx.cons + "\u1b44$"), [
+              "ᬡ", "ᬙ", "ᬔ", "ᬥ", "ᬟ", "ᬠ", "ᬣ", "ᬝ", "ᬞ", "ᬰ",
+              "ᬱ", "ᬖ", "ᬪ", "ᬨ", "ᬛ", "ᭅ", "ᭈ", "ᭊ"
+            ]],
+            [/$/, [
+              "ᬡ", "ᬙ", "ᬔ", "ᬥ", "ᬟ", "ᬠ", "ᬣ", "ᬝ", "ᬞ", "ᬰ",
+              "ᬱ", "ᬖ", "ᬪ", "ᬨ", "ᬛ", "ᭅ", "ᭈ", "ᭊ"
+            ]]
+          ]
+        ],
+        punc: [
+          [
+            [/$/, [
+              "᭞", "᭟"
+            ]]
+          ]
+        ]
+      }
     },
-    vowels: [
-      "ᬅ", "ᬇ", "ᬉ", "ᬏ",
-      "ᬐ", "ᬑ", "ᬋ", "ᬍ"
-    ],
-    dependentVowels: [
-      [RegExp(rx.cons + "[\u1b35\u1b40\u1b37\u1b39\u1b41\u1b43]$"), [
-        "", "", "", "\u1b02", "\u1b03", "\u1b04",
-        "", "", "", "", "", ""
-      ]],
-      [RegExp(rx.cons + "\u1b3e$"), [
-        "\u0008\u1b40", "", "", "\u1b02", "\u1b03", "\u1b04",
-        "", "", "", "", "", ""
-      ]],
-      [RegExp(rx.cons + "\u1b36$"), [
-        "\u0008\u1b37", "", "", "\u1b02", "\u1b03", "\u1b04",
-        "", "", "", "", "", ""
-      ]],
-      [RegExp(rx.cons + "\u1b38$"), [
-        "\u0008\u1b39", "", "", "\u1b02", "\u1b03", "\u1b04",
-        "", "", "", "", "", ""
-      ]],
-      [RegExp(rx.cons + "\u1b3f$"), [
-        "\u0008\u1b41", "", "", "\u1b02", "\u1b03", "\u1b04",
-        "", "", "", "", "", ""
-      ]],
-      [RegExp(rx.cons + "\u1b42$"), [
-        "\u0008\u1b43", "", "", "\u1b02", "\u1b03", "\u1b04",
-        "", "", "", "", "", ""
-      ]],
-      [RegExp(rx.cons + "\u1b3a$"), [
-        "\u0008\u1b3b", "", "", "", "", "",
-        "", "", "", "", "", ""
-      ]],
-      [RegExp(rx.cons + "\u1b3c$"), [
-        "\u0008\u1b3d", "", "", "", "", "",
-        "", "", "", "", "", ""
-      ]],
-      [/\u1b05$/, [
-        "\u0008\u1b06", "", "", "", "", "",
-        "", "", "", "", "", ""
-      ]],
-      [/\u1b07$/, [
-        "\u0008\u1b08", "", "", "", "", "",
-        "", "", "", "", "", ""
-      ]],
-      [/\u1b09$/, [
-        "\u0008\u1b0a", "", "", "", "", "",
-        "", "", "", "", "", ""
-      ]],
-      [/\u1b11$/, [
-        "\u0008\u1b12", "", "", "", "", "",
-        "", "", "", "", "", ""
-      ]],
-      [/\u1b0b$/, [
-        "\u0008\u1b0c", "", "", "", "", "",
-        "", "", "", "", "", ""
-      ]],
-      [/\u1b0d$/, [
-        "\u0008\u1b0e", "", "", "", "", "",
-        "", "", "", "", "", ""
-      ]],
-      [RegExp(rx.cons + "$"), [
-        "\u1b35", "\u1b3e", "\u1b36", "\u1b02", "\u1b03", "\u1b04",
-        "\u1b44", "\u1b38", "\u1b3f", "\u1b42", "\u1b3a", "\u1b3c"
-      ]],
-      [/$/, [
-        "", "", "", "", "", "",
-        "", "", "", "", "", ""
-      ]]
-    ],
-    consonants: [
-      [RegExp(rx.cons + "\u1b44$"), [
-        "ᬳ", "ᬦ", "ᬘ", "ᬭ", "ᬓ", "ᬤ", "ᬢ", "ᬲ", "ᬯ", "ᬮ",
-        "ᬫ", "ᬕ", "ᬩ", "ᬗ", "ᬧ", "ᬚ", "ᬬ", "ᬜ"
-      ]],
-      [/$/, [
-        "ᬳ", "ᬦ", "ᬘ", "ᬭ", "ᬓ", "ᬤ", "ᬢ", "ᬲ", "ᬯ", "ᬮ",
-        "ᬫ", "ᬕ", "ᬩ", "ᬗ", "ᬧ", "ᬚ", "ᬬ", "ᬜ"
-      ]]
-    ],
-    shiftConsonants: [
-      [RegExp(rx.cons + "\u1b44$"), [
-        "ᬡ", "ᬙ", "ᬔ", "ᬥ", "ᬟ", "ᬠ", "ᬣ", "ᬝ", "ᬞ", "ᬰ",
-        "ᬱ", "ᬖ", "ᬪ", "ᬨ", "ᬛ", "ᭅ", "ᭈ", "ᭊ"
-      ]],
-      [/$/, [
-        "ᬡ", "ᬙ", "ᬔ", "ᬥ", "ᬟ", "ᬠ", "ᬣ", "ᬝ", "ᬞ", "ᬰ",
-        "ᬱ", "ᬖ", "ᬪ", "ᬨ", "ᬛ", "ᭅ", "ᭈ", "ᭊ"
-      ]]
-    ]
+    numbers: {
+      grid: [
+        ["punc6", "num1", "num2", "num3", "punc7"],
+        ["punc0", "num4", "num5", "num6", "punc8"],
+        ["punc5", "num7", "num8", "num9", "backspace"],
+        ["letters", "punc3", "num0", "punc4", "return"]
+      ],
+      keys: {
+        num: [
+          [
+            [/$/, [
+              "᭐", "᭑", "᭒", "᭓", "᭔", "᭕", "᭖", "᭗", "᭘", "᭙",
+            ]]
+          ]
+        ],
+        punc: [
+          [
+            [/$/, [
+              "᭞", "᭚", "᭛", "᭝", "᭠", "᭟",
+              "᭚᭜᭚", "᭛᭜᭛", "᭟᭜᭟"
+            ]]
+          ]
+        ],
 
+      }
+    }
   }
 }
 
@@ -125,8 +167,8 @@ const stringConcat = (string, addition) => {
 const Key = props => {
   const [zoom, setZoom] = useState(false);
   let className = [
-    props.className || "", 
-    "key", 
+    props.className || "",
+    "key",
     (!props.unzoomable && zoom) ? "zoom" : "",
     (props.flash && zoom) ? "flash" : "",
   ].join(" ");
@@ -147,16 +189,20 @@ const Key = props => {
   )
 }
 
+const gridToStyle = grid => ({
+  gridTemplateAreas: grid.map(row => `"${row.join(" ")}"`).join("\n"),
+  gridTemplateRows: `repeat(${grid.length}, ${100 / grid.length}%)`,
+  gridTemplateColumns: `repeat(${grid[0].length}, ${100 / grid[0].length}%)`
+})
+
 export default class Keyboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      vowels: layouts[props.script].vowels,
-      consonants: layouts[props.script].consonants.slice(-1)[0][1],
-      dependentVowels: layouts[props.script].dependentVowels.slice(-1)[0][1],
-      match: "",
-      consonantsMatch: "",
-      shift: false,
+      layout: layouts[props.script].letters,
+      currLayout: {},
+      layoutMatches: {},
+      shiftLevel: 0,
     }
   }
 
@@ -167,40 +213,32 @@ export default class Keyboard extends Component {
   componentDidUpdate = (prevProps, prevState) => {
     if (this.props.buffer !== prevProps.buffer) {
       this.updateKeyboard(this.props.buffer);
-    } else if (this.state.shift !== prevState.shift) {
+    } else if (this.state.shiftLevel !== prevState.shiftLevel) {
+      this.updateKeyboard(this.props.buffer);
+    } else if (this.state.layout !== prevState.layout) {
       this.updateKeyboard(this.props.buffer);
     }
   }
 
-  updateKeyboard = buffer => {
-    let dependentVowels = this.state.dependentVowels;
-    let match = this.state.match;
-    layouts[this.props.script].dependentVowels.some(([rx, dv]) => {
-      let found = buffer.match(rx);
-      if (found) {
-        dependentVowels = dv;
-        match = found[0];
-        return true;
-      } else {
-        return false;
-      }
-    })
-    let consonants = this.state.consonants;
-    let consonantsMatch = this.state.consonantsMatch;
-    let consonantsLayout = this.state.shift ?
-      layouts[this.props.script].shiftConsonants :
-      layouts[this.props.script].consonants;
-    consonantsLayout.some(([rx, c]) => {
-      let found = buffer.match(rx);
-      if (found) {
-        consonants = c;
-        consonantsMatch = found[0];
-        return true;
-      } else {
-        return false;
-      }
-    })
-    this.setState({ dependentVowels, match, consonants, consonantsMatch });
+  updateKeyboard = () => {
+    let buffer = this.props.buffer;
+    let layout = this.state.layout.keys;
+    let currLayout = this.state.currLayout;
+    let layoutMatches = this.state.layoutMatches;
+    for (let type in layout) {
+      let keySet = layout[type][this.state.shiftLevel] || layout[type][0];
+      keySet.some(([rx, keys]) => {
+        let found = buffer.match(rx);
+        if (found) {
+          currLayout[type] = keys;
+          layoutMatches[type] = found[0];
+          return true;
+        } else {
+          return false;
+        }
+      })
+    }
+    this.setState({ currLayout, layoutMatches });
   }
 
   handleKeypress = k => {
@@ -210,38 +248,20 @@ export default class Keyboard extends Component {
 
   render() {
     return (
-      <div className="keyboard" style={layouts[this.props.script].style}>
-        {this.state.vowels.map((letter, k) => (
+      <div className="keyboard" style={gridToStyle(this.state.layout.grid)}>
+        {Object.entries(this.state.currLayout).map(([type, keys]) => keys.map((key, k) => (
           <Key
-            gridArea={"vowel" + k}
-            text={letter}
-            key={k}
-            onClick={e => this.handleKeypress(letter)} />
-        ))}
-        {this.state.dependentVowels.map((letter, k) => (
-          <Key
-            gridArea={"dvowel" + k}
-            className="dvowel"
-            text={letter ? stringConcat(this.state.match, letter) : ""}
-            key={k}
-            onClick={e => this.handleKeypress(letter)}
+            gridArea={type + k}
+            className={type}
+            text={key ? stringConcat(this.state.layoutMatches[type], key) : ""}
+            key={type + k}
+            onClick={e => this.handleKeypress(key)}
           />
-        ))}
-        {this.state.consonants.map((letter, k) => (
-          <Key
-            gridArea={"cons" + k}
-            text={letter ? stringConcat(this.state.consonantsMatch, letter) : ""}
-            key={k}
-            onClick={e => {
-              this.handleKeypress(letter);
-              this.setState({ shift: false });
-            }}
-          />
-        ))}
+        )))}
         <Key
           gridArea="shift"
-          text={this.state.shift ? "⬆" : "⇧"}
-          onClick={() => this.setState({ shift: !this.state.shift })}
+          text={this.state.shiftLevel ? "⬆" : "⇧"}
+          onClick={() => this.setState({ shiftLevel: this.state.shiftLevel === 0 ? 1 : 0 })}
           unzoomable
           flash
         />
@@ -252,11 +272,11 @@ export default class Keyboard extends Component {
           unzoomable
           flash
         />
-        <Key gridArea="numbers" text="᭗᭘᭙" unzoomable/>
-        <Key gridArea="danda" text="᭞" onClick={e => this.handleKeypress("᭞")} />
-        <Key gridArea="space" text="␣" className="space" onClick={e => this.handleKeypress(" ")} unzoomable flash/>
-        <Key gridArea="doubledanda" text="᭟" onClick={e => this.handleKeypress("᭟")} />
-        <Key gridArea="newline" text="⮠" className="newline" onClick={e => this.handleKeypress("\n")} unzoomable flash/>
+        <Key gridArea="numbers" text="᭗᭘᭙" unzoomable onClick={e => this.setState({layout: layouts[this.props.script].numbers})} />
+        <Key gridArea="letters" text="ᬳᬦᬘ" unzoomable onClick={e => this.setState({layout: layouts[this.props.script].letters})} />
+
+        <Key gridArea="space" text="␣" className="space" onClick={e => this.handleKeypress(" ")} unzoomable flash />
+        <Key gridArea="return" text="⮠" className="return" onClick={e => this.handleKeypress("\n")} unzoomable flash />
       </div>
     )
   }
