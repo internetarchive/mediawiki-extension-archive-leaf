@@ -126,7 +126,7 @@ export default class App extends Component {
     if (matches) {
       this.textbox.value = [matches[1], transcription, matches[2]].join("\n");
     } else {
-      this.textbox.value += "<transcription>\n" + transcription + "\n</transcription>";
+      this.textbox.value += "\n<transcription>\n" + transcription + "\n</transcription>";
     }
   }
 
