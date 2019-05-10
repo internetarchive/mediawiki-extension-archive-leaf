@@ -76,7 +76,8 @@ export default class App extends Component {
 
   scrollToCaret = () => {
     let caret = this.caretRef.current;
-    caret.scrollIntoView({ block: "start", inline: "nearest", behavior: "smooth" })
+    caret.offsetParent.scrollTop =  caret.offsetTop;
+    //caret.scrollIntoView({ block: "start", inline: "nearest", behavior: "smooth" });
   }
 
   bufferChange = buffer => {
