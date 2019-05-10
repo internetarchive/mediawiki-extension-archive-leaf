@@ -43,8 +43,8 @@
   white-space: pre-wrap;
   font-family: "Noto Serif Balinese";
   width: 100vw;
-  overflow: scroll;
   height: 20vh;
+  overflow: auto;
   overflow-wrap: break-word;
   position: fixed;
   top: 40vh;
