@@ -24,6 +24,7 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     this.caretRef = React.createRef();
+    this.keyboardRef = React.createRef();
     this.textbox = document.getElementById("wpTextbox1");
     this.isSafari = navigator.userAgent.includes("Safari");
     this.state = {
@@ -36,7 +37,7 @@ export default class App extends Component {
 
   componentDidMount = () => {
     this.checkTags();
-    this.getTranscription();
+    this.afterOpen();
   }
 
   checkTags = () => {
@@ -86,6 +87,55 @@ export default class App extends Component {
     }, this.scrollToCaret);
   }
 
+  handleBackspace = e => {
+    if (e.keyCode === 8) {
+      this.keyboardRef.current.handleKeypress("\u0008");
+      e.preventDefault();
+    }
+  }
+
+  getTranscription = () => {
+    let matches = this.textbox.value.match(/(?:.*<transcription>)(.*?)(?:<\/transcription>.*)/s);
+    if (matches) {
+      this.setState({ preText: matches[1].trim(), postText: "" }, this.scrollToCaret);
+    }
+  }
+
+  setTranscription = () => {
+    let transcription = (this.state.preText + this.state.postText).trim();
+    let matches = this.textbox.value.match(/(.*<transcription>).*(<\/transcription>.*)/s);
+    if (matches) {
+      this.textbox.value = [matches[1], transcription, matches[2]].join("\n");
+    } else {
+      this.textbox.value += "\n<transcription>\n" + transcription + "\n</transcription>";
+    }
+  }
+
+  handleOpen = () => {
+    this.checkTags();
+    this.setState({ open: true }, this.afterOpen);
+  }
+
+  afterOpen = () => {
+    if (!this.error) {
+      if (this.isSafari) {
+        document.addEventListener('touchmove', blockPinchZoom, { passive: false });
+        document.addEventListener('touchend', blockTapZoom, { passive: false });
+      }
+      document.addEventListener('keydown', this.handleBackspace);
+      this.getTranscription();
+    }
+  }
+
+  handleClose = () => {
+    if (this.isSafari) {
+      document.removeEventListener('touchmove', blockPinchZoom);
+      document.removeEventListener('touchend', blockTapZoom);
+    }
+    document.removeEventListener('keydown', this.handleBackspace);
+    this.setState({ open: false }, this.setTranscription);
+  }
+
   imageChange = state => {
     this.imageState = state;
   }
@@ -114,40 +164,6 @@ export default class App extends Component {
     return `${iiifBaseUrl}${id}/pct:${xPct},${yPct},${widthPct},${heightPct}/full/0/default.jpg`;
   }
 
-  getTranscription = () => {
-    let matches = this.textbox.value.match(/(?:.*<transcription>)(.*?)(?:<\/transcription>.*)/s);
-    if (matches) {
-      this.setState({ preText: matches[1].trim(), postText: "" }, this.scrollToCaret);
-    }
-  }
-
-  setTranscription = () => {
-    let transcription = (this.state.preText + this.state.postText).trim();
-    let matches = this.textbox.value.match(/(.*<transcription>).*(<\/transcription>.*)/s);
-    if (matches) {
-      this.textbox.value = [matches[1], transcription, matches[2]].join("\n");
-    } else {
-      this.textbox.value += "\n<transcription>\n" + transcription + "\n</transcription>";
-    }
-  }
-
-  handleOpen = () => {
-    this.checkTags();
-    if (this.isSafari) {
-      document.addEventListener('touchmove', blockPinchZoom, { passive: false });
-      document.addEventListener('touchend', blockTapZoom, { passive: false });
-    }
-    this.setState({ open: true }, this.getTranscription);
-  }
-
-  handleClose = () => {
-    if (this.isSafari) {
-      document.removeEventListener('touchmove', blockPinchZoom);
-      document.removeEventListener('touchend', blockTapZoom);
-    }
-    this.setState({ open: false }, this.setTranscription);
-  }
-
   render() {
     return (
       <div className="App">
@@ -167,6 +183,7 @@ export default class App extends Component {
             script="bali"
             onBufferChange={this.bufferChange}
             buffer={this.state.preText}
+            ref={this.keyboardRef}
           />
         </div>
         {this.state.open && !this.state.error ?
