@@ -44,7 +44,7 @@
   font-family: "Noto Serif Balinese";
   width: 100vw;
   height: 20vh;
-  overflow: scroll;
+  overflow-y: scroll;
   overflow-wrap: break-word;
   position: fixed;
   top: 40vh;
