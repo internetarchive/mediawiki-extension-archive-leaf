@@ -141,8 +141,8 @@ export default class App extends Component {
 
   handleClose = () => {
     if (this.isSafari) {
-      document.removeEventListener('touchmove', blockPinchZoom, { passive: false });
-      document.removeEventListener('touchend', blockTapZoom, { passive: false });
+      document.removeEventListener('touchmove', blockPinchZoom);
+      document.removeEventListener('touchend', blockTapZoom);
     }
     this.setState({ open: false }, this.setTranscription);
   }
