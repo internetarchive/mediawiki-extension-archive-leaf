@@ -293,7 +293,7 @@ export default class Keyboard extends Component {
         <Key gridArea="numbers" text="᭗᭘᭙" unzoomable flash onClick={e => this.setState({ layout: layouts[this.props.script].numbers })} />
         <Key gridArea="letters" text="ᬳᬦᬘ" unzoomable flash onClick={e => this.setState({ layout: layouts[this.props.script].letters })} />
         <Key gridArea="space" text="␣" className="space" onClick={e => this.handleKeypress(" ")} unzoomable flash />
-        <Key gridArea="return" text="⮠" className="return" onClick={e => this.handleKeypress("\n")} unzoomable flash />
+        <Key gridArea="return" text="⏎" className="return" onClick={e => this.handleKeypress("\n")} unzoomable flash />
       </div>
     )
   }

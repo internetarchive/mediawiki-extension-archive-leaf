@@ -29,7 +29,7 @@ export default class App extends Component {
     this.state = {
       preText: "",
       postText: "",
-      open: false,
+      open: true,
       error: false,
     };
   }
