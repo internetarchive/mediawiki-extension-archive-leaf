@@ -62,3 +62,13 @@ body.noscroll {
   block-size: 100%;
   border-inline-start: 1px solid red;
 }
+
+@media screen and (max-width: 680px) {
+  .image-container {
+    height: 30vh;
+  }
+  .tr-text {
+    height: 35vh;
+    top: 30vh;
+  }
+}
