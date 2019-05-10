@@ -55,7 +55,7 @@ export default class App extends Component {
 
   handleCaretMove = () => {
     let sel = window.getSelection();
-    if (!sel.isCollapsed) {
+    if (!sel.anchorNode || !sel.isCollapsed) {
       return;
     }
 
