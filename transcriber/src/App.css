@@ -5,6 +5,7 @@ body.noscroll {
 .App {
   z-index: 9999;
   position: absolute;
+  line-height: normal;
 }
 
 .tr-close-button {
