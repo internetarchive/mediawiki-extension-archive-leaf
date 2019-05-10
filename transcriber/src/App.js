@@ -26,7 +26,6 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     this.caretRef = React.createRef();
-    this.keyboardRef = React.createRef();
     this.textbox = document.getElementById("wpTextbox1");
     this.isSafari = navigator.userAgent.includes("Safari") && navigator.userAgent.includes("Mobile") && !navigator.userAgent.includes("Chrome");
     this.state = {
@@ -89,13 +88,6 @@ export default class App extends Component {
     }, this.scrollToCaret);
   }
 
-  handleBackspace = e => {
-    if (e.keyCode === 8) {
-      this.keyboardRef.current.handleKeypress("\u0008");
-      e.preventDefault();
-    }
-  }
-
   getTranscription = () => {
     let matches = this.textbox.value.match(/(?:.*<transcription>)(.*?)(?:<\/transcription>.*)/s);
     if (matches) {
@@ -124,7 +116,6 @@ export default class App extends Component {
         document.addEventListener('touchmove', blockPinchZoom, { passive: false });
         document.addEventListener('touchend', blockTapZoom, { passive: false });
       }
-      document.addEventListener('keydown', this.handleBackspace);
       document.body.classList.add('noscroll');
       this.getTranscription();
     }
@@ -135,7 +126,6 @@ export default class App extends Component {
       document.removeEventListener('touchmove', blockPinchZoom);
       document.removeEventListener('touchend', blockTapZoom);
     }
-    document.removeEventListener('keydown', this.handleBackspace);
     document.body.classList.remove('noscroll');
     this.setState({ open: false }, this.setTranscription);
   }
@@ -171,30 +161,34 @@ export default class App extends Component {
   render() {
     return (
       <div className="App">
-        <div className={"transcriber " + (this.state.open && !this.state.error ? "" : "closed")}>
-          <meta name="viewport" content={"width=device-width, user-scalable=" + (this.state.open ? "no" : "yes")} />
-          <div id="image-container" className="image-container">
+        <div className="transcriber">
+          <div className={"image-container " + (this.state.open && !this.state.error ? "" : "closed")}>
             <PinchZoomPan maxScale={5} doubleTapBehavior="zoom" onChange={this.imageChange}>
               <img id="lontar" alt="lontar" src={entryImageUrl} />
             </PinchZoomPan>
           </div>
-          <div className="tr-text" onClick={this.handleCaretMove}>
-            {this.state.preText}
-            <span className="tr-caret" ref={this.caretRef}></span>
-            {this.state.postText}
-          </div>
-          <Keyboard
-            script="bali"
-            onBufferChange={this.bufferChange}
-            buffer={this.state.preText}
-            ref={this.keyboardRef}
-          />
+          {(this.state.open && !this.state.error) &&
+            <>
+              <div className="tr-text" onClick={this.handleCaretMove} ref={this.textRef}>
+                {this.state.preText}
+                <span className="tr-caret" ref={this.caretRef}></span>
+                {this.state.postText}
+              </div>
+              <Keyboard
+                script="bali"
+                onBufferChange={this.bufferChange}
+                buffer={this.state.preText}
+                // keystrokeDestination={this.textRef.current}
+              />
+            </>
+          }
         </div>
-        {this.state.open && !this.state.error ?
+        {(this.state.open && !this.state.error) ?
           <button
             className={"tr-close-button"}
             onClick={this.handleClose}
           >
+            <meta name="viewport" content="width=device-width, user-scalable=no" />
             <FontAwesomeIcon icon={faTimes} />
           </button>
           :
@@ -202,10 +196,11 @@ export default class App extends Component {
             className={"tr-open-button"}
             onClick={this.handleOpen}
           >
+            <meta name="viewport" content="width=device-width, user-scalable=yes" />
             <FontAwesomeIcon icon={faKeyboard} />
           </button>
         }
       </div>
-      );
-    }
+    );
   }
+}

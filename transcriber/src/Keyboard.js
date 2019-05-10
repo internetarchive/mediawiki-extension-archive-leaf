@@ -225,15 +225,20 @@ export default class Keyboard extends Component {
   }
 
   componentDidMount = () => {
+    document.body.addEventListener("keydown", this.handlePhysKeypress);
     this.updateKeyboard(this.props.buffer);
   }
 
+  componentWillUnmount = () => {
+    document.body.removeEventListener("keydown", this.handlePhysKeypress);
+  }
+
   componentDidUpdate = (prevProps, prevState) => {
-    if (this.props.buffer !== prevProps.buffer) {
-      this.updateKeyboard(this.props.buffer);
-    } else if (this.state.shiftLevel !== prevState.shiftLevel) {
-      this.updateKeyboard(this.props.buffer);
-    } else if (this.state.layout !== prevState.layout) {
+    if (
+      this.props.buffer !== prevProps.buffer ||
+      this.state.shiftLevel !== prevState.shiftLevel ||
+      this.state.layout !== prevState.layout
+    ) {
       this.updateKeyboard(this.props.buffer);
     }
   }
@@ -264,9 +269,19 @@ export default class Keyboard extends Component {
     this.props.onBufferChange(buffer);
   }
 
+  handlePhysKeypress = e => {
+    if (e.keyCode === 8) {
+      e.preventDefault();
+      this.handleKeypress("\u0008");
+    }
+  }
+
   render() {
     return (
-      <div className="keyboard" style={gridToStyle(this.state.layout.grid)}>
+      <div
+        className="keyboard"
+        style={gridToStyle(this.state.layout.grid)}
+      >
         {Object.entries(this.state.currLayout).map(([type, keys]) => keys.map((key, k) => (
           <Key
             gridArea={type + k}
