@@ -3,7 +3,7 @@ body.noscroll {
 }
 
 .App {
-  z-index: 1000;
+  z-index: 9999;
   position: absolute;
 }
 
