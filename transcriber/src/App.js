@@ -12,7 +12,9 @@ let entryImageUrl = window.entryImageUrl;
 let iiifBaseUrl = 'https://iiif.archivelab.org/iiif/';
 
 const blockPinchZoom = e => {
-  e.preventDefault();
+  if (e.touches.length > 1) {
+    e.preventDefault();
+  }
 }
 
 const blockTapZoom = e => {
@@ -26,7 +28,7 @@ export default class App extends Component {
     this.caretRef = React.createRef();
     this.keyboardRef = React.createRef();
     this.textbox = document.getElementById("wpTextbox1");
-    this.isSafari = navigator.userAgent.includes("Safari");
+    this.isSafari = navigator.userAgent.includes("Safari") && navigator.userAgent.includes("Mobile") && !navigator.userAgent.includes("Chrome");
     this.state = {
       preText: "",
       postText: "",
@@ -77,7 +79,7 @@ export default class App extends Component {
 
   scrollToCaret = () => {
     let caret = this.caretRef.current;
-    caret.offsetParent.scrollTop =  caret.offsetTop;
+    caret.offsetParent.scrollTop = caret.offsetTop;
     //caret.scrollIntoView({ block: "start", inline: "nearest", behavior: "smooth" });
   }
 
