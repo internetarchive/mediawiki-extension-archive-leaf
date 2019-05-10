@@ -14,7 +14,7 @@ body {
   background-color: white;
 }
 
-@media (max-width: 680px) {
+@media screen and (max-width: 350px) {
   body {
     margin-bottom: 35vh !important;
   }

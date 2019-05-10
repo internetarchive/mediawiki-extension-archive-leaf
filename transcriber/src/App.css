@@ -63,7 +63,7 @@ body.noscroll {
   border-inline-start: 1px solid red;
 }
 
-@media screen and (max-width: 680px) {
+@media screen and (max-width: 350px) {
   .image-container {
     height: 30vh;
   }
