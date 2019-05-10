@@ -123,6 +123,7 @@ export default class App extends Component {
         document.addEventListener('touchend', blockTapZoom, { passive: false });
       }
       document.addEventListener('keydown', this.handleBackspace);
+      document.body.classList.add('noscroll');
       this.getTranscription();
     }
   }
@@ -133,6 +134,7 @@ export default class App extends Component {
       document.removeEventListener('touchend', blockTapZoom);
     }
     document.removeEventListener('keydown', this.handleBackspace);
+    document.body.classList.remove('noscroll');
     this.setState({ open: false }, this.setTranscription);
   }
 
