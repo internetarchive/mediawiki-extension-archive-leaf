@@ -46,6 +46,7 @@
   height: 20vh;
   overflow-y: scroll;
   overflow-wrap: break-word;
+  scroll-behavior: smooth;
   position: fixed;
   top: 40vh;
   left: 0;
