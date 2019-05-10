@@ -176,7 +176,7 @@ export default class App extends Component {
           </div>
           <div className="tr-text" onClick={this.handleCaretMove}>
             {this.state.preText}
-            <span id="tr-caret" ref={this.caretRef}></span>
+            <span className="tr-caret" ref={this.caretRef}></span>
             {this.state.postText}
           </div>
           <Keyboard
