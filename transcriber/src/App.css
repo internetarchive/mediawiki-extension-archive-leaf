@@ -1,13 +1,9 @@
-/* body {
-  margin-top: 100vh !important;
-} */
-
 .App {
   z-index: 1000;
   position: absolute;
 }
 
-.close-button {
+.tr-close-button {
   position: fixed;
   top: 0;
   right: 0;
@@ -15,11 +11,18 @@
   height: 32px;
 }
 
-.close-button.closed {
+.tr-open-button {
+  position: fixed;
   top: unset;
   right: unset;
   bottom: 0;
   left: 0;
+  margin: 10px;
+  height: 32px;
+}
+
+.transcriber {
+  height: 100%;
 }
 
 .transcriber.closed {
@@ -35,21 +38,21 @@
   background: white;
 }
 
-.text {
+.tr-text {
   font-size: 32pt;
   white-space: pre-wrap;
   font-family: "Noto Serif Balinese";
   width: 100vw;
   overflow: scroll;
   height: 20vh;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
   position: fixed;
   top: 40vh;
   left: 0;
   background: white;
 }
 
-#caret {
+#tr-caret {
   block-size: 100%;
   border-inline-start: 1px solid red;
 }

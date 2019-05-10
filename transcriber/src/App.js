@@ -11,16 +11,45 @@ let entryImageUrl = window.entryImageUrl;
 
 let iiifBaseUrl = 'https://iiif.archivelab.org/iiif/';
 
+const blockPinchZoom = e => {
+  e.preventDefault();
+}
+
+const blockTapZoom = e => {
+  e.preventDefault();
+  e.target.click();
+}
+
 export default class App extends Component {
   constructor(props) {
     super(props);
     this.caretRef = React.createRef();
     this.textbox = document.getElementById("wpTextbox1");
+    this.isSafari = navigator.userAgent.includes("Safari");
     this.state = {
       preText: "",
       postText: "",
-      open: true,
+      open: false,
+      error: false,
     };
+  }
+
+  componentDidMount = () => {
+    this.checkTags();
+    this.getTranscription();
+  }
+
+  checkTags = () => {
+    let error = false;
+    let openTags = this.textbox.value.match(/<transcription>/g);
+    let closeTags = this.textbox.value.match(/<\/transcription>/g);
+    if (!openTags || !closeTags || (openTags && openTags.length !== 1) || (closeTags && closeTags.length !== 1)) {
+      error = true;
+    }
+    if (error) {
+      alert("Transcription tags are malformed!");
+    }
+    this.setState({ error });
   }
 
   handleCaretMove = () => {
@@ -101,27 +130,36 @@ export default class App extends Component {
     }
   }
 
-  handleOpenClose = () => {
-    if (this.state.open) {
-      this.setState({ open: false }, this.setTranscription);
-    } else {
-      this.setState({ open: true }, this.getTranscription);
+  handleOpen = () => {
+    this.checkTags();
+    if (this.isSafari) {
+      document.addEventListener('touchmove', blockPinchZoom, { passive: false });
+      document.addEventListener('touchend', blockTapZoom, { passive: false });
     }
+    this.setState({ open: true }, this.getTranscription);
+  }
+
+  handleClose = () => {
+    if (this.isSafari) {
+      document.removeEventListener('touchmove', blockPinchZoom, { passive: false });
+      document.removeEventListener('touchend', blockTapZoom, { passive: false });
+    }
+    this.setState({ open: false }, this.setTranscription);
   }
 
   render() {
     return (
       <div className="App">
-        <div className={"transcriber " + (!this.state.open ? "closed" : "")}>
+        <div className={"transcriber " + (this.state.open && !this.state.error ? "" : "closed")}>
           <meta name="viewport" content={"width=device-width, user-scalable=" + (this.state.open ? "no" : "yes")} />
           <div id="image-container" className="image-container">
             <PinchZoomPan maxScale={5} doubleTapBehavior="zoom" onChange={this.imageChange}>
               <img id="lontar" alt="lontar" src={entryImageUrl} />
             </PinchZoomPan>
           </div>
-          <div className="text" onClick={this.handleCaretMove}>
+          <div className="tr-text" onClick={this.handleCaretMove}>
             {this.state.preText}
-            <span id="caret" ref={this.caretRef}></span>
+            <span id="tr-caret" ref={this.caretRef}></span>
             {this.state.postText}
           </div>
           <Keyboard
@@ -130,13 +168,22 @@ export default class App extends Component {
             buffer={this.state.preText}
           />
         </div>
-        <button
-          className={"close-button" + (this.state.open ? "" : " closed")}
-          onClick={this.handleOpenClose}
-        >
-          <FontAwesomeIcon icon={this.state.open ? faTimes : faKeyboard} />
-        </button>
+        {this.state.open && !this.state.error ?
+          <button
+            className={"tr-close-button"}
+            onClick={this.handleClose}
+          >
+            <FontAwesomeIcon icon={faTimes} />
+          </button>
+          :
+          <button
+            className={"tr-open-button"}
+            onClick={this.handleOpen}
+          >
+            <FontAwesomeIcon icon={faKeyboard} />
+          </button>
+        }
       </div>
-    );
+      );
+    }
   }
-}

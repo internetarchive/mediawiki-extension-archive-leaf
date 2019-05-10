@@ -11,41 +11,25 @@ body {
   width: 100vw;
   height: 40vh;
   font-size: 4vh;
-  user-select: none;
   background-color: white;
-}
-
-.vowels {
-  display: flex;
-  flex-direction: row;
-}
-
-.independent-vowels {
-  display: flex;
-  flex-direction: column;
 }
 
 .dvowel {
   color: darkgrey;
 }
 
-.key-row {
-  display: flex;
-  block-size: 8vh;
-  align-items: flex-end;
-}
-
 .key {
   background: white;
   box-sizing: border-box;
   text-align: center;
-  border: .5px black solid;
+  border: 0.5px black solid;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  user-select: none;
 }
 
 .key.zoom {
