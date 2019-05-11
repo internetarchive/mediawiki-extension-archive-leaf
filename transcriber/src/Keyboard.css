@@ -27,7 +27,7 @@ body {
   color: darkgrey;
 }
 
-.key {
+.kb-key {
   background: white;
   box-sizing: border-box;
   text-align: center;
@@ -41,7 +41,12 @@ body {
   user-select: none;
 }
 
-.key.zoom {
+.kb-key img {
+  block-size: 4vh;
+  margin: 8px;
+}
+
+.kb-key.kb-zoom {
   z-index: 3;
   block-size: 20vh;
   min-inline-size: 100%;
@@ -50,6 +55,10 @@ body {
   align-self: end;
 }
 
-.key.flash {
+.kb-key.kb-flash {
   background-color: grey;
 }
+
+/* .kb-icon {
+  block-size: 4vh;
+} */

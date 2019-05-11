@@ -178,7 +178,6 @@ export default class App extends Component {
                 script="bali"
                 onBufferChange={this.bufferChange}
                 buffer={this.state.preText}
-                // keystrokeDestination={this.textRef.current}
               />
             </>
           }

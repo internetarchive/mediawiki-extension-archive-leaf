@@ -1,10 +1,12 @@
 import React, { Component, useState } from 'react';
+import NonPrintingKeys from './NonPrintingKeys.js';
 import './Keyboard.css';
+import zwnj from './zwnj.svg';
+import zwj from './zwj.svg';
 
 const rx = {
   cons: "([ᬅᬓ-ᬳᭅ-ᭋ]\u1b34?\u1b44)*[ᬅᬓ-ᬳᭅ-ᭋ]\u1b34?",
 }
-
 const layouts = {
   "bali": {
     letters: {
@@ -13,7 +15,7 @@ const layouts = {
         ["vowel4", "vowel5", "vowel6", "vowel7", "dvowel6", "dvowel7", "dvowel8", "dvowel9", "dvowel10", "dvowel11"],
         ["cons0", "cons1", "cons2", "cons3", "cons4", "cons5", "cons6", "cons7", "cons8", "cons9"],
         ["shift", "cons10", "cons11", "cons12", "cons13", "cons14", "cons15", "cons16", "cons17", "backspace"],
-        ["numbers", "numbers", "punc0", "space", "space", "space", "space", "punc1", "return", "return"]
+        ["numbers", "numbers", "punc0", "space", "space", "space", "zwnj", "punc1", "return", "return"]
       ],
       keys: {
         vowel: [
@@ -186,9 +188,9 @@ const Key = props => {
   const [zoom, setZoom] = useState(false);
   let className = [
     props.className || "",
-    "key",
-    (!props.unzoomable && zoom) ? "zoom" : "",
-    (props.flash && zoom) ? "flash" : "",
+    "kb-key",
+    (!props.unzoomable && zoom) ? "kb-zoom" : "",
+    (props.flash && zoom) ? "kb-flash" : "",
   ].join(" ");
   return (
     <div
@@ -202,7 +204,7 @@ const Key = props => {
       }}
       onPointerLeave={() => setZoom(false)}
     >
-      <span>{props.text}</span>
+      {props.img ? <img src={props.img} alt={props.text} /> : props.text}
     </div>
   )
 }
@@ -225,12 +227,12 @@ export default class Keyboard extends Component {
   }
 
   componentDidMount = () => {
-    document.body.addEventListener("keydown", this.handlePhysKeypress);
+    window.addEventListener("keydown", this.handlePhysKeypress);
     this.updateKeyboard(this.props.buffer);
   }
 
   componentWillUnmount = () => {
-    document.body.removeEventListener("keydown", this.handlePhysKeypress);
+    window.removeEventListener("keydown", this.handlePhysKeypress);
   }
 
   componentDidUpdate = (prevProps, prevState) => {
@@ -270,6 +272,10 @@ export default class Keyboard extends Component {
   }
 
   handlePhysKeypress = e => {
+    if (!NonPrintingKeys.has(e.key)) {
+      e.preventDefault();
+      this.handleKeypress(e.key);
+    }
     if (e.keyCode === 8) {
       e.preventDefault();
       this.handleKeypress("\u0008");
@@ -277,6 +283,7 @@ export default class Keyboard extends Component {
   }
 
   render() {
+    let keySet = new Set(this.state.layout.grid.flat());
     return (
       <div
         className="keyboard"
@@ -291,24 +298,30 @@ export default class Keyboard extends Component {
             onClick={e => this.handleKeypress(key)}
           />
         )))}
-        <Key
-          gridArea="shift"
-          text={this.state.shiftLevel ? "⬆" : "⇧"}
-          onClick={() => this.setState({ shiftLevel: this.state.shiftLevel === 0 ? 1 : 0 })}
-          unzoomable
-          flash
-        />
-        <Key
-          gridArea="backspace"
-          text={"⌫"}
-          onClick={() => this.handleKeypress("\u0008")}
-          unzoomable
-          flash
-        />
-        <Key gridArea="numbers" text="᭗᭘᭙" unzoomable flash onClick={e => this.setState({ layout: layouts[this.props.script].numbers })} />
-        <Key gridArea="letters" text="ᬳᬦᬘ" unzoomable flash onClick={e => this.setState({ layout: layouts[this.props.script].letters })} />
-        <Key gridArea="space" text="␣" className="space" onClick={e => this.handleKeypress(" ")} unzoomable flash />
-        <Key gridArea="return" text="⏎" className="return" onClick={e => this.handleKeypress("\n")} unzoomable flash />
+        {keySet.has("zwnj") &&
+          <Key gridArea="zwnj" img={zwnj} text="zwnj" onClick={() => this.handleKeypress("\u200c")} />
+        }
+        {keySet.has("zwj") &&
+          <Key gridArea="zwj" img={zwj} text="zwj" onClick={() => this.handleKeypress("\u200d")} />
+        }
+        {keySet.has("shift") &&
+          <Key gridArea="shift" text={this.state.shiftLevel ? "⬆" : "⇧"} onClick={() => this.setState({ shiftLevel: this.state.shiftLevel === 0 ? 1 : 0 })} unzoomable flash />
+        }
+        {keySet.has("backspace") &&
+          <Key gridArea="backspace" text="⌫" onClick={() => this.handleKeypress("\u0008")} unzoomable flash />
+        }
+        {keySet.has("numbers") &&
+          <Key gridArea="numbers" text="᭗᭘᭙" unzoomable flash onClick={e => this.setState({ layout: layouts[this.props.script].numbers })} />
+        }
+        {keySet.has("letters") &&
+          <Key gridArea="letters" text="ᬳᬦᬘ" unzoomable flash onClick={e => this.setState({ layout: layouts[this.props.script].letters })} />
+        }
+        {keySet.has("space") &&
+          <Key gridArea="space" text="␣" className="space" onClick={e => this.handleKeypress(" ")} unzoomable flash />
+        }
+        {keySet.has("return") &&
+          <Key gridArea="return" text="⏎" className="return" onClick={e => this.handleKeypress("\n")} unzoomable flash />
+        }
       </div>
     )
   }
