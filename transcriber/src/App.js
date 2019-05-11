@@ -93,7 +93,7 @@ export default class App extends Component {
   }
 
   setTranscription = () => {
-    let transcription = (this.state.preText + this.state.postText).trim();
+    let transcription = (this.state.text).trim();
     let matches = this.textbox.value.match(/(.*<transcription>).*(<\/transcription>.*)/s);
     if (matches) {
       this.textbox.value = [matches[1], transcription, matches[2]].join("\n");
