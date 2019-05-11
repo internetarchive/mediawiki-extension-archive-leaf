@@ -29,8 +29,8 @@ export default class App extends Component {
     this.textbox = document.getElementById("wpTextbox1");
     this.isSafari = navigator.userAgent.includes("Safari") && navigator.userAgent.includes("Mobile") && !navigator.userAgent.includes("Chrome");
     this.state = {
-      preText: "",
-      postText: "",
+      text: "",
+      caretPos: 0,
       open: true,
       error: false,
     };
@@ -61,19 +61,14 @@ export default class App extends Component {
     }
 
     let node = sel.anchorNode;
-    let offset = sel.anchorOffset;
+    let caretPos = sel.anchorOffset;
     while (node.previousSibling) {
       node = node.previousSibling;
       if (node.nodeType === 3) {
-        offset += node.nodeValue.length;
+        caretPos += node.nodeValue.length;
       }
     }
-
-    let text = this.state.preText + this.state.postText;
-    this.setState({
-      preText: text.slice(0, offset),
-      postText: text.slice(offset),
-    })
+    this.setState({caretPos});
   }
 
   scrollToCaret = () => {
@@ -82,16 +77,18 @@ export default class App extends Component {
     //caret.scrollIntoView({ block: "start", inline: "nearest", behavior: "smooth" });
   }
 
-  bufferChange = buffer => {
+  textChange = (text, caretPos) => {
     this.setState({
-      preText: buffer
+      text,
+      caretPos
     }, this.scrollToCaret);
   }
 
   getTranscription = () => {
     let matches = this.textbox.value.match(/(?:.*<transcription>)(.*?)(?:<\/transcription>.*)/s);
     if (matches) {
-      this.setState({ preText: matches[1].trim(), postText: "" }, this.scrollToCaret);
+      let text = matches[1].trim();
+      this.setState({ text, caretPos: text.length }, this.scrollToCaret);
     }
   }
 
@@ -169,15 +166,16 @@ export default class App extends Component {
           </div>
           {(this.state.open && !this.state.error) &&
             <>
-              <div className="tr-text" onClick={this.handleCaretMove} ref={this.textRef}>
-                {this.state.preText}
+              <div className="tr-text" onClick={this.handleCaretMove}>
+                {this.state.text.slice(0, this.state.caretPos)}
                 <span className="tr-caret" ref={this.caretRef}></span>
-                {this.state.postText}
+                {this.state.text.slice(this.state.caretPos)}
               </div>
               <Keyboard
                 script="bali"
-                onBufferChange={this.bufferChange}
-                buffer={this.state.preText}
+                onTextChange={this.textChange}
+                text={this.state.text}
+                caretPos={this.state.caretPos}
               />
             </>
           }

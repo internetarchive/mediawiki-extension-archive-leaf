@@ -172,16 +172,20 @@ const layouts = {
   }
 }
 
-const stringConcat = (string, addition) => {
-  let newString = string;
+const stringInsert = (string, addition, caretPos) => {
+  caretPos = caretPos === undefined ? string.length : caretPos;
+  let preString = string.slice(0, caretPos);
+  let postString = string.slice(caretPos);
   for (let c of addition) {
     if (c === "\u0008") {
-      newString = newString.slice(0, -1);
+      preString = preString.slice(0, -1);
+    } else if (c === "\u007f") {
+      postString = postString.slice(1);
     } else {
-      newString = newString + c;
+      preString = preString + c;
     }
   }
-  return newString;
+  return [preString, postString];
 }
 
 const Key = props => {
@@ -228,7 +232,7 @@ export default class Keyboard extends Component {
 
   componentDidMount = () => {
     window.addEventListener("keydown", this.handlePhysKeypress);
-    this.updateKeyboard(this.props.buffer);
+    this.updateKeyboard(this.props.text);
   }
 
   componentWillUnmount = () => {
@@ -237,16 +241,17 @@ export default class Keyboard extends Component {
 
   componentDidUpdate = (prevProps, prevState) => {
     if (
-      this.props.buffer !== prevProps.buffer ||
+      this.props.text !== prevProps.text ||
+      this.props.caretPos !== prevProps.caretPos ||
       this.state.shiftLevel !== prevState.shiftLevel ||
       this.state.layout !== prevState.layout
     ) {
-      this.updateKeyboard(this.props.buffer);
+      this.updateKeyboard(this.props.text);
     }
   }
 
   updateKeyboard = () => {
-    let buffer = this.props.buffer;
+    let buffer = this.props.text.slice(0, this.props.caretPos);
     let layout = this.state.layout.keys;
     let currLayout = this.state.currLayout;
     let layoutMatches = this.state.layoutMatches;
@@ -267,18 +272,36 @@ export default class Keyboard extends Component {
 
   handleKeypress = k => {
     this.setState({ shiftLevel: 0 });
-    let buffer = stringConcat(this.props.buffer, k);
-    this.props.onBufferChange(buffer);
+    let [preText, postText] = stringInsert(this.props.text, k, this.props.caretPos);
+    this.props.onTextChange(preText + postText, preText.length);
+  }
+
+  handleArrow = dir => {
+    let caretPos = this.props.caretPos;
+    if (dir === "←") {
+      caretPos = caretPos - 1;
+    } else if (dir === "→") {
+      caretPos = caretPos + 1;
+    }
+    this.props.onTextChange(this.props.text, caretPos)
   }
 
   handlePhysKeypress = e => {
     if (!NonPrintingKeys.has(e.key)) {
       e.preventDefault();
       this.handleKeypress(e.key);
-    }
-    if (e.keyCode === 8) {
+    } else if (e.key === "Backspace") {
       e.preventDefault();
       this.handleKeypress("\u0008");
+    } else if (e.key === "Delete") {
+      e.preventDefault();
+      this.handleKeypress("\u007f");
+    } else if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      this.handleArrow("←");
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault();
+      this.handleArrow("→");
     }
   }
 
@@ -293,7 +316,7 @@ export default class Keyboard extends Component {
           <Key
             gridArea={type + k}
             className={type}
-            text={key ? stringConcat(this.state.layoutMatches[type], key) : ""}
+            text={key ? stringInsert(this.state.layoutMatches[type], key).join("") : ""}
             key={type + k}
             onClick={e => this.handleKeypress(key)}
           />
@@ -310,6 +333,9 @@ export default class Keyboard extends Component {
         {keySet.has("backspace") &&
           <Key gridArea="backspace" text="⌫" onClick={() => this.handleKeypress("\u0008")} unzoomable flash />
         }
+        {keySet.has("delete") &&
+          <Key gridArea="delete" text="⌦" onClick={() => this.handleKeypress("\u007f")} unzoomable flash />
+        }
         {keySet.has("numbers") &&
           <Key gridArea="numbers" text="᭗᭘᭙" unzoomable flash onClick={e => this.setState({ layout: layouts[this.props.script].numbers })} />
         }
@@ -322,6 +348,13 @@ export default class Keyboard extends Component {
         {keySet.has("return") &&
           <Key gridArea="return" text="⏎" className="return" onClick={e => this.handleKeypress("\n")} unzoomable flash />
         }
+        {keySet.has("arrowleft") &&
+          <Key gridArea="arrowleft" text="←" className="arrowleft" onClick={e => this.handleArrow("←")} unzoomable flash />
+        }
+        {keySet.has("arrowright") &&
+          <Key gridArea="arrowright" text="→" className="arrowright" onClick={e => this.handleArrow("→")} unzoomable flash />
+        }
+
       </div>
     )
   }
