@@ -287,21 +287,23 @@ export default class Keyboard extends Component {
   }
 
   handlePhysKeypress = e => {
-    if (!NonPrintingKeys.has(e.key)) {
-      e.preventDefault();
-      this.handleKeypress(e.key);
-    } else if (e.key === "Backspace") {
-      e.preventDefault();
-      this.handleKeypress("\u0008");
-    } else if (e.key === "Delete") {
-      e.preventDefault();
-      this.handleKeypress("\u007f");
-    } else if (e.key === "ArrowLeft") {
-      e.preventDefault();
-      this.handleArrow("←");
-    } else if (e.key === "ArrowRight") {
-      e.preventDefault();
-      this.handleArrow("→");
+    if (!(e.altKey || e.ctrlKey || e.metaKey)) {
+      if (!NonPrintingKeys.has(e.key)) {
+        e.preventDefault();
+        this.handleKeypress(e.key);
+      } else if (e.key === "Backspace") {
+        e.preventDefault();
+        this.handleKeypress("\u0008");
+      } else if (e.key === "Delete") {
+        e.preventDefault();
+        this.handleKeypress("\u007f");
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        this.handleArrow("←");
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        this.handleArrow("→");
+      }
     }
   }
 
