@@ -26,7 +26,6 @@
   },
   "Hooks": {
     "ParserFirstCallInit": "ArchiveLeafHooks::onParserFirstCallInit",
-    "ParserBeforeInternalParse": "ArchiveLeafHooks::onParserBeforeInternalParse",
     "BeforePageDisplay": "ArchiveLeafHooks::onBeforePageDisplay",
     "EditPage::showEditForm:initial": "ArchiveLeafHooks::onShowEditForm"
   },
