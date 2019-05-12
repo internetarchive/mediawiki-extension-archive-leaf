@@ -33,6 +33,7 @@ body.noscroll {
 .image-container {
   width: 100vw;
   height: 40vh;
+  height: calc(var(--vh, 1vh) * 40);
   top: 0;
   left: 0;
   position: fixed;
@@ -49,11 +50,13 @@ body.noscroll {
   font-family: "Noto Serif Balinese";
   width: 100vw;
   height: 20vh;
+  height: calc(var(--vh, 1vh) * 20);
   overflow-y: scroll;
   overflow-wrap: break-word;
   scroll-behavior: smooth;
   position: fixed;
   top: 40vh;
+  top: calc(var(--vh, 1vh) * 40);
   left: 0;
   background: white;
 }
@@ -61,14 +64,4 @@ body.noscroll {
 .tr-caret {
   block-size: 100%;
   border-inline-start: 1px solid red;
-}
-
-@media screen and (max-width: 400px) {
-  .image-container {
-    height: 30vh;
-  }
-  .tr-text {
-    height: 25vh;
-    top: 30vh;
-  }
 }

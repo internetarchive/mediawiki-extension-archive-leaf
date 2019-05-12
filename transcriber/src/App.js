@@ -8,8 +8,17 @@ import './App.css';
 import Keyboard from './Keyboard';
 
 let entryImageUrl = window.entryImageUrl;
-
 let iiifBaseUrl = 'https://iiif.archivelab.org/iiif/';
+
+{
+  let vh = document.documentElement.clientHeight * 0.01;
+  document.documentElement.style.setProperty('--vh', `${vh}px`);
+
+  window.addEventListener('resize', () => {
+    let vh = document.documentElement.clientHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  });
+}
 
 const blockPinchZoom = e => {
   if (e.touches.length > 1) {
