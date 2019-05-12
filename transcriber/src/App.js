@@ -10,16 +10,6 @@ import Keyboard from './Keyboard';
 let entryImageUrl = window.entryImageUrl;
 let iiifBaseUrl = 'https://iiif.archivelab.org/iiif/';
 
-{
-  let vh = document.documentElement.clientHeight * 0.01;
-  document.documentElement.style.setProperty('--vh', `${vh}px`);
-
-  window.addEventListener('resize', () => {
-    let vh = document.documentElement.clientHeight * 0.01;
-    document.documentElement.style.setProperty('--vh', `${vh}px`);
-  });
-}
-
 const blockPinchZoom = e => {
   if (e.touches.length > 1) {
     e.preventDefault();
@@ -36,13 +26,31 @@ export default class App extends Component {
     super(props);
     this.caretRef = React.createRef();
     this.textbox = document.getElementById("wpTextbox1");
-    this.isSafari = navigator.userAgent.includes("Safari") && navigator.userAgent.includes("Mobile") && !navigator.userAgent.includes("Chrome");
+
+    let ua = window.navigator.userAgent;
+    this.isSafari = ua.match(/iPhone|iPod|iPad/) && ua.match(/WebKit/) && !ua.match(/CriOS/);
+
+    this.viewportFix();
+
     this.state = {
       text: "",
       caretPos: 0,
       open: true,
       error: false,
     };
+  }
+
+  viewportFix = () => {
+    document.documentElement.style.setProperty('--vh', this.getVhPx());
+    window.addEventListener('resize', () => {
+      document.documentElement.style.setProperty('--vh', this.getVhPx());
+    });
+  }
+
+  getVhPx = () => {
+    var height = document.documentElement.clientHeight;
+    if (this.isSafari) height -= 44; // bottom 44px reserved for bottom bar
+    return (height * 0.01) + 'px';
   }
 
   componentDidMount = () => {
