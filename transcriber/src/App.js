@@ -29,7 +29,6 @@ export default class App extends Component {
 
     let ua = window.navigator.userAgent;
     this.isSafari = ua.match(/iPhone|iPod|iPad/) && ua.match(/WebKit/) && !ua.match(/CriOS/);
-
     this.viewportFix();
 
     this.state = {
@@ -193,7 +192,9 @@ export default class App extends Component {
                 onTextChange={this.textChange}
                 text={this.state.text}
                 caretPos={this.state.caretPos}
+                safari={this.isSafari}
               />
+              {this.isSafari && <div className="safari-spacer"></div>}
             </>
           }
         </div>

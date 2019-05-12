@@ -16,6 +16,10 @@ body {
   background-color: white;
 }
 
+.keyboard.safari {
+  bottom: 44px;
+}
+
 .dvowel {
   color: darkgrey;
 }
