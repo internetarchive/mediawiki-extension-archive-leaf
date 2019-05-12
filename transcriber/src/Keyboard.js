@@ -311,7 +311,7 @@ export default class Keyboard extends Component {
     let keySet = new Set(this.state.layout.grid.flat());
     return (
       <div
-        className={this.props.safari ? "keyboard safari" : "keyboard"}
+        className="keyboard"
         style={gridToStyle(this.state.layout.grid)}
       >
         {Object.entries(this.state.currLayout).map(([type, keys]) => keys.map((key, k) => (

@@ -192,9 +192,7 @@ export default class App extends Component {
                 onTextChange={this.textChange}
                 text={this.state.text}
                 caretPos={this.state.caretPos}
-                safari={this.isSafari}
               />
-              {this.isSafari && <div className="safari-spacer"></div>}
             </>
           }
         </div>
