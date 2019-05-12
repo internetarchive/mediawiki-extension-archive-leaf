@@ -1,5 +1,4 @@
 body {
-  margin-bottom: 40vh !important;
   margin-bottom: calc(var(--vh, 1vh) * 40) !important;
 }
 
@@ -7,13 +6,10 @@ body {
   font-family: "Noto Serif Balinese";
   display: grid;
   position: fixed;
-  top: 60vh;
   top: calc(var(--vh, 1vh) * 60);
   left: 0;
   width: 100vw;
-  height: 40vh;
   height: calc(var(--vh, 1vh) * 40);
-  font-size: 4vh;
   font-size: calc(var(--vh, 1vh) * 4);
   background-color: white;
 }
@@ -37,14 +33,12 @@ body {
 }
 
 .kb-key img {
-  block-size: 4vh;
   block-size: calc(var(--vh, 1vh) * 4);
   margin: 8px;
 }
 
 .kb-key.kb-zoom {
   z-index: 3;
-  block-size: 20vh;
   block-size: calc(var(--vh, 1vh) * 20);
   min-inline-size: 100%;
   justify-content: flex-start;
