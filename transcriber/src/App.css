@@ -55,6 +55,7 @@ body.noscroll {
   height: 20%;
   overflow-y: scroll;
   overflow-wrap: break-word;
+  word-break: break-all;
   scroll-behavior: smooth;
   position: absolute;
   top: 40%;
