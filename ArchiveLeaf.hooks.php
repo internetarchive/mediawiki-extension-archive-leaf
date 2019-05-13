@@ -66,7 +66,8 @@ class ArchiveLeafHooks {
     }
 
     public static function onShowEditForm( EditPage &$editor, OutputPage &$out ) {
-        if ( preg_match( '/\{\{EntryImage/', $editor->textbox1 )
+        if ( $editor->section
+          && preg_match( '/\{\{EntryImage/', $editor->textbox1 )
           && preg_match( '/LocalFileName=(.+?)\s*\n/', $editor->textbox1, $matches ) ) {
 
             $file = wfFindFile( $matches[1] );
