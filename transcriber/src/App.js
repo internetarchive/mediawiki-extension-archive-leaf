@@ -203,7 +203,7 @@ export default class App extends Component {
         </div>
         {(this.state.open && !this.state.error) ?
           <button
-            className={"tr-close-button"}
+            className="tr-close-button"
             onClick={this.handleClose}
           >
             <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
@@ -211,7 +211,7 @@ export default class App extends Component {
           </button>
           :
           <button
-            className={"tr-open-button"}
+            className="tr-open-button"
             onClick={this.handleOpen}
           >
             <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes" />
