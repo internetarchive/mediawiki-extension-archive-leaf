@@ -1,6 +1,6 @@
 # ArchiveLeaf
 
-ArchiveLeaf is a [MediaWiki](https://mediawiki.org) extension which implements essential features for [palmleaf.org](https://palmleaf.org), including import from [Archive.org](https://archive.org) and font and input support.
+ArchiveLeaf is a [MediaWiki](https://mediawiki.org) extension which implements essential features for [palmleaf.org](https://palmleaf.org), including importing from [Archive.org](https://archive.org) and font/input support.
 
 ## Requirements
 
@@ -11,15 +11,18 @@ ArchiveLeaf is a [MediaWiki](https://mediawiki.org) extension which implements e
 ## Installation
 
 1. Clone the repository or extract files into a directory `ArchiveLeaf` inside the MediaWiki install’s `extensions` directory.
-2. From the `ArchiveLeaf` directory:
-  * Run `maintenance/transcriber-install` to install the transcriber’s dependencies with `yarn`.
-  * Run `maintenance/transcriber-build` to create a production build of the transcriber React app.
-3. Install the [Metrolook](https://www.mediawiki.org/wiki/Skin:Metrolook) skin into the MediaWiki install’s `skins` directory.
-4. Import templates:
-  * Login into your wiki as administrator and navigate to `Special:Import`.
-  * Import `templates.xml` file in the repository’s `sources` directory.
 
-Note that the `maintenance/transcriber-build` script modifies `extension.json`. In order to pull a new version from GitHub, you should run the following command:
+2. From the `ArchiveLeaf` directory:
+    * Run `maintenance/transcriber-install` to install the transcriber’s dependencies with `yarn`.
+    * Run `maintenance/transcriber-build` to create a production build of the transcriber React app.
+
+3. Install the [Metrolook](https://www.mediawiki.org/wiki/Skin:Metrolook) skin into the MediaWiki install’s `skins` directory (as `Metrolook`).
+
+4. Import templates:
+    * Login into your wiki as administrator and navigate to `Special:Import`.
+    * Import the `templates.xml` file located in this repository’s `sources` directory.
+
+Note that the `maintenance/transcriber-build` script modifies `extension.json`. In order to pull a new version from GitHub, you should run the following command from the `ArchiveLeaf` directory:
 
 ```
 git reset --hard && git pull && maintenance/transcriber-install && maintenance/transcriber-build
@@ -105,9 +108,9 @@ location /transcriber/static {
 
 ## Usage
 
-* To import items from Archive.org, navigate to `Special:ArchiveLeaf`. When the import completes, a link will appear that takes you to the imported page.
+* To import items from Archive.org, navigate to `Special:ArchiveLeaf`. When the import completes, a link will appear for the imported page.
 * To transcribe, first navigate to an imported page. Choose a leaf and click Edit to work on it. The transcriber interface will appear.
-* When you have finished working on the leaf, close the transcriber by clicking the X in the upper right. You will see the regular MediaWiki edit page, with your transcribed text inside the `<transcription>` tag.
+* When you have finished working on the leaf, close the transcriber by clicking the X in the upper right. The regular MediaWiki edit page will appear, with your transcribed text inside the `<transcription>` tag.
 * Click *Save changes* to save your work.
 
 ## Implementation
@@ -116,16 +119,16 @@ location /transcriber/static {
 
 The extension uses two templates on imported pages, which contain the following parameters:
 
-* Primary template (by default named `Entry`)
-** `Description`: contains general item description.
-** `Title`: contains Archive.org identifier, for example `tutur-smara-bhuwana`.
-** `Url`: contains Archive.org item URL.
+* Primary template (by default `Entry`):
+    - `Description`: contains general item description.
+    - `Title`: contains Archive.org identifier, for example `tutur-smara-bhuwana`.
+    - `Url`: contains Archive.org item URL.
 
-* Per-image template (by default named `EntryImage`)
-** `EntryID`: matches `Title` of primary template.
-** `Title`: leaf number, for example `0`.
-** `LocalFileName`: image filename, displayed as 400px thumbnail.
-** `ImageBrowse`: link to Archive.org image browser, displayed as link near thumbnail.
+* Per-image template (by default `EntryImage`):
+    - `EntryID`: matches `Title` of primary template.
+    - `Title`: leaf number, for example `0`.
+    - `LocalFileName`: image filename, displayed as 400px thumbnail.
+    - `ImageBrowse`: link to Archive.org image browser, displayed as link near thumbnail.
 
 ### Imported pages
 
@@ -145,7 +148,7 @@ Imported pages have the following structure:
 <transcription>
 
 </transcription>
-==== Page 1 ====
+==== Leaf 1 ====
 {{EntryImage
 |Title=1
 …
@@ -154,7 +157,7 @@ Imported pages have the following structure:
 <transcription>
 
 </transcription>
-==== Page 2 ====
+==== Leaf 2 ====
 {{EntryImage
 |Title=2
 …
