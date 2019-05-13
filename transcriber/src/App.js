@@ -27,10 +27,7 @@ export default class App extends Component {
     this.caretRef = React.createRef();
     this.textbox = document.getElementById("wpTextbox1");
 
-    let ua = window.navigator.userAgent;
-    this.isAndroidChrome = ua.match(/Android/) && ua.match(/Chrome/);
-    this.isIOS = ua.match(/iPhone|iPod|iPad/);
-    this.isIOSSafari = this.isIOS && ua.match(/WebKit/) && !ua.match(/CriOS/);
+    this.detectPlatform();
     this.viewportFix();
 
     this.state = {
@@ -41,13 +38,16 @@ export default class App extends Component {
     };
   }
 
+  detectPlatform = () => {
+    let ua = window.navigator.userAgent;
+    let isIOS = ua.match(/iPhone|iPod|iPad/);
+    let isAndroid = ua.match(/Android/);
+    this.isMobile = isIOS || isAndroid;
+    this.isAndroidChrome = isAndroid && ua.match(/Chrome/);
+    this.isIOSSafari = isIOS && ua.match(/WebKit/) && !ua.match(/CriOS/);
+  }
+
   viewportFix = () => {
-    // if (this.isIOS) {
-    //   document.documentElement.style.setProperty('--vw', this.getVwPx());
-    //   window.addEventListener('resize', () => {
-    //     document.documentElement.style.setProperty('--vw', this.getVwPx());
-    //   });
-    // }
     if (this.isAndroidChrome) {
       document.documentElement.style.setProperty('--vh', this.getVhPx());
       window.addEventListener('resize', () => {
@@ -58,13 +58,8 @@ export default class App extends Component {
 
   getVhPx = () => {
     var height = document.documentElement.clientHeight;
-    //if (this.isIOSSafari) height -= 44; // bottom 44px reserved for bottom bar
     return (height * 0.01) + 'px';
   }
-
-  // getVwPx = () => {
-  //   return (document.documentElement.clientWidth * 0.01) + 'px';
-  // }
 
   componentDidMount = () => {
     this.checkTags();
