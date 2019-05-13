@@ -55,7 +55,7 @@ export default class App extends Component {
   }
 
   getVhPx = () => {
-    var height = document.documentElement.clientHeight;
+    let height = document.documentElement.clientHeight;
     return (height * 0.01) + 'px';
   }
 
