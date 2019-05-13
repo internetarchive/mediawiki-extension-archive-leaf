@@ -105,8 +105,8 @@ location /transcriber/static {
 
 ## Usage
 
-* To import items from Archive.org, navigate to `Special:ArchiveLeaf`. When the import completes, a link will appear for the imported page.
-* To transcribe, first navigate to an imported page. Choose a leaf and click Edit to work on it. The transcriber interface will appear.
+* To import items from Archive.org, navigate to `Special:ArchiveLeaf`. When the import completes, a link to the imported page will appear.
+* To transcribe a leaf, first navigate to an imported page. Choose a leaf and click Edit to work on it. The transcriber interface will appear.
 * When you have finished working on the leaf, close the transcriber by clicking the X in the upper right. The regular MediaWiki edit page will appear, with your transcribed text inside the `<transcription>` tag.
 * Click *Save changes* to save your work.
 
