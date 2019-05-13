@@ -187,20 +187,18 @@ export default class App extends Component {
               <img id="lontar" alt="lontar" src={entryImageUrl} />
             </PinchZoomPan>
           </div>
+          <div className="tr-text" onClick={this.handleCaretMove}>
+            {this.state.text.slice(0, this.state.caretPos)}
+            <span className="tr-caret" ref={this.caretRef}></span>
+            {this.state.text.slice(this.state.caretPos)}
+          </div>
           {(this.state.open && !this.state.error) &&
-            <>
-              <div className="tr-text" onClick={this.handleCaretMove}>
-                {this.state.text.slice(0, this.state.caretPos)}
-                <span className="tr-caret" ref={this.caretRef}></span>
-                {this.state.text.slice(this.state.caretPos)}
-              </div>
-              <Keyboard
-                script="bali"
-                onTextChange={this.textChange}
-                text={this.state.text}
-                caretPos={this.state.caretPos}
-              />
-            </>
+            <Keyboard
+              script="bali"
+              onTextChange={this.textChange}
+              text={this.state.text}
+              caretPos={this.state.caretPos}
+            />
           }
         </div>
         {(this.state.open && !this.state.error) ?

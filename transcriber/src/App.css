@@ -8,22 +8,23 @@ body.noscroll {
   line-height: normal;
 }
 
-.tr-close-button {
+.tr-close-button, .tr-open-button {
   position: fixed;
-  top: 0;
-  right: 0;
   margin: 10px;
   height: 32px;
+  cursor: pointer;
+}
+
+.tr-close-button {
+  top: 0;
+  right: 0;
 }
 
 .tr-open-button {
-  position: fixed;
   top: unset;
   right: unset;
   bottom: 0;
   left: 0;
-  margin: 10px;
-  height: 32px;
 }
 
 .transcriber {
