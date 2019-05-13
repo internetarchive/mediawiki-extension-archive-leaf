@@ -5,7 +5,7 @@ body {
 .keyboard {
   font-family: "Noto Serif Balinese";
   display: grid;
-  position: fixed;
+  position: absolute;
   top: calc(var(--vh, 1vh) * 60);
   left: 0;
   width: 100vw;
