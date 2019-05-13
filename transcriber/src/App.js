@@ -183,8 +183,8 @@ export default class App extends Component {
   render() {
     return (
       <div className="App">
-        <div className="transcriber">
-          <div className={"image-container " + (this.state.open && !this.state.error ? "" : "closed")}>
+        <div className={"transcriber " + (this.state.open && !this.state.error ? "" : "closed")}>
+          <div className="image-container">
             <PinchZoomPan maxScale={5} doubleTapBehavior="zoom" zoomButtons={!this.isMobile} onChange={this.imageChange}>
               <img id="lontar" alt="lontar" src={entryImageUrl} />
             </PinchZoomPan>
@@ -210,7 +210,7 @@ export default class App extends Component {
             className={"tr-close-button"}
             onClick={this.handleClose}
           >
-            <meta name="viewport" content="width=device-width, user-scalable=no" />
+            <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
             <FontAwesomeIcon icon={faTimes} />
           </button>
           :
@@ -218,7 +218,7 @@ export default class App extends Component {
             className={"tr-open-button"}
             onClick={this.handleOpen}
           >
-            <meta name="viewport" content="width=device-width, user-scalable=yes" />
+            <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes" />
             <FontAwesomeIcon icon={faKeyboard} />
           </button>
         }

@@ -1,15 +1,15 @@
-body {
+/*body {
   margin-bottom: calc(var(--vh, 1vh) * 40) !important;
-}
+}*/
 
 .keyboard {
   font-family: "Noto Serif Balinese";
   display: grid;
-  position: fixed;
-  top: calc(var(--vh, 1vh) * 60);
+  position: absolute;
+  top: 60%;
   left: 0;
   width: 100%;
-  height: calc(var(--vh, 1vh) * 40);
+  height: 40%;
   font-size: calc(var(--vh, 1vh) * 4);
   background-color: white;
 }
@@ -19,7 +19,7 @@ body {
 }
 
 .kb-key {
-  background: white;
+  background-color: white;
   box-sizing: border-box;
   text-align: center;
   border: 0.5px black solid;

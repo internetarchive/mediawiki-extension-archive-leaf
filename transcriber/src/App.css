@@ -27,20 +27,24 @@ body.noscroll {
 }
 
 .transcriber {
+  position: fixed;
+  top: 0;
+  left: 0;
   height: 100%;
+  width: 100%;
+  background: white;
+}
+
+.transcriber.closed {
+  display: none;
 }
 
 .image-container {
   width: 100%;
-  height: calc(var(--vh, 1vh) * 40);
+  height: 40%;
   top: 0;
   left: 0;
-  position: fixed;
-  background: white;
-}
-
-.image-container.closed {
-  display: none;
+  position: absolute;
 }
 
 .tr-text {
@@ -48,14 +52,13 @@ body.noscroll {
   white-space: pre-wrap;
   font-family: "Noto Serif Balinese";
   width: 100%;
-  height: calc(var(--vh, 1vh) * 20);
+  height: 20%;
   overflow-y: scroll;
   overflow-wrap: break-word;
   scroll-behavior: smooth;
-  position: fixed;
-  top: calc(var(--vh, 1vh) * 40);
+  position: absolute;
+  top: 40%;
   left: 0;
-  background: white;
 }
 
 .tr-caret {
