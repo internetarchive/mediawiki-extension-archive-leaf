@@ -41,9 +41,7 @@ export default class App extends Component {
   detectPlatform = () => {
     let ua = window.navigator.userAgent;
     let isIOS = ua.match(/iPhone|iPod|iPad/);
-    let isAndroid = ua.match(/Android/);
-    this.isMobile = isIOS || isAndroid;
-    this.isAndroidChrome = isAndroid && ua.match(/Chrome/);
+    this.isMobile = isIOS || ua.match(/Android/);
     this.isIOSSafari = isIOS && ua.match(/WebKit/) && !ua.match(/CriOS/);
   }
 
