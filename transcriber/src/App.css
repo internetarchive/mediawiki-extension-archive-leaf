@@ -31,7 +31,7 @@ body.noscroll {
 }
 
 .image-container {
-  width: 100vw;
+  width: 100%;
   height: calc(var(--vh, 1vh) * 40);
   top: 0;
   left: 0;
@@ -47,7 +47,7 @@ body.noscroll {
   font-size: 32pt;
   white-space: pre-wrap;
   font-family: "Noto Serif Balinese";
-  width: 100vw;
+  width: 100%;
   height: calc(var(--vh, 1vh) * 20);
   overflow-y: scroll;
   overflow-wrap: break-word;
