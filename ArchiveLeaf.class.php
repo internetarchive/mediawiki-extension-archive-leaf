@@ -130,7 +130,7 @@ class ArchiveLeaf {
             if ( $imageNum == 0 ) {
                 $template .= "\n==== Front and Back Covers ====";
             } else {
-                $template .= "\n==== Page {$imageNum} ====";
+                $template .= "\n==== Leaf {$imageNum} ====";
             }
 
             $template .= "\n{{" . $wgArchiveLeafTemplateImageName;
