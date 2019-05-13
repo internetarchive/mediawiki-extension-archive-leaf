@@ -28,7 +28,9 @@ export default class App extends Component {
     this.textbox = document.getElementById("wpTextbox1");
 
     let ua = window.navigator.userAgent;
-    this.isSafari = ua.match(/iPhone|iPod|iPad/) && ua.match(/WebKit/) && !ua.match(/CriOS/);
+    this.isAndroidChrome = ua.match(/Android/) && ua.match(/Chrome/);
+    this.isIOS = ua.match(/iPhone|iPod|iPad/);
+    this.isIOSSafari = this.isIOS && ua.match(/WebKit/) && !ua.match(/CriOS/);
     this.viewportFix();
 
     this.state = {
@@ -40,17 +42,29 @@ export default class App extends Component {
   }
 
   viewportFix = () => {
-    document.documentElement.style.setProperty('--vh', this.getVhPx());
-    window.addEventListener('resize', () => {
+    // if (this.isIOS) {
+    //   document.documentElement.style.setProperty('--vw', this.getVwPx());
+    //   window.addEventListener('resize', () => {
+    //     document.documentElement.style.setProperty('--vw', this.getVwPx());
+    //   });
+    // }
+    if (this.isAndroidChrome) {
       document.documentElement.style.setProperty('--vh', this.getVhPx());
-    });
+      window.addEventListener('resize', () => {
+        document.documentElement.style.setProperty('--vh', this.getVhPx());
+      });
+    }
   }
 
   getVhPx = () => {
     var height = document.documentElement.clientHeight;
-    if (this.isSafari) height -= 44; // bottom 44px reserved for bottom bar
+    //if (this.isIOSSafari) height -= 44; // bottom 44px reserved for bottom bar
     return (height * 0.01) + 'px';
   }
+
+  // getVwPx = () => {
+  //   return (document.documentElement.clientWidth * 0.01) + 'px';
+  // }
 
   componentDidMount = () => {
     this.checkTags();
@@ -125,7 +139,7 @@ export default class App extends Component {
 
   afterOpen = () => {
     if (!this.error) {
-      if (this.isSafari) {
+      if (this.isIOSSafari) {
         document.addEventListener('touchmove', blockPinchZoom, { passive: false });
         document.addEventListener('touchend', blockTapZoom, { passive: false });
       }
@@ -135,7 +149,7 @@ export default class App extends Component {
   }
 
   handleClose = () => {
-    if (this.isSafari) {
+    if (this.isIOSSafari) {
       document.removeEventListener('touchmove', blockPinchZoom);
       document.removeEventListener('touchend', blockTapZoom);
     }
