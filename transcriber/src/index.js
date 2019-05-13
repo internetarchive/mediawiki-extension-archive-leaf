@@ -5,7 +5,7 @@ import * as serviceWorker from './serviceWorker';
 
 let transcriber = document.createElement("div");
 transcriber.id = "transcriber";
-document.body.appendChild(transcriber);
+document.body.insertBefore(transcriber, document.body.firstChild);
 ReactDOM.render(<App />, transcriber);
 
 // If you want your app to work offline and load faster, you can change
