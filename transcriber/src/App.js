@@ -185,7 +185,7 @@ export default class App extends Component {
       <div className="App">
         <div className="transcriber">
           <div className={"image-container " + (this.state.open && !this.state.error ? "" : "closed")}>
-            <PinchZoomPan maxScale={5} doubleTapBehavior="zoom" onChange={this.imageChange}>
+            <PinchZoomPan maxScale={5} doubleTapBehavior="zoom" zoomButtons={!this.isMobile} onChange={this.imageChange}>
               <img id="lontar" alt="lontar" src={entryImageUrl} />
             </PinchZoomPan>
           </div>
