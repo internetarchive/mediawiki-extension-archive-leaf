@@ -48,7 +48,7 @@ export default class App extends Component {
   }
 
   viewportFix = () => {
-    if (this.isAndroidChrome) {
+    if (this.isMobile) {
       document.documentElement.style.setProperty('--vh', this.getVhPx());
       window.addEventListener('resize', () => {
         document.documentElement.style.setProperty('--vh', this.getVhPx());
