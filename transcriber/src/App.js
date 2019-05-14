@@ -77,14 +77,14 @@ export default class App extends Component {
     this.setState({ error });
   }
 
-  handleCaretMove = () => {
-    let sel = window.getSelection();
-    if (!sel.anchorNode || !sel.isCollapsed) {
+  handleCaretMove = e => {
+    let range = document.caretRangeFromPoint(e.clientX, e.clientY);
+    if (!range || !range.collapsed) {
       return;
     }
 
-    let node = sel.anchorNode;
-    let caretPos = sel.anchorOffset;
+    let node = range.commonAncestorContainer;
+    let caretPos = range.startOffset;
     while (node.previousSibling) {
       node = node.previousSibling;
       if (node.nodeType === 3) {
