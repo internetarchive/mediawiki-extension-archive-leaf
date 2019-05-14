@@ -10,16 +10,16 @@ import Keyboard from './Keyboard';
 let entryImageUrl = window.entryImageUrl;
 let iiifBaseUrl = 'https://iiif.archivelab.org/iiif/';
 
-// const blockPinchZoom = e => {
-//   if (e.touches.length > 1) {
-//     e.preventDefault();
-//   }
-// }
-
-const blockTapZoom = e => {
-  e.preventDefault();
-  e.target.click();
+const blockPinchZoom = e => {
+  if (e.touches.length > 1) {
+    e.preventDefault();
+  }
 }
+
+// const blockTapZoom = e => {
+//   e.preventDefault();
+//   e.target.click();
+// }
 
 export default class App extends Component {
   constructor(props) {
