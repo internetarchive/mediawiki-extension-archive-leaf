@@ -7,7 +7,7 @@ ArchiveLeaf is a [MediaWiki](https://mediawiki.org) extension which implements e
 * Mediawiki 1.27+
 * PHP 5.6+
 * [node.js](https://nodejs.org) and [yarn](https://yarnpkg.com)
-* [jq](https://stedolan.github.io/jq/) 
+* [jq](https://stedolan.github.io/jq/)
 
 ## Installation
 
@@ -110,6 +110,10 @@ location /transcriber/static {
 * To transcribe a leaf, first navigate to an imported page. Choose a leaf and click Edit to work on it. The transcriber interface will appear.
 * When you have finished working on the leaf, close the transcriber by clicking the X in the upper right. The regular MediaWiki edit page will appear, with your transcribed text inside the `<transcription>` tag.
 * Click *Save changes* to save your work.
+
+### Transcriber
+
+(to be expanded)
 
 ## Implementation
 
