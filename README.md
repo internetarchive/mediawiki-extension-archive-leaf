@@ -1,12 +1,13 @@
 # ArchiveLeaf
 
-ArchiveLeaf is a [MediaWiki](https://mediawiki.org) extension which implements essential features for [palmleaf.org](https://palmleaf.org), including importing from [Archive.org](https://archive.org) and font/input support.
+ArchiveLeaf is a [MediaWiki](https://mediawiki.org) extension which implements essential features for [palmleaf.org](http://palmleaf.org), including importing from [Archive.org](https://archive.org) and font/input support.
 
 ## Requirements
 
 * Mediawiki 1.27+
 * PHP 5.6+
 * [node.js](https://nodejs.org) and [yarn](https://yarnpkg.com)
+* [jq](https://stedolan.github.io/jq/) 
 
 ## Installation
 
