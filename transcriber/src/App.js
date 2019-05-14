@@ -87,13 +87,15 @@ export default class App extends Component {
       }
       node = range.commonAncestorContainer;
       caretPos = range.startOffset;
-    } else {
+    } else if (window.getSelection) {
       let sel = window.getSelection();
       if (!sel.anchorNode || !sel.isCollapsed) {
         return;
       }
       node = sel.anchorNode;
       caretPos = sel.anchorOffset;
+    } else {
+      return;
     }
 
     while (node.previousSibling) {
