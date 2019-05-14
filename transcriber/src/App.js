@@ -134,7 +134,7 @@ export default class App extends Component {
     if (!this.error) {
       if (this.isIOSSafari) {
         document.addEventListener('touchmove', blockPinchZoom, { passive: false });
-        document.addEventListener('touchend', blockTapZoom, { passive: false });
+        //document.addEventListener('touchend', blockTapZoom, { passive: false });
       }
       document.body.classList.add('noscroll');
       this.getTranscription();
@@ -144,7 +144,7 @@ export default class App extends Component {
   handleClose = () => {
     if (this.isIOSSafari) {
       document.removeEventListener('touchmove', blockPinchZoom);
-      document.removeEventListener('touchend', blockTapZoom);
+      //document.removeEventListener('touchend', blockTapZoom);
     }
     document.body.classList.remove('noscroll');
     this.setState({ open: false }, this.setTranscription);
