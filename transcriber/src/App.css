@@ -69,8 +69,8 @@ body.noscroll {
 }
 
 @media screen and (max-width: 350px) {
-  .tr-close-button, .tr-open-buttom {
-    transform: scale(1.25);
+  .tr-close-button, .tr-open-button {
+    transform: scale(1.4);
   }
 }
 
