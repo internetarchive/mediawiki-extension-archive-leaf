@@ -78,13 +78,24 @@ export default class App extends Component {
   }
 
   handleCaretMove = e => {
-    let range = document.caretRangeFromPoint(e.clientX, e.clientY);
-    if (!range || !range.collapsed) {
-      return;
+    let node, caretPos;
+
+    if (document.caretRangeFromPoint) {
+      let range = document.caretRangeFromPoint(e.clientX, e.clientY);
+      if (!range || !range.collapsed) {
+        return;
+      }
+      node = range.commonAncestorContainer;
+      caretPos = range.startOffset;
+    } else {
+      let sel = window.getSelection();
+      if (!sel.anchorNode || !sel.isCollapsed) {
+        return;
+      }
+      node = sel.anchorNode;
+      caretPos = sel.anchorOffset;
     }
 
-    let node = range.commonAncestorContainer;
-    let caretPos = range.startOffset;
     while (node.previousSibling) {
       node = node.previousSibling;
       if (node.nodeType === 3) {
