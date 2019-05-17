@@ -64,12 +64,14 @@ export default class Keyboard extends Component {
   }
 
   componentDidMount = () => {
-    window.addEventListener("keydown", this.handlePhysKeypress);
+    window.addEventListener("keydown", this.handlePhysKeydown);
+    window.addEventListener("keyup", this.handlePhysKeyup);
     this.updateKeyboard(this.props.text);
   }
 
   componentWillUnmount = () => {
-    window.removeEventListener("keydown", this.handlePhysKeypress);
+    window.removeEventListener("keydown", this.handlePhysKeydown);
+    window.removeEventListener("keyup", this.handlePhysKeyup);
   }
 
   componentDidUpdate = (prevProps, prevState) => {
@@ -119,24 +121,38 @@ export default class Keyboard extends Component {
     this.props.onTextChange(this.props.text, caretPos)
   }
 
-  handlePhysKeypress = e => {
-    if (!(e.altKey || e.ctrlKey || e.metaKey)) {
-      if (!NonPrintingKeys.has(e.key)) {
-        e.preventDefault();
-        this.handleKeypress(e.key);
-      } else if (e.key === "Backspace") {
-        e.preventDefault();
-        this.handleKeypress("\u0008");
-      } else if (e.key === "Delete") {
-        e.preventDefault();
-        this.handleKeypress("\u007f");
-      } else if (e.key === "ArrowLeft") {
-        e.preventDefault();
-        this.handleArrow("←");
-      } else if (e.key === "ArrowRight") {
-        e.preventDefault();
-        this.handleArrow("→");
-      }
+  handlePhysKeydown = e => {
+    if (e.altKey || e.ctrlKey || e.metaKey) {
+      return;
+    }
+
+    if (!NonPrintingKeys.has(e.key)) {
+      this.handleKeypress(e.key);
+    } else if (e.key === "Shift") {
+      this.setState({ shiftLevel: 1 });
+    } else if (e.key === "Backspace") {
+      this.handleKeypress("\u0008");
+    } else if (e.key === "Delete") {
+      this.handleKeypress("\u007f");
+    } else if (e.key === "Enter") {
+      this.handleKeypress("\n");
+    } else if (e.key === "ArrowLeft") {
+      this.handleArrow("←");
+    } else if (e.key === "ArrowRight") {
+      this.handleArrow("→");
+    } else if (e.key === "Escape" && this.props.onEsc) {
+      this.props.onEsc();
+    } else {
+      return;
+    }
+
+    e.preventDefault();
+  }
+
+  handlePhysKeyup = e => {
+    if (e.key === "Shift") {
+      this.setState({ shiftLevel: 0 });
+      e.preventDefault();
     }
   }
 
