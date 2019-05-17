@@ -15,7 +15,7 @@ const stringInsert = (string, addition, caretPos) => {
     } else if (c === "\u007f") {
       postString = postString.slice(1);
     } else {
-      preString = preString + c;
+      preString += c;
     }
   }
   return [preString, postString];
@@ -114,34 +114,43 @@ export default class Keyboard extends Component {
   handleArrow = dir => {
     let caretPos = this.props.caretPos;
     if (dir === "←") {
-      caretPos = caretPos - 1;
+      caretPos--;
     } else if (dir === "→") {
-      caretPos = caretPos + 1;
+      caretPos++;
     }
     this.props.onTextChange(this.props.text, caretPos)
   }
 
   handlePhysKeydown = e => {
     if (e.altKey || e.ctrlKey || e.metaKey) {
-      return;
-    }
-
-    if (!NonPrintingKeys.has(e.key)) {
-      this.handleKeypress(e.key);
-    } else if (e.key === "Shift") {
-      this.setState({ shiftLevel: 1 });
-    } else if (e.key === "Backspace") {
-      this.handleKeypress("\u0008");
-    } else if (e.key === "Delete") {
-      this.handleKeypress("\u007f");
-    } else if (e.key === "Enter") {
-      this.handleKeypress("\n");
-    } else if (e.key === "ArrowLeft") {
-      this.handleArrow("←");
-    } else if (e.key === "ArrowRight") {
-      this.handleArrow("→");
+      if (e.key === "v" && (e.ctrlKey || e.metaKey)) {
+        navigator.clipboard.readText().then(clipboardText => {
+          let text = this.props.text.slice(0, this.props.caretPos) + clipboardText + this.props.text.slice(this.props.caretPos);
+          if (text !== this.props.text) {
+            this.props.onTextChange(text, this.props.caretPos + clipboardText.length);
+          }
+        }, () => {});
+      } else {
+        return;
+      }
     } else {
-      return;
+      if (!NonPrintingKeys.has(e.key)) {
+        this.handleKeypress(e.key);
+      } else if (e.key === "Shift") {
+        this.setState({ shiftLevel: 1 });
+      } else if (e.key === "Backspace") {
+        this.handleKeypress("\u0008");
+      } else if (e.key === "Delete") {
+        this.handleKeypress("\u007f");
+      } else if (e.key === "Enter") {
+        this.handleKeypress("\n");
+      } else if (e.key === "ArrowLeft") {
+        this.handleArrow("←");
+      } else if (e.key === "ArrowRight") {
+        this.handleArrow("→");
+      } else {
+        return;
+      }
     }
 
     e.preventDefault();
