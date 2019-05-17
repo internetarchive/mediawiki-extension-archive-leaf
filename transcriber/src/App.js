@@ -161,8 +161,11 @@ export default class App extends Component {
         savedText = savedText.trim();
         if (savedText !== text) {
           let useSaved = window.confirm("It looks like your work was interrupted. Do you want to restore your previous work?");
-          if (useSaved) this.setState({ text: savedText, caretPos: savedText.length });
+          if (useSaved) {
+            this.setState({ text: savedText, caretPos: savedText.length });
+          }
         }
+        window.localStorage.removeItem(key);
       }
     }
   }
@@ -194,6 +197,7 @@ export default class App extends Component {
         //document.addEventListener('touchend', blockTapZoom, { passive: false });
       }
       document.body.classList.add('noscroll');
+      document.addEventListener('keydown', this.handleKeydown);
 
       this.getArchiveItem();
       this.getTranscription();
@@ -206,7 +210,15 @@ export default class App extends Component {
       //document.removeEventListener('touchend', blockTapZoom);
     }
     document.body.classList.remove('noscroll');
+    document.removeEventListener('keydown', this.handleKeydown);
     this.setState({ open: false }, this.setTranscription);
+  }
+
+  handleKeydown = e => {
+    if (e.key === "Escape") {
+      this.handleClose();
+      e.preventDefault();
+    }
   }
 
   imageChange = state => {
@@ -245,7 +257,6 @@ export default class App extends Component {
               onTextChange={this.textChange}
               text={this.state.text}
               caretPos={this.state.caretPos}
-              onEsc={this.handleClose}
             />
           }
         </div>

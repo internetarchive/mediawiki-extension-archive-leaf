@@ -140,8 +140,6 @@ export default class Keyboard extends Component {
       this.handleArrow("←");
     } else if (e.key === "ArrowRight") {
       this.handleArrow("→");
-    } else if (e.key === "Escape" && this.props.onEsc) {
-      this.props.onEsc();
     } else {
       return;
     }
