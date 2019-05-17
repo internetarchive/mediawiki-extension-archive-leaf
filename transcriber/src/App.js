@@ -64,6 +64,12 @@ export default class App extends Component {
     this.afterOpen();
   }
 
+  componentDidUpdate = (prevProps, prevState) => {
+    if (this.state.caretPos !== prevState.caretPos || this.state.text !== prevState.text) {
+      this.scrollToCaret();
+    }
+  }
+
   checkTags = () => {
     let error = false;
     let openTags = this.textbox.value.match(/<transcription>/g);
@@ -104,20 +110,16 @@ export default class App extends Component {
         caretPos += node.nodeValue.length;
       }
     }
-    this.setState({caretPos});
+    this.setState({ caretPos });
   }
 
   scrollToCaret = () => {
     let caret = this.caretRef.current;
     caret.offsetParent.scrollTop = caret.offsetTop;
-    //caret.scrollIntoView({ block: "start", inline: "nearest", behavior: "smooth" });
   }
 
   textChange = (text, caretPos) => {
-    this.setState({
-      text,
-      caretPos
-    }, this.scrollToCaret);
+    this.setState({ text, caretPos });
 
     let key = this.storageKey();
     if (key) {
@@ -125,20 +127,18 @@ export default class App extends Component {
     }
   }
 
-  getInternetArchiveItem = () => {
+  getArchiveItem = () => {
     let matches = this.textbox.value.match(/\bEntryID=(\S+).*\bTitle=(\S+)/s);
     if (matches) {
-      this.itemIdentifier = matches[1];
-      this.itemLeaf = matches[2];
+      this.archiveItem = { id: matches[1], leaf: matches[2] };
     } else {
-      this.itemIdentifier = null;
-      this.itemLeaf = null;
+      this.archiveItem = null;
     }
   }
 
   storageKey = () => {
-    if (this.itemIdentifier) {
-      return this.itemIdentifier + '$' + this.itemLeaf;
+    if (this.archiveItem) {
+      return this.archiveItem.id + '$' + this.archiveItem.leaf;
     } else {
       return null;
     }
@@ -147,8 +147,9 @@ export default class App extends Component {
   getTranscription = () => {
     let matches = this.textbox.value.match(/(?:.*<transcription>)(.*?)(?:<\/transcription>.*)/s);
     if (matches) {
-      let text = this.checkStoredText(matches[1].trim());
-      this.setState({ text, caretPos: text.length }, this.scrollToCaret);
+      let text = matches[1].trim();
+      this.setState({ text, caretPos: text.length });
+      setTimeout(() => this.checkStoredText(text), 500);
     }
   }
 
@@ -160,12 +161,10 @@ export default class App extends Component {
         savedText = savedText.trim();
         if (savedText !== text) {
           let useSaved = window.confirm("It looks like your work was interrupted. Do you want to restore your previous work?");
-          if (useSaved) return savedText;
+          if (useSaved) this.setState({ text: savedText, caretPos: savedText.length });
         }
       }
     }
-
-    return text;
   }
 
   setTranscription = () => {
@@ -196,7 +195,7 @@ export default class App extends Component {
       }
       document.body.classList.add('noscroll');
 
-      this.getInternetArchiveItem();
+      this.getArchiveItem();
       this.getTranscription();
     }
   }
@@ -215,7 +214,7 @@ export default class App extends Component {
   }
 
   getImageRegionUrl = () => {
-    if (!(this.imageState && this.itemIdentifier)) return null;
+    if (!(this.imageState && this.archiveItem)) return null;
 
     let { left, top, scale, containerDimensions, imageDimensions } = this.imageState;
     let xPct = (-100 * left / (imageDimensions.width * scale)).toFixed(2);
@@ -223,7 +222,7 @@ export default class App extends Component {
     let widthPct = (100 * containerDimensions.width / (imageDimensions.width * scale)).toFixed(2);
     let heightPct = (100 * containerDimensions.height / (imageDimensions.height * scale)).toFixed(2);
 
-    return `${iiifBaseUrl}/${this.itemIdentifier}%24${this.itemLeaf}/pct:${xPct},${yPct},${widthPct},${heightPct}/full/0/default.jpg`;
+    return `${iiifBaseUrl}/${this.archiveItem.id}%24${this.archiveItem.leaf}/pct:${xPct},${yPct},${widthPct},${heightPct}/full/0/default.jpg`;
   }
 
   render() {
@@ -246,6 +245,7 @@ export default class App extends Component {
               onTextChange={this.textChange}
               text={this.state.text}
               caretPos={this.state.caretPos}
+              onEsc={this.handleClose}
             />
           }
         </div>
