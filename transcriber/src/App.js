@@ -8,7 +8,7 @@ import './App.css';
 import Keyboard from './Keyboard';
 
 let entryImageUrl = window.entryImageUrl;
-let iiifBaseUrl = 'https://iiif.archivelab.org/iiif/';
+let iiifBaseUrl = 'https://iiif.archivelab.org/iiif';
 
 const blockPinchZoom = e => {
   if (e.touches.length > 1) {
@@ -118,14 +118,54 @@ export default class App extends Component {
       text,
       caretPos
     }, this.scrollToCaret);
+
+    let key = this.storageKey();
+    if (key) {
+      window.localStorage.setItem(key, text);
+    }
+  }
+
+  getInternetArchiveItem = () => {
+    let matches = this.textbox.value.match(/\bEntryID=(\S+).*\bTitle=(\S+)/s);
+    if (matches) {
+      this.itemIdentifier = matches[1];
+      this.itemLeaf = matches[2];
+    } else {
+      this.itemIdentifier = null;
+      this.itemLeaf = null;
+    }
+  }
+
+  storageKey = () => {
+    if (this.itemIdentifier) {
+      return this.itemIdentifier + '$' + this.itemLeaf;
+    } else {
+      return null;
+    }
   }
 
   getTranscription = () => {
     let matches = this.textbox.value.match(/(?:.*<transcription>)(.*?)(?:<\/transcription>.*)/s);
     if (matches) {
-      let text = matches[1].trim();
+      let text = this.checkStoredText(matches[1].trim());
       this.setState({ text, caretPos: text.length }, this.scrollToCaret);
     }
+  }
+
+  checkStoredText = text => {
+    let key = this.storageKey();
+    if (key) {
+      let savedText = window.localStorage.getItem(key);
+      if (savedText) {
+        savedText = savedText.trim();
+        if (savedText !== text) {
+          let useSaved = window.confirm("It looks like your work was interrupted. Do you want to restore your previous work?");
+          if (useSaved) return savedText;
+        }
+      }
+    }
+
+    return text;
   }
 
   setTranscription = () => {
@@ -135,6 +175,11 @@ export default class App extends Component {
       this.textbox.value = [matches[1], transcription, matches[2]].join("\n");
     } else {
       this.textbox.value += "\n<transcription>\n" + transcription + "\n</transcription>";
+    }
+
+    let key = this.storageKey();
+    if (key) {
+      window.localStorage.removeItem(key);
     }
   }
 
@@ -150,6 +195,8 @@ export default class App extends Component {
         //document.addEventListener('touchend', blockTapZoom, { passive: false });
       }
       document.body.classList.add('noscroll');
+
+      this.getInternetArchiveItem();
       this.getTranscription();
     }
   }
@@ -167,20 +214,8 @@ export default class App extends Component {
     this.imageState = state;
   }
 
-  getIiifIdentifier = () => {
-    let textbox = document.getElementById("wpTextbox1");
-
-    let matches = textbox.value.match(/\bEntryID=(\S+).*\bTitle=(\S+)/s);
-    return matches
-      ? `${matches[1]}%24${matches[2]}`
-      : null;
-  }
-
   getImageRegionUrl = () => {
-    if (!this.imageState) return null;
-
-    let id = this.getIiifIdentifier();
-    if (!id) return null;
+    if (!(this.imageState && this.itemIdentifier)) return null;
 
     let { left, top, scale, containerDimensions, imageDimensions } = this.imageState;
     let xPct = (-100 * left / (imageDimensions.width * scale)).toFixed(2);
@@ -188,7 +223,7 @@ export default class App extends Component {
     let widthPct = (100 * containerDimensions.width / (imageDimensions.width * scale)).toFixed(2);
     let heightPct = (100 * containerDimensions.height / (imageDimensions.height * scale)).toFixed(2);
 
-    return `${iiifBaseUrl}${id}/pct:${xPct},${yPct},${widthPct},${heightPct}/full/0/default.jpg`;
+    return `${iiifBaseUrl}/${this.itemIdentifier}%24${this.itemLeaf}/pct:${xPct},${yPct},${widthPct},${heightPct}/full/0/default.jpg`;
   }
 
   render() {
