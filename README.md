@@ -113,26 +113,26 @@ location /transcriber/static {
 
 ### Transcriber
 
-The transcriber interface allows for a more seamless transcription experience for users. It overlays on top of the edit box and reads and writes to the edit box when opened and closed. It is designed primarily as a mobile interface, but will work fine on desktop machines as well.
+The transcriber interface allows for a more seamless transcription experience for users. It overlays on top of the regular wiki edit page and reads and writes to the edit box when opened and closed. It is designed primarily as a mobile interface, but will work fine on desktop machines as well.
 
 The transcriber consists of three sections:
 1. The image to be transcribed, which can be zoomed in and out.
 2. A text edit box that displays the current working text of the transcriber.
 3. An onscreen keyboard.
 
-The transcriber reads from the `<transcription></transcription>` tag within the edit box, and when closed, writes to that same tag. It does not automatically write to the edit box as the user is typing. Instead, it writes when the transcriber is closed, and the user must manually save the Wiki edit.
+The transcriber reads from the `<transcription>` tag within the edit box, and when closed, writes back to the tag. After the transcriber is closed, the user must manually save the wiki edit.
 
-One keyboard layout is currently available, Balinese. More are planned for the future.
+One keyboard layout is currently available: Balinese. More are planned for the future.
 
 #### Balinese keyboard notes
-* The Balinese onscreen keyboard is designed to type any characters found in Balinese, while preventing the typing of malformed sequences
+
+* The Balinese onscreen keyboard is designed to type any characters found in Balinese, while preventing the typing of malformed sequences.
 * To type a consonant-vowel syllable, first type the consonant, and then the vowel marks for that consonant will be displayed in the upper right section.
 * Type all vowels after their consonant (in spoken order), even if they are written to the left of the consonant, like "ᬳᬾ".
 * To type consonant clusters, type the first consonant, then adeg-adeg (in the vowel marks section), then the following consonant. The keyboard will adjust to demonstrate the character to be typed.
 * If an explicit adeg-adeg is needed in a place that would normally cause a consonanant cluster (such as "ᬦ᭄‌ᬪ"), type the first consonant, then the adeg-adeg, then a Zero-Width Non-Joiner (the key to the right of the space bar), then the next consonant. The Zero-Width Non-Joiner blocks the adeg-adeg from creating a consonant cluster.
 * Rarer and Sanskrit-specific consonants, and some rare vowel marks, can be found by pressing the shift key.
-* To type numbers and punctuation marks, press the bottom left key with "᭗᭘᭙" printed on it.
-
+* To type numbers and punctuation marks, press the bottom-left key "᭗᭘᭙".
 
 ## Implementation
 
