@@ -118,7 +118,7 @@ export default class Keyboard extends Component {
     } else if (dir === "→") {
       caretPos++;
     }
-    this.props.onTextChange(this.props.text, caretPos)
+    this.props.onTextChange(this.props.text, caretPos);
   }
 
   handlePhysKeydown = e => {
