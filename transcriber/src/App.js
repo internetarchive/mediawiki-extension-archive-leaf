@@ -215,7 +215,7 @@ export default class App extends Component {
   }
 
   handleKeydown = e => {
-    if (e.key === "Escape") {
+    if (e.key === "Escape" && !(e.altKey || e.ctrlKey || e.metaKey || e.shiftKey)) {
       this.handleClose();
       e.preventDefault();
     }
