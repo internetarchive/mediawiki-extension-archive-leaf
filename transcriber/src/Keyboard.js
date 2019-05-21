@@ -1,5 +1,5 @@
 import React, { Component, useState } from 'react';
-import NonPrintingKeys from './NonPrintingKeys.js';
+//import NonPrintingKeys from './NonPrintingKeys.js';
 import './Keyboard.css';
 import zwnj from './zwnj.svg';
 import zwj from './zwj.svg';
@@ -55,6 +55,7 @@ const gridToStyle = grid => ({
 export default class Keyboard extends Component {
   constructor(props) {
     super(props);
+    this.physBufferRef = React.createRef();
     this.state = {
       layout: layouts[props.script].letters,
       currLayout: {},
@@ -122,44 +123,58 @@ export default class Keyboard extends Component {
   }
 
   handlePhysKeydown = e => {
-    if (e.altKey || e.ctrlKey || e.metaKey) {
-      if (e.key === "v" && (e.ctrlKey || e.metaKey)) {
-        navigator.clipboard.readText().then(clipboardText => {
-          let text = this.props.text.slice(0, this.props.caretPos) + clipboardText + this.props.text.slice(this.props.caretPos);
-          if (text !== this.props.text) {
-            this.props.onTextChange(text, this.props.caretPos + clipboardText.length);
-          }
-        }, () => {});
-      } else {
-        return;
-      }
-    } else {
-      if (!NonPrintingKeys.has(e.key)) {
-        this.handleKeypress(e.key);
-      } else if (e.key === "Shift") {
-        this.setState({ shiftLevel: 1 });
-      } else if (e.key === "Backspace") {
-        this.handleKeypress("\u0008");
-      } else if (e.key === "Delete") {
-        this.handleKeypress("\u007f");
-      } else if (e.key === "Enter") {
-        this.handleKeypress("\n");
-      } else if (e.key === "ArrowLeft") {
-        this.handleArrow("←");
-      } else if (e.key === "ArrowRight") {
-        this.handleArrow("→");
-      } else {
-        return;
-      }
+    if (e.key === "v" && (e.ctrlKey || e.metaKey)) {
+      navigator.clipboard.readText().then(clipboardText => {
+        let text = this.props.text.slice(0, this.props.caretPos) + clipboardText + this.props.text.slice(this.props.caretPos);
+        if (text !== this.props.text) {
+          this.props.onTextChange(text, this.props.caretPos + clipboardText.length);
+        }
+      }, () => {});
+      e.preventDefault();
+    } else if (e.key === "Shift") {
+      this.setState({ shiftLevel: 1 });
+      e.preventDefault();
+    } else if (e.key === "Backspace") {
+      this.handleKeypress("\u0008");
+      e.preventDefault();
+    } else if (e.key === "Delete") {
+      this.handleKeypress("\u007f");
+      e.preventDefault();
+    } else if (e.key === "Enter") {
+      this.handleKeypress("\n");
+      e.preventDefault();
+    } else if (e.key === "ArrowLeft") {
+      this.handleArrow("←");
+      e.preventDefault();
+    } else if (e.key === "ArrowRight") {
+      this.handleArrow("→");
+      e.preventDefault();
+    } else if (document.activeElement !== this.physBufferRef.current) {
+      this.physBufferRef.current.focus();
+      this.physBufferRef.current.dispatchEvent(new KeyboardEvent("keypress", {
+        key: e.key,
+        code: e.code,
+        ctrlKey: e.ctrlKey,
+        shiftKey: e.shiftKey,
+        altKey: e.altKey,
+        metaKey: e.metaKey,
+        repeat: e.repeat,
+        isComposing: e.isComposing,
+      }));
     }
-
-    e.preventDefault();
   }
 
   handlePhysKeyup = e => {
     if (e.key === "Shift") {
       this.setState({ shiftLevel: 0 });
       e.preventDefault();
+    }
+  }
+
+  handlePhysBufferKeyUp = e => {
+    if (!e.nativeEvent.isComposing && e.target.value.length) {
+      this.handleKeypress(e.target.value);
+      e.target.value = "";
     }
   }
 
@@ -212,7 +227,7 @@ export default class Keyboard extends Component {
         {keySet.has("arrowright") &&
           <Key gridArea="arrowright" text="→" className="arrowright" onClick={e => this.handleArrow("→")} unzoomable flash />
         }
-
+        <input id="phys-key-buffer" ref={this.physBufferRef} onKeyUp={this.handlePhysBufferKeyUp} />
       </div>
     )
   }

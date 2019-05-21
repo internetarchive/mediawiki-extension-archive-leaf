@@ -53,3 +53,8 @@
 /* .kb-icon {
   block-size: 4vh;
 } */
+
+#phys-key-buffer {
+  position: fixed;
+  top: 99999px;
+}
