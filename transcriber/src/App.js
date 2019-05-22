@@ -149,7 +149,7 @@ export default class App extends Component {
     if (matches) {
       let text = matches[1].trim();
       this.setState({ text, caretPos: text.length });
-      setTimeout(() => this.checkStoredText(text), 500);
+      setTimeout(() => this.checkStoredText(text), 1000);
     }
   }
 
