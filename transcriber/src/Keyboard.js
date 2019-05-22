@@ -128,9 +128,7 @@ export default class Keyboard extends Component {
     if (e.key === "Shift") {
       this.setState({ shiftLevel: 1 });
       preventDefault = true;
-    }
-
-    if (!preventDefault && !e.isComposing) {
+    } else if (!e.isComposing) {
       if (e.key === "Backspace") {
         this.handleKeypress("\u0008");
         preventDefault = true;
