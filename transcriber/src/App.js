@@ -1,5 +1,6 @@
+import 'react-app-polyfill/stable';
 import React, { Component } from 'react';
-import PinchZoomPan from "react-responsive-pinch-zoom-pan";
+import PinchZoomPan from 'react-responsive-pinch-zoom-pan';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faKeyboard } from '@fortawesome/free-solid-svg-icons';
 
