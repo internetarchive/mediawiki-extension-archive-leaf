@@ -65,14 +65,14 @@ export default class Keyboard extends Component {
   }
 
   componentDidMount = () => {
-    window.addEventListener("keydown", this.handlePhysKeydown);
-    window.addEventListener("keyup", this.handlePhysKeyup);
+    window.addEventListener("keydown", this.handlePhysKeyDown);
+    window.addEventListener("keyup", this.handlePhysKeyUp);
     this.updateKeyboard(this.props.text);
   }
 
   componentWillUnmount = () => {
-    window.removeEventListener("keydown", this.handlePhysKeydown);
-    window.removeEventListener("keyup", this.handlePhysKeyup);
+    window.removeEventListener("keydown", this.handlePhysKeyDown);
+    window.removeEventListener("keyup", this.handlePhysKeyUp);
   }
 
   componentDidUpdate = (prevProps, prevState) => {
@@ -122,34 +122,39 @@ export default class Keyboard extends Component {
     this.props.onTextChange(this.props.text, caretPos);
   }
 
-  handlePhysKeydown = e => {
-    if (e.key === "v" && (e.ctrlKey || e.metaKey)) {
-      navigator.clipboard.readText().then(clipboardText => {
-        let text = this.props.text.slice(0, this.props.caretPos) + clipboardText + this.props.text.slice(this.props.caretPos);
-        if (text !== this.props.text) {
-          this.props.onTextChange(text, this.props.caretPos + clipboardText.length);
-        }
-      }, () => {});
-      e.preventDefault();
-    } else if (e.key === "Shift") {
+  handlePhysKeyDown = e => {
+    let preventDefault = false;
+
+    if (e.key === "Shift") {
       this.setState({ shiftLevel: 1 });
+      preventDefault = true;
+    }
+
+    if (!preventDefault && !e.isComposing) {
+      if (e.key === "Backspace") {
+        this.handleKeypress("\u0008");
+        preventDefault = true;
+      } else if (e.key === "Delete") {
+        this.handleKeypress("\u007f");
+        preventDefault = true;
+      } else if (e.key === "Enter") {
+        this.handleKeypress("\n");
+        preventDefault = true;
+      } else if (e.key === "ArrowLeft") {
+        this.handleArrow("←");
+        preventDefault = true;
+      } else if (e.key === "ArrowRight") {
+        this.handleArrow("→");
+        preventDefault = true;
+      }
+    }
+
+    if (preventDefault) {
       e.preventDefault();
-    } else if (e.key === "Backspace") {
-      this.handleKeypress("\u0008");
-      e.preventDefault();
-    } else if (e.key === "Delete") {
-      this.handleKeypress("\u007f");
-      e.preventDefault();
-    } else if (e.key === "Enter") {
-      this.handleKeypress("\n");
-      e.preventDefault();
-    } else if (e.key === "ArrowLeft") {
-      this.handleArrow("←");
-      e.preventDefault();
-    } else if (e.key === "ArrowRight") {
-      this.handleArrow("→");
-      e.preventDefault();
-    } else if (document.activeElement !== this.physBufferRef.current) {
+    } else if (document.activeElement !== this.physBufferRef.current
+      && !(e.key === "Meta" || e.key === "Control" || e.key === "Alt")
+      && !(e.key === "c" && (e.ctrlKey || e.metaKey))
+    ) {
       this.physBufferRef.current.focus();
       this.physBufferRef.current.dispatchEvent(new KeyboardEvent("keypress", {
         key: e.key,
@@ -164,15 +169,15 @@ export default class Keyboard extends Component {
     }
   }
 
-  handlePhysKeyup = e => {
+  handlePhysKeyUp = e => {
     if (e.key === "Shift") {
       this.setState({ shiftLevel: 0 });
       e.preventDefault();
     }
   }
 
-  handlePhysBufferKeyUp = e => {
-    if (!e.nativeEvent.isComposing && e.target.value.length) {
+  handlePhysBufferInput = e => {
+    if (e.target.value.length && !e.nativeEvent.isComposing) {
       this.handleKeypress(e.target.value);
       e.target.value = "";
     }
@@ -227,7 +232,7 @@ export default class Keyboard extends Component {
         {keySet.has("arrowright") &&
           <Key gridArea="arrowright" text="→" className="arrowright" onClick={e => this.handleArrow("→")} unzoomable flash />
         }
-        <input id="phys-key-buffer" ref={this.physBufferRef} onKeyUp={this.handlePhysBufferKeyUp} />
+        <input id="phys-key-buffer" ref={this.physBufferRef} onKeyUp={this.handlePhysBufferInput} onInput={this.handlePhysBufferInput} />
       </div>
     )
   }

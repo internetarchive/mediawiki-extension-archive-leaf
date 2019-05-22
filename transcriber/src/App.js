@@ -22,6 +22,30 @@ const blockPinchZoom = e => {
 //   e.target.click();
 // }
 
+const getCaretViaGetSelection = () => {
+  if (window.getSelection) {
+      let sel = window.getSelection();
+      if (!sel.anchorNode || !sel.isCollapsed) {
+        return null;
+      }
+      return { node: sel.anchorNode, caretPos: sel.anchorOffset };
+  } else {
+    return null;
+  }
+}
+
+const getCaretViaCaretRangeFromPoint = e => {
+  if (document.caretRangeFromPoint) {
+    let range = document.caretRangeFromPoint(e.clientX, e.clientY);
+    if (!range || !range.collapsed) {
+      return null;
+    }
+    return { node: range.commonAncestorContainer, caretPos: range.startOffset };
+  } else {
+    return null;
+  }
+}
+
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -41,9 +65,9 @@ export default class App extends Component {
 
   detectPlatform = () => {
     let ua = window.navigator.userAgent;
-    let isIOS = ua.match(/iPhone|iPod|iPad/);
-    this.isMobile = isIOS || ua.match(/Android/);
-    this.isIOSSafari = isIOS && ua.match(/WebKit/) && !ua.match(/CriOS/);
+    this.isIOS = ua.match(/iPhone|iPod|iPad/);
+    this.isIOSSafari = this.isIOS && ua.match(/WebKit/) && !ua.match(/CriOS/);
+    this.isMobile = this.isIOS || ua.match(/Android/);
   }
 
   viewportFix = () => {
@@ -85,33 +109,21 @@ export default class App extends Component {
   }
 
   handleCaretMove = e => {
-    let node, caretPos;
+    let sel = this.isIOS
+      ? getCaretViaCaretRangeFromPoint(e)
+      : getCaretViaGetSelection();
 
-    if (document.caretRangeFromPoint) {
-      let range = document.caretRangeFromPoint(e.clientX, e.clientY);
-      if (!range || !range.collapsed) {
-        return;
-      }
-      node = range.commonAncestorContainer;
-      caretPos = range.startOffset;
-    } else if (window.getSelection) {
-      let sel = window.getSelection();
-      if (!sel.anchorNode || !sel.isCollapsed) {
-        return;
-      }
-      node = sel.anchorNode;
-      caretPos = sel.anchorOffset;
-    } else {
-      return;
-    }
+    if (sel) {
+      let { node, caretPos } = sel;
 
-    while (node.previousSibling) {
-      node = node.previousSibling;
-      if (node.nodeType === 3) {
-        caretPos += node.nodeValue.length;
+      while (node.previousSibling) {
+        node = node.previousSibling;
+        if (node.nodeType === 3) {
+          caretPos += node.nodeValue.length;
+        }
       }
+      this.setState({ caretPos });
     }
-    this.setState({ caretPos });
   }
 
   scrollToCaret = () => {
