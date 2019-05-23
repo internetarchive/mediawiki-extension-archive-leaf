@@ -163,6 +163,9 @@ export default class Keyboard extends Component {
         metaKey: e.metaKey,
         repeat: e.repeat,
         isComposing: e.isComposing,
+        charCode: e.charCode,
+        keyCode: e.keyCode,
+        which: e.which,
       }));
     }
   }
