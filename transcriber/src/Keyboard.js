@@ -154,7 +154,7 @@ export default class Keyboard extends Component {
       && !(e.key === "c" && (e.ctrlKey || e.metaKey))
     ) {
       this.physBufferRef.current.focus();
-      this.physBufferRef.current.dispatchEvent(new KeyboardEvent("keypress", {
+      this.physBufferRef.current.dispatchEvent(new KeyboardEvent("keydown", {
         key: e.key,
         code: e.code,
         ctrlKey: e.ctrlKey,
