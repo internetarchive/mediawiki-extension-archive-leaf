@@ -24,11 +24,11 @@ const blockPinchZoom = e => {
 
 const getCaretViaGetSelection = () => {
   if (window.getSelection) {
-      let sel = window.getSelection();
-      if (!sel.anchorNode || !sel.isCollapsed) {
-        return null;
-      }
-      return { node: sel.anchorNode, caretPos: sel.anchorOffset };
+    let sel = window.getSelection();
+    if (!sel.anchorNode || !sel.isCollapsed) {
+      return null;
+    }
+    return { node: sel.anchorNode, caretPos: sel.anchorOffset };
   } else {
     return null;
   }
