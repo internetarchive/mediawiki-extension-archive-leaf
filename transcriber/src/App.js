@@ -22,25 +22,23 @@ const blockPinchZoom = e => {
 //   e.target.click();
 // }
 
-const getCaretViaGetSelection = () => {
+const getSelection = () => {
   if (window.getSelection) {
     let sel = window.getSelection();
-    if (!sel.anchorNode || !sel.isCollapsed) {
-      return null;
-    }
-    return { node: sel.anchorNode, caretPos: sel.anchorOffset };
+    return sel.anchorNode && sel.isCollapsed
+      ? { node: sel.anchorNode, caretPos: sel.anchorOffset }
+      : null;
   } else {
     return null;
   }
 }
 
-const getCaretViaCaretRangeFromPoint = e => {
+const getCaretRangeFromPoint = e => {
   if (document.caretRangeFromPoint) {
     let range = document.caretRangeFromPoint(e.clientX, e.clientY);
-    if (!range || !range.collapsed) {
-      return null;
-    }
-    return { node: range.commonAncestorContainer, caretPos: range.startOffset };
+    return range && range.collapsed
+      ? { node: range.commonAncestorContainer, caretPos: range.startOffset }
+      : null;
   } else {
     return null;
   }
@@ -110,8 +108,8 @@ export default class App extends Component {
 
   handleCaretMove = e => {
     let sel = this.isIOS
-      ? getCaretViaCaretRangeFromPoint(e)
-      : getCaretViaGetSelection();
+      ? getCaretRangeFromPoint(e)
+      : getSelection();
 
     if (sel) {
       let { node, caretPos } = sel;
