@@ -53,6 +53,10 @@ export default class App extends Component {
     this.detectPlatform();
     this.viewportFix();
 
+    this.getSelection = this.isIOS
+      ? getCaretRangeFromPoint
+      : getSelection;
+
     this.state = {
       text: "",
       caretPos: 0,
@@ -107,10 +111,7 @@ export default class App extends Component {
   }
 
   handleCaretMove = e => {
-    let sel = this.isIOS
-      ? getCaretRangeFromPoint(e)
-      : getSelection();
-
+    let sel = this.getSelection(e);
     if (sel) {
       let { node, caretPos } = sel;
 
