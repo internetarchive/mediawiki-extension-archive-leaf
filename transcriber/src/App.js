@@ -23,25 +23,17 @@ const blockPinchZoom = e => {
 // }
 
 const getSelection = () => {
-  if (window.getSelection) {
-    let sel = window.getSelection();
-    return sel.anchorNode && sel.isCollapsed
-      ? { node: sel.anchorNode, caretPos: sel.anchorOffset }
-      : null;
-  } else {
-    return null;
-  }
+  let sel = window.getSelection();
+  return sel.anchorNode && sel.isCollapsed
+    ? { node: sel.anchorNode, caretPos: sel.anchorOffset }
+    : null;
 }
 
 const getCaretRangeFromPoint = e => {
-  if (document.caretRangeFromPoint) {
-    let range = document.caretRangeFromPoint(e.clientX, e.clientY);
-    return range && range.collapsed
-      ? { node: range.commonAncestorContainer, caretPos: range.startOffset }
-      : null;
-  } else {
-    return null;
-  }
+  let range = document.caretRangeFromPoint(e.clientX, e.clientY);
+  return range && range.collapsed
+    ? { node: range.commonAncestorContainer, caretPos: range.startOffset }
+    : null;
 }
 
 export default class App extends Component {
@@ -51,11 +43,8 @@ export default class App extends Component {
     this.textbox = document.getElementById("wpTextbox1");
 
     this.detectPlatform();
+    this.detectGetSelection();
     this.viewportFix();
-
-    this.getSelection = this.isIOS
-      ? getCaretRangeFromPoint
-      : getSelection;
 
     this.state = {
       text: "",
@@ -70,6 +59,16 @@ export default class App extends Component {
     this.isIOS = ua.match(/iPhone|iPod|iPad/);
     this.isIOSSafari = this.isIOS && ua.match(/WebKit/) && !ua.match(/CriOS/);
     this.isMobile = this.isIOS || ua.match(/Android/);
+  }
+
+  detectGetSelection = () => {
+    let [ supported, func ] = this.isIOS
+      ? [ document.caretRangeFromPoint, getCaretRangeFromPoint ]
+      : [ window.getSelection, getSelection ];
+
+    this.getSelection = supported
+      ? func
+      : () => null;
   }
 
   viewportFix = () => {
