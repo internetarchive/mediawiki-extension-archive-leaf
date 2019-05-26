@@ -5,11 +5,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faKeyboard } from '@fortawesome/free-solid-svg-icons';
 
 import './App.css';
-
 import Keyboard from './Keyboard';
 
 let entryImageUrl = window.entryImageUrl;
-let iiifBaseUrl = 'https://iiif.archivelab.org/iiif';
+let iiifBaseUrl = "https://iiif.archivelab.org/iiif";
 
 const blockPinchZoom = e => {
   if (e.touches.length > 1) {
@@ -73,16 +72,16 @@ export default class App extends Component {
 
   viewportFix = () => {
     if (this.isMobile) {
-      document.documentElement.style.setProperty('--vh', this.getVhPx());
-      window.addEventListener('resize', () => {
-        document.documentElement.style.setProperty('--vh', this.getVhPx());
+      document.documentElement.style.setProperty("--vh", this.getVhPx());
+      window.addEventListener("resize", () => {
+        document.documentElement.style.setProperty("--vh", this.getVhPx());
       });
     }
   }
 
   getVhPx = () => {
     let height = document.documentElement.clientHeight;
-    return (height * 0.01) + 'px';
+    return (height * 0.01) + "px";
   }
 
   componentDidMount = () => {
@@ -102,8 +101,6 @@ export default class App extends Component {
     let closeTags = this.textbox.value.match(/<\/transcription>/g);
     if (!openTags || !closeTags || (openTags && openTags.length !== 1) || (closeTags && closeTags.length !== 1)) {
       error = true;
-    }
-    if (error) {
       alert("Transcription tags are malformed!");
     }
     this.setState({ error });
@@ -140,19 +137,15 @@ export default class App extends Component {
 
   getArchiveItem = () => {
     let matches = this.textbox.value.match(/\bEntryID=(\S+).*\bTitle=(\S+)/s);
-    if (matches) {
-      this.archiveItem = { id: matches[1], leaf: matches[2] };
-    } else {
-      this.archiveItem = null;
-    }
+    this.archiveItem = matches
+      ? { id: matches[1], leaf: matches[2] }
+      : null;
   }
 
   storageKey = () => {
-    if (this.archiveItem) {
-      return this.archiveItem.id + '$' + this.archiveItem.leaf;
-    } else {
-      return null;
-    }
+    return this.archiveItem
+      ? this.archiveItem.id + "$" + this.archiveItem.leaf
+      : null;
   }
 
   getTranscription = () => {
@@ -204,11 +197,11 @@ export default class App extends Component {
   afterOpen = () => {
     if (!this.error) {
       if (this.isIOSSafari) {
-        document.addEventListener('touchmove', blockPinchZoom, { passive: false });
-        //document.addEventListener('touchend', blockTapZoom, { passive: false });
+        document.addEventListener("touchmove", blockPinchZoom, { passive: false });
+        //document.addEventListener("touchend", blockTapZoom, { passive: false });
       }
-      document.body.classList.add('noscroll');
-      document.addEventListener('keydown', this.handleKeydown);
+      document.body.classList.add("noscroll");
+      document.addEventListener("keydown", this.handleKeydown);
 
       this.getArchiveItem();
       this.getTranscription();
@@ -217,11 +210,11 @@ export default class App extends Component {
 
   handleClose = () => {
     if (this.isIOSSafari) {
-      document.removeEventListener('touchmove', blockPinchZoom);
-      //document.removeEventListener('touchend', blockTapZoom);
+      document.removeEventListener("touchmove", blockPinchZoom);
+      //document.removeEventListener("touchend", blockTapZoom);
     }
-    document.body.classList.remove('noscroll');
-    document.removeEventListener('keydown', this.handleKeydown);
+    document.body.classList.remove("noscroll");
+    document.removeEventListener("keydown", this.handleKeydown);
     this.setState({ open: false }, this.setTranscription);
   }
 
@@ -237,15 +230,17 @@ export default class App extends Component {
   }
 
   getImageRegionUrl = () => {
-    if (!(this.imageState && this.archiveItem)) return null;
+    if (this.imageState && this.archiveItem) {
+      let { left, top, scale, containerDimensions, imageDimensions } = this.imageState;
+      let xPct = (-100 * left / (imageDimensions.width * scale)).toFixed(2);
+      let yPct = (-100 * top / (imageDimensions.height * scale)).toFixed(2);
+      let widthPct = (100 * containerDimensions.width / (imageDimensions.width * scale)).toFixed(2);
+      let heightPct = (100 * containerDimensions.height / (imageDimensions.height * scale)).toFixed(2);
 
-    let { left, top, scale, containerDimensions, imageDimensions } = this.imageState;
-    let xPct = (-100 * left / (imageDimensions.width * scale)).toFixed(2);
-    let yPct = (-100 * top / (imageDimensions.height * scale)).toFixed(2);
-    let widthPct = (100 * containerDimensions.width / (imageDimensions.width * scale)).toFixed(2);
-    let heightPct = (100 * containerDimensions.height / (imageDimensions.height * scale)).toFixed(2);
-
-    return `${iiifBaseUrl}/${this.archiveItem.id}%24${this.archiveItem.leaf}/pct:${xPct},${yPct},${widthPct},${heightPct}/full/0/default.jpg`;
+      return `${iiifBaseUrl}/${this.archiveItem.id}%24${this.archiveItem.leaf}/pct:${xPct},${yPct},${widthPct},${heightPct}/full/0/default.jpg`;
+    } else {
+      return null;
+    }
   }
 
   render() {
