@@ -222,6 +222,10 @@ export default class App extends Component {
     if (e.key === "Escape" && !(e.altKey || e.ctrlKey || e.metaKey || e.shiftKey)) {
       this.handleClose();
       e.preventDefault();
+    } else if (e.key === "t" && e.ctrlKey) {
+      this.getTransliteration().then(text => {
+        this.setState({ text, caretPos: text.length });
+      });
     }
   }
 
