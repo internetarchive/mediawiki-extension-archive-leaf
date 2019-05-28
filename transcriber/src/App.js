@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import PinchZoomPan from 'react-responsive-pinch-zoom-pan';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faKeyboard } from '@fortawesome/free-solid-svg-icons';
+import { Swipeable } from 'react-swipeable';
 
 import './App.css';
 import Keyboard from './Keyboard';
@@ -50,6 +51,8 @@ export default class App extends Component {
       caretPos: 0,
       open: true,
       error: false,
+      transliteration: "",
+      transliterationVisible: false,
     };
   }
 
@@ -223,9 +226,7 @@ export default class App extends Component {
       this.handleClose();
       e.preventDefault();
     } else if (e.key === "t" && e.ctrlKey) {
-      this.getTransliteration().then(text => {
-        this.setState({ text, caretPos: text.length });
-      });
+      this.handleOpenTransliteration();
     }
   }
 
@@ -233,9 +234,21 @@ export default class App extends Component {
     this.imageState = state;
   }
 
+  handleOpenTransliteration = () => {
+    if (!this.state.transliterationVisible) {
+      this.getTransliteration().then(transliteration => {
+        this.setState({ transliterationVisible: true, transliteration });
+      });
+    }
+  }
+
+  handleCloseTransliteration = () => {
+    this.setState({ transliterationVisible: false });
+  }
+
   getTransliteration = () => {
     return new Promise((resolve, reject) => {
-      window.fetch("/transliterate", {
+      window.fetch("https://bali.panlex.org/transliterate", {
         method: "POST",
         body: this.state.text
       }).then(res => {
@@ -267,10 +280,21 @@ export default class App extends Component {
               <img id="lontar" alt="lontar" src={entryImageUrl} />
             </PinchZoomPan>
           </div>
-          <div className="tr-text" onClick={this.handleCaretMove}>
+          <Swipeable
+            className="tr-text"
+            onClick={this.handleCaretMove}
+            onSwipedLeft={this.handleOpenTransliteration}
+            onSwipedRight={this.handleOpenTransliteration}
+          >
             {this.state.text.slice(0, this.state.caretPos)}
             <span className="tr-caret" ref={this.caretRef}></span>
             {this.state.text.slice(this.state.caretPos)}
+          </Swipeable>
+          <div
+            className={"tr-transliteration " + (this.state.transliterationVisible ? "visible" : "")}
+            onClick={this.handleCloseTransliteration}
+          >
+            {this.state.transliteration}
           </div>
           {(this.state.open && !this.state.error) &&
             <Keyboard
