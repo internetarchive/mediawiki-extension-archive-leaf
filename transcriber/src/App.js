@@ -229,6 +229,17 @@ export default class App extends Component {
     this.imageState = state;
   }
 
+  getTransliteration = () => {
+    return new Promise((resolve, reject) => {
+      window.fetch("/transliterate", {
+        method: "POST",
+        body: this.state.text
+      }).then(res => {
+        res.text().then(resolve, reject);
+      }, reject);
+    });
+  }
+
   getImageRegionUrl = () => {
     if (this.imageState && this.archiveItem) {
       let { left, top, scale, containerDimensions, imageDimensions } = this.imageState;
