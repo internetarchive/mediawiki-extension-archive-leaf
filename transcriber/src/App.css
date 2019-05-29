@@ -8,23 +8,25 @@ body.noscroll {
   line-height: normal;
 }
 
-.tr-close-button, .tr-open-button {
+.tr-buttons {
   position: fixed;
+  top: 0;
+  right: 0;
   margin: 10px;
+}
+
+.tr-button {
+  margin-left: 12px;
   height: 32px;
   cursor: pointer;
 }
 
-.tr-close-button {
-  top: 0;
-  right: 0;
-}
-
 .tr-open-button {
-  top: unset;
-  right: unset;
+  position: fixed;
   bottom: 0;
   left: 0;
+  margin: 10px;
+  height: 32px;
 }
 
 .transcriber {
@@ -50,11 +52,11 @@ body.noscroll {
 
 .tr-text {
   font-size: 16pt;
-  white-space: pre-wrap;
   font-family: "Noto Serif Balinese";
+  white-space: pre-wrap;
   width: 100%;
   height: 20%;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-wrap: break-word;
   word-break: break-all;
   scroll-behavior: smooth;
@@ -74,17 +76,17 @@ body.noscroll {
   transition: all 0.5s ease-out;
   z-index: 2;
   font-size: 16pt;
-  white-space: pre-wrap;
   font-family: sans-serif;
+  white-space: pre-wrap;
   width: 100%;
   height: 40%;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-wrap: break-word;
   word-break: break-all;
   position: absolute;
   top: 60%;
   left: 0;
-  padding: 5px;
+  padding: 5px 0px;
   background-color: white;
   border-top: 2px solid black;
 }
@@ -95,8 +97,12 @@ body.noscroll {
 }
 
 @media screen and (max-width: 350px) {
-  .tr-close-button, .tr-open-button {
+  .tr-button {
     transform: scale(1.4);
+  }
+
+  .tr-transliteration-button {
+    right: 50px;
   }
 }
 

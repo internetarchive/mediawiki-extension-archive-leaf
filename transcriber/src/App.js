@@ -2,7 +2,7 @@ import 'react-app-polyfill/stable';
 import React, { Component } from 'react';
 import PinchZoomPan from 'react-responsive-pinch-zoom-pan';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faKeyboard } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faKeyboard, faFont } from '@fortawesome/free-solid-svg-icons';
 import { Swipeable } from 'react-swipeable';
 
 import './App.css';
@@ -225,8 +225,6 @@ export default class App extends Component {
     if (e.key === "Escape" && !(e.altKey || e.ctrlKey || e.metaKey || e.shiftKey)) {
       this.handleClose();
       e.preventDefault();
-    } else if (e.key === "t" && e.ctrlKey) {
-      this.handleOpenTransliteration();
     }
   }
 
@@ -234,16 +232,28 @@ export default class App extends Component {
     this.imageState = state;
   }
 
-  handleOpenTransliteration = () => {
-    if (!this.state.transliterationVisible) {
-      this.getTransliteration().then(transliteration => {
-        this.setState({ transliterationVisible: true, transliteration });
-      });
+  setTransliterationVisible = transliterationVisible => {
+    if (transliterationVisible !== this.state.transliterationVisible) {
+      if (transliterationVisible) {
+        this.getTransliteration().then(transliteration => {
+          this.setState({ transliterationVisible, transliteration });
+        });
+      } else {
+        this.setState({ transliterationVisible });
+      }
     }
   }
 
-  handleCloseTransliteration = () => {
-    this.setState({ transliterationVisible: false });
+  showTransliteration = () => {
+    this.setTransliterationVisible(true);
+  }
+
+  hideTransliteration = () => {
+    this.setTransliterationVisible(false);
+  }
+
+  toggleTransliteration = () => {
+    this.setTransliterationVisible(!this.state.transliterationVisible);
   }
 
   getTransliteration = () => {
@@ -283,8 +293,8 @@ export default class App extends Component {
           <Swipeable
             className="tr-text"
             onClick={this.handleCaretMove}
-            onSwipedLeft={this.handleOpenTransliteration}
-            onSwipedRight={this.handleOpenTransliteration}
+            onSwipedLeft={this.showTransliteration}
+            onSwipedRight={this.showTransliteration}
           >
             {this.state.text.slice(0, this.state.caretPos)}
             <span className="tr-caret" ref={this.caretRef}></span>
@@ -292,7 +302,7 @@ export default class App extends Component {
           </Swipeable>
           <div
             className={"tr-transliteration " + (this.state.transliterationVisible ? "visible" : "")}
-            onClick={this.handleCloseTransliteration}
+            onClick={this.isMobile ? this.hideTransliteration : null}
           >
             {this.state.transliteration}
           </div>
@@ -306,13 +316,23 @@ export default class App extends Component {
           }
         </div>
         {(this.state.open && !this.state.error) ?
-          <button
-            className="tr-close-button"
-            onClick={this.handleClose}
-          >
-            <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-            <FontAwesomeIcon icon={faTimes} />
-          </button>
+          <div className="tr-buttons">
+            {!this.isMobile &&
+              <button
+                className="tr-button"
+                onClick={this.toggleTransliteration}
+              >
+                <FontAwesomeIcon icon={faFont} />
+              </button>
+            }
+            <button
+              className="tr-button"
+              onClick={this.handleClose}
+            >
+              <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+              <FontAwesomeIcon icon={faTimes} />
+            </button>
+          </div>
           :
           <button
             className="tr-open-button"
