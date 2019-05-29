@@ -1,4 +1,3 @@
-import 'react-app-polyfill/stable';
 import React, { Component } from 'react';
 import PinchZoomPan from 'react-responsive-pinch-zoom-pan';
 import { Swipeable } from 'react-swipeable';
