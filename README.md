@@ -20,10 +20,10 @@ ArchiveLeaf is a [MediaWiki](https://mediawiki.org) extension which implements e
     * Login into your wiki as administrator and navigate to `Special:Import`.
     * Import the `templates.xml` file located in this repository’s `sources` directory.
 
-Note that the `maintenance/transcriber-build` script modifies `extension.json`. In order to pull a new version from GitHub, you should run the following command from the `ArchiveLeaf` directory:
+In order to pull a new version from GitHub and build it, you can run the following command from the `ArchiveLeaf` directory:
 
 ```
-git reset --hard && git pull && maintenance/transcriber-install && maintenance/transcriber-build
+git pull && maintenance/transcriber-install && maintenance/transcriber-build
 ```
 
 ## Configuration
