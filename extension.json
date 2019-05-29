@@ -53,7 +53,7 @@
     },
     "ext.archiveleaf.transcriber": {
       "scripts": [
-        "transcriber/build/static/js/transcriber.js",
+        "transcriber/build/static/js/transcriber.js"
       ],
       "styles": [
         "transcriber/build/static/css/transcriber.css"
