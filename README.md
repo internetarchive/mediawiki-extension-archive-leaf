@@ -4,8 +4,8 @@ ArchiveLeaf is a [MediaWiki](https://mediawiki.org) extension which implements e
 
 ## Requirements
 
-* Mediawiki 1.27+
-* PHP 5.6+
+* Mediawiki 1.32+
+* PHP 7+
 * [node.js](https://nodejs.org) and [yarn](https://yarnpkg.com)
 * [jq](https://stedolan.github.io/jq/)
 
