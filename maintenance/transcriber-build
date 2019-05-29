@@ -4,12 +4,7 @@ cd transcriber
 yarn build
 
 cd build/static/js
-echo "/*@nomin*/" > transcriber.js
-cat runtime*.js >> transcriber.js
-echo >> transcriber.js
-cat [0-9]*.js >> transcriber.js
-echo >> transcriber.js
-cat main*.js >> transcriber.js
+cat <(echo "/*@nomin*/") runtime*.js <(echo) [0-9]*.js <(echo) main*.js > transcriber.js
 
 cd ../css
 cat [0-9]*.css main*.css > transcriber.css
