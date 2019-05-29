@@ -27,6 +27,7 @@ body.noscroll {
   left: 0;
   margin: 10px;
   height: 32px;
+  cursor: pointer;
 }
 
 .transcriber {
