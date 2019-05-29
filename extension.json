@@ -53,12 +53,10 @@
     },
     "ext.archiveleaf.transcriber": {
       "scripts": [
-        "transcriber/build/static/js/runtime~main.a8a9905a.js",
-        "transcriber/build/static/js/2.d6a534e5.chunk.js",
-        "transcriber/build/static/js/main.b05c7c10.chunk.js"
+        "transcriber/build/static/js/transcriber.js",
       ],
       "styles": [
-        "transcriber/build/static/css/main.899e7c32.chunk.css"
+        "transcriber/build/static/css/transcriber.css"
       ],
       "position": "top"
     }

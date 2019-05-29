@@ -1,23 +1,15 @@
 #!/bin/bash
 
-function to_json() {
-  printf '%s\n' $* | jq -R . | jq -s .
-}
-
 cd transcriber
 yarn build
-cd ..
 
-js=("transcriber/build/static/js/runtime*.js" "transcriber/build/static/js/[0-9]*.js" "transcriber/build/static/js/main*.js")
-css=("transcriber/build/static/css/[0-9]*.css" "transcriber/build/static/css/main*.css")
+cd build/static/js
+echo "/*nomin*/" > transcriber.js
+cat runtime*.js >> transcriber.js
+echo >> transcriber.js
+cat [0-9]*.js >> transcriber.js
+echo >> transcriber.js
+cat main*.js >> transcriber.js
 
-jq '.ResourceModules."ext.archiveleaf.transcriber".scripts = '"$(to_json ${js[@]})"' | .ResourceModules."ext.archiveleaf.transcriber".styles = '"$(to_json ${css[@]})" \
-  < extension.json \
-  > extension.json.new
-
-if [ $? -eq 0 ]
-then
-  mv -f extension.json.new extension.json
-else
-  echo failed
-fi
+cd ../css
+cat [0-9]*.css main*.css > transcriber.css
