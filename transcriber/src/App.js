@@ -1,9 +1,10 @@
 import 'react-app-polyfill/stable';
 import React, { Component } from 'react';
 import PinchZoomPan from 'react-responsive-pinch-zoom-pan';
+import { Swipeable } from 'react-swipeable';
+import cx from 'clsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faKeyboard, faFont } from '@fortawesome/free-solid-svg-icons';
-import { Swipeable } from 'react-swipeable';
 
 import './App.css';
 import Keyboard from './Keyboard';
@@ -284,7 +285,7 @@ export default class App extends Component {
   render() {
     return (
       <div className="App">
-        <div className={"transcriber " + (this.state.open && !this.state.error ? "" : "closed")}>
+        <div className={cx("transcriber", (!this.state.open || this.state.error) && "closed")}>
           <div className="image-container">
             <PinchZoomPan maxScale={5} doubleTapBehavior="zoom" zoomButtons={!this.isMobile} onChange={this.imageChange}>
               <img id="lontar" alt="lontar" src={entryImageUrl} />
@@ -301,7 +302,7 @@ export default class App extends Component {
             {this.state.text.slice(this.state.caretPos)}
           </Swipeable>
           <div
-            className={"tr-transliteration " + (this.state.transliterationVisible ? "visible" : "")}
+            className={cx("tr-transliteration", this.state.transliterationVisible && "visible")}
             onClick={this.isMobile ? this.hideTransliteration : null}
           >
             {this.state.transliteration}

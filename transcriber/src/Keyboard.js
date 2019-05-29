@@ -1,4 +1,5 @@
 import React, { Component, useState } from 'react';
+import cx from 'clsx';
 //import NonPrintingKeys from './NonPrintingKeys.js';
 import './Keyboard.css';
 import zwnj from './zwnj.svg';
@@ -23,16 +24,15 @@ const stringInsert = (string, addition, caretPos) => {
 
 const Key = props => {
   const [zoom, setZoom] = useState(false);
-  let className = [
-    props.className || "",
-    "kb-key",
-    (!props.unzoomable && zoom) ? "kb-zoom" : "",
-    (props.flash && zoom) ? "kb-flash" : "",
-  ].join(" ");
   return (
     <div
       style={{ gridArea: props.gridArea }}
-      className={className}
+      className={cx(
+        props.className,
+        "kb-key",
+        !props.unzoomable && zoom && "kb-zoom",
+        props.flash && zoom && "kb-flash"
+      )}
       onClick={props.onClick}
       onPointerDown={() => setZoom(true)}
       onPointerUp={() => {
