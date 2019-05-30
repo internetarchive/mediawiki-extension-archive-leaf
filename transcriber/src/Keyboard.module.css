@@ -58,3 +58,12 @@
   position: fixed;
   top: 99999px;
 }
+
+@media screen and (max-width: 420px) {
+  .keyboard {
+    font-size: calc(var(--vh, 1vh) * 3.8);
+  }
+  .key img {
+    block-size: calc(var(--vh, 1vh) * 3.8);
+  }
+}
