@@ -5,7 +5,7 @@ import cx from 'clsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faKeyboard, faFont } from '@fortawesome/free-solid-svg-icons';
 
-import './App.css';
+import styles from './App.module.css';
 import Keyboard from './Keyboard';
 
 let entryImageUrl = window.entryImageUrl;
@@ -203,7 +203,7 @@ export default class App extends Component {
         document.addEventListener("touchmove", blockPinchZoom, { passive: false });
         //document.addEventListener("touchend", blockTapZoom, { passive: false });
       }
-      document.body.classList.add("noscroll");
+      document.body.classList.add(styles.noscroll);
       document.addEventListener("keydown", this.handleKeydown);
 
       this.getArchiveItem();
@@ -216,7 +216,7 @@ export default class App extends Component {
       document.removeEventListener("touchmove", blockPinchZoom);
       //document.removeEventListener("touchend", blockTapZoom);
     }
-    document.body.classList.remove("noscroll");
+    document.body.classList.remove(styles.noscroll);
     document.removeEventListener("keydown", this.handleKeydown);
     this.setState({ open: false }, this.setTranscription);
   }
@@ -285,25 +285,25 @@ export default class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <div className={cx("transcriber", (!this.state.open || this.state.error) && "closed")}>
-          <div className="image-container">
+      <div className={styles.App}>
+        <div className={cx(styles.transcriber, (!this.state.open || this.state.error) && styles.closed)}>
+          <div className={styles.imageContainer}>
             <PinchZoomPan maxScale={5} doubleTapBehavior="zoom" zoomButtons={!this.isMobile} onChange={this.imageChange}>
               <img id="lontar" alt="lontar" src={entryImageUrl} />
             </PinchZoomPan>
           </div>
           <Swipeable
-            className="tr-text"
+            className={styles.text}
             onClick={this.handleCaretMove}
             onSwipedLeft={this.showTransliteration}
             onSwipedRight={this.showTransliteration}
           >
             {this.state.text.slice(0, this.state.caretPos)}
-            <span className="tr-caret" ref={this.caretRef}></span>
+            <span className={styles.caret} ref={this.caretRef}></span>
             {this.state.text.slice(this.state.caretPos)}
           </Swipeable>
           <div
-            className={cx("tr-transliteration", this.state.transliterationVisible && "visible")}
+            className={cx(styles.transliteration, this.state.transliterationVisible && styles.visible)}
             onClick={this.isMobile ? this.hideTransliteration : null}
           >
             {this.state.transliteration}
@@ -318,17 +318,17 @@ export default class App extends Component {
           }
         </div>
         {(this.state.open && !this.state.error) ?
-          <div className="tr-buttons">
+          <div className={styles.buttons}>
             {!this.isMobile &&
               <button
-                className="tr-button"
+                className={styles.button}
                 onClick={this.toggleTransliteration}
               >
                 <FontAwesomeIcon icon={faFont} />
               </button>
             }
             <button
-              className="tr-button"
+              className={styles.button}
               onClick={this.handleClose}
             >
               <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
@@ -337,7 +337,7 @@ export default class App extends Component {
           </div>
           :
           <button
-            className="tr-open-button"
+            className={styles.openButton}
             onClick={this.handleOpen}
           >
             <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes" />

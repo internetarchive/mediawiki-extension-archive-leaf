@@ -18,7 +18,7 @@
   color: darkgrey;
 }
 
-.kb-key {
+.key {
   background-color: white;
   box-sizing: border-box;
   text-align: center;
@@ -32,12 +32,12 @@
   user-select: none;
 }
 
-.kb-key img {
+.key img {
   block-size: calc(var(--vh, 1vh) * 4);
   margin: 8px;
 }
 
-.kb-key.kb-zoom {
+.key.zoom {
   z-index: 3;
   block-size: calc(var(--vh, 1vh) * 20);
   min-inline-size: 100%;
@@ -46,11 +46,11 @@
   align-self: end;
 }
 
-.kb-key.kb-flash {
+.key.flash {
   background-color: grey;
 }
 
-/* .kb-icon {
+/* .icon {
   block-size: 4vh;
 } */
 

@@ -8,20 +8,20 @@ body.noscroll {
   line-height: normal;
 }
 
-.tr-buttons {
+.buttons {
   position: fixed;
   top: 0;
   right: 0;
   margin: 10px;
 }
 
-.tr-button {
+.button {
   margin-left: 12px;
   height: 32px;
   cursor: pointer;
 }
 
-.tr-open-button {
+.openButton {
   position: fixed;
   bottom: 0;
   left: 0;
@@ -43,7 +43,7 @@ body.noscroll {
   display: none;
 }
 
-.image-container {
+.imageContainer {
   width: 100%;
   height: 40%;
   top: 0;
@@ -51,7 +51,7 @@ body.noscroll {
   position: absolute;
 }
 
-.tr-text {
+.text {
   font-size: 16pt;
   font-family: "Noto Serif Balinese";
   white-space: pre-wrap;
@@ -66,12 +66,12 @@ body.noscroll {
   left: 0;
 }
 
-.tr-caret {
+.caret {
   block-size: 100%;
   border-inline-start: 1px solid red;
 }
 
-.tr-transliteration {
+.transliteration {
   visibility: hidden;
   opacity: 0;
   transition: all 0.5s ease-out;
@@ -92,18 +92,14 @@ body.noscroll {
   border-top: 2px solid black;
 }
 
-.tr-transliteration.visible {
+.transliteration.visible {
   visibility: visible;
   opacity: 1;
 }
 
 @media screen and (max-width: 350px) {
-  .tr-button {
+  .button {
     transform: scale(1.4);
-  }
-
-  .tr-transliteration-button {
-    right: 50px;
   }
 }
 

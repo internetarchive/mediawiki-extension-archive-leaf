@@ -1,7 +1,8 @@
 import React, { Component, useState } from 'react';
 import cx from 'clsx';
+
 //import NonPrintingKeys from './NonPrintingKeys.js';
-import './Keyboard.css';
+import styles from './Keyboard.module.css';
 import zwnj from './zwnj.svg';
 import zwj from './zwj.svg';
 import layouts from './layouts.js';
@@ -29,9 +30,9 @@ const Key = props => {
       style={{ gridArea: props.gridArea }}
       className={cx(
         props.className,
-        "kb-key",
-        !props.unzoomable && zoom && "kb-zoom",
-        props.flash && zoom && "kb-flash"
+        styles.key,
+        !props.unzoomable && zoom && styles.zoom,
+        props.flash && zoom && styles.flash
       )}
       onClick={props.onClick}
       onPointerDown={() => setZoom(true)}
@@ -188,13 +189,13 @@ export default class Keyboard extends Component {
     let keySet = new Set(this.state.layout.grid.flat());
     return (
       <div
-        className="keyboard"
+        className={styles.keyboard}
         style={gridToStyle(this.state.layout.grid)}
       >
         {Object.entries(this.state.currLayout).map(([type, keys]) => keys.map((key, k) => (
           <Key
             gridArea={type + k}
-            className={type}
+            className={styles[type]}
             text={key ? stringInsert(this.state.layoutMatches[type], key).join("") : ""}
             key={type + k}
             onClick={e => this.handleKeypress(key)}
@@ -222,16 +223,16 @@ export default class Keyboard extends Component {
           <Key gridArea="letters" text="ᬳᬦᬘ" unzoomable flash onClick={e => this.setState({ layout: layouts[this.props.script].letters })} />
         }
         {keySet.has("space") &&
-          <Key gridArea="space" text="␣" className="space" onClick={e => this.handleKeypress(" ")} unzoomable flash />
+          <Key gridArea="space" text="␣" className={styles.space} onClick={e => this.handleKeypress(" ")} unzoomable flash />
         }
         {keySet.has("return") &&
-          <Key gridArea="return" text="⏎" className="return" onClick={e => this.handleKeypress("\n")} unzoomable flash />
+          <Key gridArea="return" text="⏎" className={styles.return} onClick={e => this.handleKeypress("\n")} unzoomable flash />
         }
         {keySet.has("arrowleft") &&
-          <Key gridArea="arrowleft" text="←" className="arrowleft" onClick={e => this.handleArrow("←")} unzoomable flash />
+          <Key gridArea="arrowleft" text="←" className={styles.arrowleft} onClick={e => this.handleArrow("←")} unzoomable flash />
         }
         {keySet.has("arrowright") &&
-          <Key gridArea="arrowright" text="→" className="arrowright" onClick={e => this.handleArrow("→")} unzoomable flash />
+          <Key gridArea="arrowright" text="→" className={styles.arrowright} onClick={e => this.handleArrow("→")} unzoomable flash />
         }
         <input id="phys-key-buffer" ref={this.physBufferRef} onKeyUp={this.handlePhysBufferInput} onInput={this.handlePhysBufferInput} />
       </div>
