@@ -87,7 +87,6 @@ body.noscroll {
   position: absolute;
   top: 60%;
   left: 0;
-  padding: 5px 0px;
   background-color: white;
   border-top: 2px solid black;
 }
@@ -95,6 +94,10 @@ body.noscroll {
 .transliteration.visible {
   visibility: visible;
   opacity: 1;
+}
+
+.transliterationText {
+  padding: 3px;
 }
 
 @media screen and (max-width: 350px) {
