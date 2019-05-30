@@ -235,9 +235,11 @@ export default class App extends Component {
   setTransliterationVisible = transliterationVisible => {
     if (transliterationVisible !== this.state.transliterationVisible) {
       if (transliterationVisible) {
-        this.getTransliteration().then(transliteration => {
-          this.setState({ transliterationVisible, transliteration });
-        });
+        if (this.state.text.trim().length) {
+          this.getTransliteration().then(transliteration => {
+            this.setState({ transliterationVisible, transliteration });
+          });
+        }
       } else {
         this.setState({ transliterationVisible });
       }
