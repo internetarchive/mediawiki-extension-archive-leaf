@@ -11,7 +11,7 @@ $keyboardTop: $imageHeight + $textHeight;
 $keyboardHeight: 100% - $keyboardTop;
 
 @function vh($val) {
-    @return calc(var(--vh, 1vh) * #{$val});
+  @return calc(var(--vh, 1vh) * #{$val});
 }
 
 @mixin pane {
