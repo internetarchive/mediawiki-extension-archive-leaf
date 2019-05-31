@@ -1,3 +1,5 @@
+$fontSize: 16pt;
+
 $imageTop: 0;
 $imageHeight: 40%;
 $imageHeightExpanded: 50%;
@@ -29,4 +31,9 @@ $keyboardHeight: 100% - $keyboardTop;
 
 @mixin balinese {
   font-family: "Noto Serif Balinese";
+}
+
+@mixin button {
+  height: 32px;
+  cursor: pointer;
 }
