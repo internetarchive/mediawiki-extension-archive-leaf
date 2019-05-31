@@ -284,10 +284,12 @@ export default class App extends Component {
   }
 
   render() {
+    let { open, error, text, caretPos, keyboardOpen } = this.state;
+
     return (
       <div className={styles.App}>
-        <div className={cx(styles.transcriber, (!this.state.open || this.state.error) && styles.closed)}>
-          <div className={cx(styles.image, !this.state.keyboardOpen && styles.expanded)}>
+        <div className={cx(styles.transcriber, (!open || error) && styles.closed)}>
+          <div className={cx(styles.image, !keyboardOpen && styles.expanded)}>
             <PinchZoomPan
               maxScale={5}
               doubleTapBehavior="zoom"
@@ -297,42 +299,42 @@ export default class App extends Component {
               <img id="lontar" alt="lontar" src={this.state.imageUrl} />
             </PinchZoomPan>
           </div>
-          {this.state.keyboardOpen ?
+          {keyboardOpen ?
             <Swipeable
               onSwipedLeft={this.showTransliteration}
               onSwipedRight={this.showTransliteration}
             >
               <div className={cx(styles.text)} onClick={this.handleCaretMove}>
-                {this.state.text.slice(0, this.state.caretPos)}
+                {text.slice(0, caretPos)}
                 <span className={styles.caret} ref={this.caretRef}></span>
-                {this.state.text.slice(this.state.caretPos)}
+                {text.slice(caretPos)}
               </div>
             </Swipeable>
           :
             <textarea
-              className={cx(styles.text, !this.state.keyboardOpen && styles.expanded)}
-              value={this.state.text}
+              className={cx(styles.text, !keyboardOpen && styles.expanded)}
+              value={text}
               onChange={this.textChangeTextArea}
             />
           }
           <div
-            className={cx(styles.transliteration, this.state.transliterationOpen && styles.visible, !this.state.keyboardOpen && styles.expanded)}
+            className={cx(styles.transliteration, this.state.transliterationOpen && styles.visible, !keyboardOpen && styles.expanded)}
             onClick={platform.mobile && this.hideTransliteration}
           >
             <div className={styles.transliterationText}>
               {this.state.transliteration}
             </div>
           </div>
-          {this.state.open && !this.state.error && this.state.keyboardOpen &&
+          {open && !error && keyboardOpen &&
             <Keyboard
               script="bali"
               onTextChange={this.textChange}
-              text={this.state.text}
-              caretPos={this.state.caretPos}
+              text={text}
+              caretPos={caretPos}
             />
           }
         </div>
-        {(this.state.open && !this.state.error) ?
+        {(open && !error) ?
           <div className={styles.buttons}>
             {!platform.mobile &&
               <>
