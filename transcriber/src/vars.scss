@@ -1,0 +1,32 @@
+$imageTop: 0;
+$imageHeight: 40%;
+$imageHeightExpanded: 50%;
+
+$textTop: $imageHeight;
+$textTopExpanded: $imageHeightExpanded;
+$textHeight: 20%;
+$textHeightExpanded: 100% - $imageHeightExpanded;
+
+$keyboardTop: $imageHeight + $textHeight;
+$keyboardHeight: 100% - $keyboardTop;
+
+@function vh($val) {
+    @return calc(var(--vh, 1vh) * #{$val});
+}
+
+@mixin pane {
+  position: absolute;
+  left: 0;
+  width: 100%;
+}
+
+@mixin wrap {
+  white-space: pre-wrap;
+  overflow-y: auto;
+  overflow-wrap: break-word;
+  word-break: break-all;
+}
+
+@mixin balinese {
+  font-family: "Noto Serif Balinese";
+}

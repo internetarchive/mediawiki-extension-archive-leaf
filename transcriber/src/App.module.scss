@@ -1,3 +1,5 @@
+@import './vars.scss';
+
 body.noscroll {
   overflow: hidden !important;
 }
@@ -43,37 +45,30 @@ body.noscroll {
   display: none;
 }
 
-.imageContainer {
-  width: 100%;
-  height: 40%;
-  top: 0;
-  left: 0;
-  position: absolute;
+.image {
+  @include pane;
+  top: $imageTop;
+  height: $imageHeight;
 }
 
-.imageContainer.expanded {
-  height: 50%;
+.image.expanded {
+  height: $imageHeightExpanded;
 }
 
 .text {
+  @include pane;
+  @include balinese;
+  @include wrap;
   font-size: 16pt;
-  font-family: "Noto Serif Balinese";
-  white-space: pre-wrap;
-  width: 100%;
-  height: 20%;
-  overflow-y: auto;
-  overflow-wrap: break-word;
-  word-break: break-all;
   scroll-behavior: smooth;
-  position: absolute;
-  top: 40%;
-  left: 0;
+  top: $textTop;
+  height: $textHeight;
   border: none;
 }
 
 .text.expanded {
-  height: 50%;
-  top: 50%;
+  top: $textTopExpanded;
+  height: $textHeightExpanded;
 }
 
 .caret {
@@ -82,28 +77,23 @@ body.noscroll {
 }
 
 .transliteration {
+  @include pane;
+  @include wrap;
   visibility: hidden;
   opacity: 0;
   transition: all 0.5s ease-out;
   z-index: 2;
   font-size: 16pt;
   font-family: sans-serif;
-  white-space: pre-wrap;
-  width: 100%;
-  height: 40%;
-  overflow-y: auto;
-  overflow-wrap: break-word;
-  word-break: break-all;
-  position: absolute;
-  top: 60%;
-  left: 0;
+  top: $keyboardTop;
+  height: $keyboardHeight;
   background-color: white;
   border-top: 2px solid black;
 }
 
 .transliteration.expanded {
-  height: 50%;
-  top: 50%;
+  top: $textTopExpanded;
+  height: $textHeightExpanded;
 }
 
 .transliteration.visible {

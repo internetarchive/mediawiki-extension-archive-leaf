@@ -2,7 +2,7 @@ import React, { Component, useState } from 'react';
 import cx from 'clsx';
 
 //import NonPrintingKeys from './NonPrintingKeys.js';
-import styles from './Keyboard.module.css';
+import styles from './Keyboard.module.scss';
 import zwnj from './zwnj.svg';
 import zwj from './zwj.svg';
 import layouts from './layouts.js';

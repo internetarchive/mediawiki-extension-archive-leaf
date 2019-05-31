@@ -5,7 +5,7 @@ import cx from 'clsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faKeyboard, faFont } from '@fortawesome/free-solid-svg-icons';
 
-import styles from './App.module.css';
+import styles from './App.module.scss';
 import Keyboard from './Keyboard';
 
 let entryImageUrl = window.entryImageUrl;
@@ -296,21 +296,21 @@ export default class App extends Component {
     return (
       <div className={styles.App}>
         <div className={cx(styles.transcriber, (!this.state.open || this.state.error) && styles.closed)}>
-          <div className={cx(styles.imageContainer, !this.state.keyboardOpen && styles.expanded)}>
+          <div className={cx(styles.image, !this.state.keyboardOpen && styles.expanded)}>
             <PinchZoomPan maxScale={5} doubleTapBehavior="zoom" zoomButtons={!this.isMobile} onChange={this.imageChange}>
               <img id="lontar" alt="lontar" src={entryImageUrl} />
             </PinchZoomPan>
           </div>
           {this.state.keyboardOpen ?
             <Swipeable
-              className={cx(styles.text)}
-              onClick={this.handleCaretMove}
               onSwipedLeft={this.showTransliteration}
               onSwipedRight={this.showTransliteration}
             >
-              {this.state.text.slice(0, this.state.caretPos)}
-              <span className={styles.caret} ref={this.caretRef}></span>
-              {this.state.text.slice(this.state.caretPos)}
+              <div className={cx(styles.text)} onClick={this.handleCaretMove}>
+                {this.state.text.slice(0, this.state.caretPos)}
+                <span className={styles.caret} ref={this.caretRef}></span>
+                {this.state.text.slice(this.state.caretPos)}
+              </div>
             </Swipeable>
           :
             <textarea

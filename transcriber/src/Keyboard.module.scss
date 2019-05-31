@@ -1,16 +1,12 @@
-/*body {
-  margin-bottom: calc(var(--vh, 1vh) * 40) !important;
-}*/
+@import './vars.scss';
 
 .keyboard {
-  font-family: "Noto Serif Balinese";
+  @include pane;
+  @include balinese;
   display: grid;
-  position: absolute;
-  top: 60%;
-  left: 0;
-  width: 100%;
-  height: 40%;
-  font-size: calc(var(--vh, 1vh) * 4);
+  top: $keyboardTop;
+  height: $keyboardHeight;
+  font-size: vh(4);
   background-color: white;
 }
 
@@ -33,13 +29,13 @@
 }
 
 .key img {
-  block-size: calc(var(--vh, 1vh) * 4);
+  block-size: vh(4);
   margin: 8px;
 }
 
 .key.zoom {
   z-index: 3;
-  block-size: calc(var(--vh, 1vh) * 20);
+  block-size: vh(20);
   min-inline-size: 100%;
   justify-content: flex-start;
   justify-self: center;
@@ -51,7 +47,7 @@
 }
 
 /* .icon {
-  block-size: 4vh;
+  block-size: vh(4);
 } */
 
 #phys-key-buffer {
@@ -61,9 +57,9 @@
 
 @media screen and (max-width: 420px) {
   .keyboard {
-    font-size: calc(var(--vh, 1vh) * 3.8);
+    font-size: vh(3.8);
   }
   .key img {
-    block-size: calc(var(--vh, 1vh) * 3.8);
+    block-size: vh(3.8);
   }
 }
