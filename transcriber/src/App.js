@@ -46,13 +46,18 @@ export default class App extends Component {
     this.detectGetSelection();
     this.viewportFix();
 
+    let keyboardOpen = window.localStorage.getItem("keyboardOpen") === "false"
+      ? false
+      : true;
+
     this.state = {
       text: "",
       caretPos: 0,
       open: true,
       error: false,
       transliteration: "",
-      transliterationVisible: false,
+      transliterationOpen: false,
+      keyboardOpen,
     };
   }
 
@@ -93,7 +98,8 @@ export default class App extends Component {
   }
 
   componentDidUpdate = (prevProps, prevState) => {
-    if (this.state.caretPos !== prevState.caretPos || this.state.text !== prevState.text) {
+    if (this.state.keyboardOpen &&
+      (this.state.caretPos !== prevState.caretPos || this.state.text !== prevState.text)) {
       this.scrollToCaret();
     }
   }
@@ -107,89 +113,6 @@ export default class App extends Component {
       alert("Transcription tags are malformed!");
     }
     this.setState({ error });
-  }
-
-  handleCaretMove = e => {
-    let sel = this.getSelection(e);
-    if (sel) {
-      let { node, caretPos } = sel;
-
-      while (node.previousSibling) {
-        node = node.previousSibling;
-        if (node.nodeType === 3) {
-          caretPos += node.nodeValue.length;
-        }
-      }
-      this.setState({ caretPos });
-    }
-  }
-
-  scrollToCaret = () => {
-    let caret = this.caretRef.current;
-    caret.offsetParent.scrollTop = caret.offsetTop;
-  }
-
-  textChange = (text, caretPos) => {
-    this.setState({ text, caretPos });
-
-    let key = this.storageKey();
-    if (key) {
-      window.localStorage.setItem(key, text);
-    }
-  }
-
-  getArchiveItem = () => {
-    let matches = this.textbox.value.match(/\bEntryID=(\S+).*\bTitle=(\S+)/s);
-    this.archiveItem = matches
-      ? { id: matches[1], leaf: matches[2] }
-      : null;
-  }
-
-  storageKey = () => {
-    return this.archiveItem
-      ? this.archiveItem.id + "$" + this.archiveItem.leaf
-      : null;
-  }
-
-  getTranscription = () => {
-    let matches = this.textbox.value.match(/(?:.*<transcription>)(.*?)(?:<\/transcription>.*)/s);
-    if (matches) {
-      let text = matches[1].trim();
-      this.setState({ text, caretPos: text.length });
-      setTimeout(() => this.checkStoredText(text), 1000);
-    }
-  }
-
-  checkStoredText = text => {
-    let key = this.storageKey();
-    if (key) {
-      let savedText = window.localStorage.getItem(key);
-      if (savedText) {
-        savedText = savedText.trim();
-        if (savedText !== text) {
-          let useSaved = window.confirm("It looks like your work was interrupted. Do you want to restore your previous work?");
-          if (useSaved) {
-            this.setState({ text: savedText, caretPos: savedText.length });
-          }
-        }
-        window.localStorage.removeItem(key);
-      }
-    }
-  }
-
-  setTranscription = () => {
-    let transcription = (this.state.text).trim();
-    let matches = this.textbox.value.match(/(.*<transcription>).*(<\/transcription>.*)/s);
-    if (matches) {
-      this.textbox.value = [matches[1], transcription, matches[2]].join("\n");
-    } else {
-      this.textbox.value += "\n<transcription>\n" + transcription + "\n</transcription>";
-    }
-
-    let key = this.storageKey();
-    if (key) {
-      window.localStorage.removeItem(key);
-    }
   }
 
   handleOpen = () => {
@@ -228,34 +151,116 @@ export default class App extends Component {
     }
   }
 
-  imageChange = state => {
-    this.imageState = state;
+  getArchiveItem = () => {
+    let matches = this.textbox.value.match(/\bEntryID=(\S+).*\bTitle=(\S+)/s);
+    if (matches) {
+      this.archiveItem = { id: matches[1], leaf: matches[2] };
+      this.archiveItemKey = this.archiveItem.id + "$" + this.archiveItem.leaf;
+    }
   }
 
-  setTransliterationVisible = transliterationVisible => {
-    if (transliterationVisible !== this.state.transliterationVisible) {
-      if (transliterationVisible) {
+  getTranscription = () => {
+    let matches = this.textbox.value.match(/(?:.*<transcription>)(.*?)(?:<\/transcription>.*)/s);
+    if (matches) {
+      let text = matches[1].trim();
+      this.setState({ text, caretPos: text.length });
+      setTimeout(() => this.checkStoredText(text), 1000);
+    }
+  }
+
+  checkStoredText = text => {
+    if (this.archiveItemKey) {
+      let savedText = window.localStorage.getItem(this.archiveItemKey);
+      if (savedText) {
+        savedText = savedText.trim();
+        if (savedText !== text) {
+          let useSaved = window.confirm("It looks like your work was interrupted. Do you want to restore your previous work?");
+          if (useSaved) {
+            this.setState({ text: savedText, caretPos: savedText.length });
+          }
+        }
+        window.localStorage.removeItem(this.archiveItemKey);
+      }
+    }
+  }
+
+  setTranscription = () => {
+    let transcription = (this.state.text).trim();
+    let matches = this.textbox.value.match(/(.*<transcription>).*(<\/transcription>.*)/s);
+    if (matches) {
+      this.textbox.value = [matches[1], transcription, matches[2]].join("\n");
+    } else {
+      this.textbox.value += "\n<transcription>\n" + transcription + "\n</transcription>";
+    }
+
+    if (this.archiveItemKey) {
+      window.localStorage.removeItem(this.archiveItemKey);
+    }
+  }
+
+  textChange = (text, caretPos = 0) => {
+    this.setState({ text, caretPos });
+    if (this.archiveItemKey) {
+      window.localStorage.setItem(this.archiveItemKey, text);
+    }
+  }
+
+  textChangeTextArea = e => {
+    if (e.target.value !== this.state.text) {
+      this.textChange(e.target.value);
+    }
+  }
+
+  toggleKeyboard = () => {
+    let keyboardOpen = !this.state.keyboardOpen;
+    this.setState({ keyboardOpen });
+    window.localStorage.setItem("keyboardOpen", keyboardOpen);
+  }
+
+  handleCaretMove = e => {
+    let sel = this.getSelection(e);
+    if (sel) {
+      let { node, caretPos } = sel;
+
+      while (node.previousSibling) {
+        node = node.previousSibling;
+        if (node.nodeType === 3) {
+          caretPos += node.nodeValue.length;
+        }
+      }
+      this.setState({ caretPos });
+    }
+  }
+
+  scrollToCaret = () => {
+    let caret = this.caretRef.current;
+    caret.offsetParent.scrollTop = caret.offsetTop;
+  }
+
+  setTransliterationOpen = transliterationOpen => {
+    if (transliterationOpen !== this.state.transliterationOpen) {
+      if (transliterationOpen) {
         if (this.state.text.trim().length) {
           this.getTransliteration().then(transliteration => {
-            this.setState({ transliterationVisible, transliteration });
+            this.setState({ transliterationOpen, transliteration });
           });
         }
       } else {
-        this.setState({ transliterationVisible });
+        this.setState({ transliterationOpen });
       }
     }
   }
 
   showTransliteration = () => {
-    this.setTransliterationVisible(true);
+    this.setTransliterationOpen(true);
   }
 
   hideTransliteration = () => {
-    this.setTransliterationVisible(false);
+    this.setTransliterationOpen(false);
   }
 
   toggleTransliteration = () => {
-    this.setTransliterationVisible(!this.state.transliterationVisible);
+    this.setTransliterationOpen(!this.state.transliterationOpen);
   }
 
   getTransliteration = () => {
@@ -267,6 +272,10 @@ export default class App extends Component {
         res.text().then(resolve, reject);
       }, reject);
     });
+  }
+
+  imageChange = state => {
+    this.imageState = state;
   }
 
   getImageRegionUrl = () => {
@@ -287,30 +296,38 @@ export default class App extends Component {
     return (
       <div className={styles.App}>
         <div className={cx(styles.transcriber, (!this.state.open || this.state.error) && styles.closed)}>
-          <div className={styles.imageContainer}>
+          <div className={cx(styles.imageContainer, !this.state.keyboardOpen && styles.expanded)}>
             <PinchZoomPan maxScale={5} doubleTapBehavior="zoom" zoomButtons={!this.isMobile} onChange={this.imageChange}>
               <img id="lontar" alt="lontar" src={entryImageUrl} />
             </PinchZoomPan>
           </div>
-          <Swipeable
-            className={styles.text}
-            onClick={this.handleCaretMove}
-            onSwipedLeft={this.showTransliteration}
-            onSwipedRight={this.showTransliteration}
-          >
-            {this.state.text.slice(0, this.state.caretPos)}
-            <span className={styles.caret} ref={this.caretRef}></span>
-            {this.state.text.slice(this.state.caretPos)}
-          </Swipeable>
+          {this.state.keyboardOpen ?
+            <Swipeable
+              className={cx(styles.text)}
+              onClick={this.handleCaretMove}
+              onSwipedLeft={this.showTransliteration}
+              onSwipedRight={this.showTransliteration}
+            >
+              {this.state.text.slice(0, this.state.caretPos)}
+              <span className={styles.caret} ref={this.caretRef}></span>
+              {this.state.text.slice(this.state.caretPos)}
+            </Swipeable>
+          :
+            <textarea
+              className={cx(styles.text, !this.state.keyboardOpen && styles.expanded)}
+              value={this.state.text}
+              onChange={this.textChangeTextArea}
+            />
+          }
           <div
-            className={cx(styles.transliteration, this.state.transliterationVisible && styles.visible)}
-            onClick={this.isMobile ? this.hideTransliteration : null}
+            className={cx(styles.transliteration, this.state.transliterationOpen && styles.visible, !this.state.keyboardOpen && styles.expanded)}
+            onClick={this.isMobile && this.hideTransliteration}
           >
             <div className={styles.transliterationText}>
               {this.state.transliteration}
             </div>
           </div>
-          {(this.state.open && !this.state.error) &&
+          {this.state.open && !this.state.error && this.state.keyboardOpen &&
             <Keyboard
               script="bali"
               onTextChange={this.textChange}
@@ -322,12 +339,20 @@ export default class App extends Component {
         {(this.state.open && !this.state.error) ?
           <div className={styles.buttons}>
             {!this.isMobile &&
-              <button
-                className={styles.button}
-                onClick={this.toggleTransliteration}
-              >
-                <FontAwesomeIcon icon={faFont} />
-              </button>
+              <>
+                <button
+                  className={styles.button}
+                  onClick={this.toggleTransliteration}
+                >
+                  <FontAwesomeIcon icon={faFont} />
+                </button>
+                <button
+                  className={styles.button}
+                  onClick={this.toggleKeyboard}
+                >
+                  <FontAwesomeIcon icon={faKeyboard} />
+                </button>
+              </>
             }
             <button
               className={styles.button}

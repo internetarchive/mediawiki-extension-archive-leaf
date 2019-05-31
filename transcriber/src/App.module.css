@@ -51,6 +51,10 @@ body.noscroll {
   position: absolute;
 }
 
+.imageContainer.expanded {
+  height: 50%;
+}
+
 .text {
   font-size: 16pt;
   font-family: "Noto Serif Balinese";
@@ -64,6 +68,12 @@ body.noscroll {
   position: absolute;
   top: 40%;
   left: 0;
+  border: none;
+}
+
+.text.expanded {
+  height: 50%;
+  top: 50%;
 }
 
 .caret {
@@ -89,6 +99,11 @@ body.noscroll {
   left: 0;
   background-color: white;
   border-top: 2px solid black;
+}
+
+.transliteration.expanded {
+  height: 50%;
+  top: 50%;
 }
 
 .transliteration.visible {
