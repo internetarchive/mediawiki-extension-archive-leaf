@@ -46,10 +46,6 @@ export default class App extends Component {
     this.detectGetSelection();
     this.viewportFix();
 
-    let keyboardOpen = window.localStorage.getItem("keyboardOpen") === "false"
-      ? false
-      : true;
-
     this.state = {
       text: "",
       caretPos: 0,
@@ -57,7 +53,7 @@ export default class App extends Component {
       error: false,
       transliteration: "",
       transliterationOpen: false,
-      keyboardOpen,
+      keyboardOpen: !(window.localStorage.getItem("keyboardOpen") === "false"),
     };
   }
 
