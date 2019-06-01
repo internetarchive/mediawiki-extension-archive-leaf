@@ -72,24 +72,24 @@ Add the following to the `MediaWiki:Common.css` page on the wiki:
 
 ```css
 body {
-    font-family: "Noto Serif Balinese", sans-serif;
+  font-family: "Vimala Noto", "Noto Serif Balinese", sans-serif;
 }
 
 .mw-editfont-monospace {
-    font-family: "Noto Serif Balinese", monospace, monospace;
+  font-family: "Vimala Noto", "Noto Serif Balinese", monospace, monospace;
 }
 
 .mw-jump {
-    display: none;
+  display: none;
 }
 
 .thumbinner {
-    max-width: 100%;
+  max-width: 100%;
 }
 
 img.thumbimage {
-    width: 100%;
-    height: auto;
+  width: 100%;
+  height: auto;
 }
 ```
 
