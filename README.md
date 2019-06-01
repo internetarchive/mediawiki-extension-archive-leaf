@@ -130,7 +130,7 @@ One keyboard layout is currently available: Balinese. More are planned for the f
 * Type all vowels after their consonant (in spoken order), even if they are written to the left of the consonant, like "ᬳᬾ".
 * To type consonant clusters, type the first consonant, then adeg-adeg (in the vowel marks section), then the following consonant. The keyboard will adjust to demonstrate the character to be typed.
 * If an explicit adeg-adeg is needed in a place that would normally cause a consonanant cluster (such as "ᬦ᭄‌ᬪ"), type the first consonant, then the adeg-adeg, then a Zero-Width Non-Joiner (the key to the right of the space bar), then the next consonant. The Zero-Width Non-Joiner blocks the adeg-adeg from creating a consonant cluster.
-* Rarer and Sanskrit-specific consonants, and some rare vowel marks, can be found by pressing the shift key.
+* Sanskrit-specific consonants and less common vowel marks can be found by pressing the shift key.
 * To type numbers and punctuation marks, press the bottom-left key "᭗᭘᭙".
 
 ## Implementation
