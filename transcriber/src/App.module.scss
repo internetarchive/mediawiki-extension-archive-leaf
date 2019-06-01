@@ -58,6 +58,7 @@ body.noscroll {
   @include balinese;
   @include wrap;
   font-size: $fontSize;
+  line-height: 2.3;
   scroll-behavior: smooth;
   top: $textTop;
   height: $textHeight;
@@ -104,7 +105,7 @@ body.noscroll {
 }
 
 @media screen and (max-width: 350px) {
-  .button {
+  .button, .openButton {
     transform: scale(1.4);
   }
 }

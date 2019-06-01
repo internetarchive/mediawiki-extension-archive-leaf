@@ -6,6 +6,15 @@
     unicode-range: U+1B00-1B7F;
 }
 
+/* © Aditya Bayu Perdana, CC-BY-NC-ND */
+@font-face {
+    font-family: "Vimala Noto";
+    src: url(https://bali.panlex.org/transcriber/static/media/VimalaNoto.woff2) format('woff2'),
+         url(https://bali.panlex.org/transcriber/static/media/VimalaNoto.woff) format('woff'),
+         url(https://bali.panlex.org/transcriber/static/media/VimalaNoto.otf) format('opentype');
+    unicode-range: U+1B00-1B7F;
+}
+
 @font-face {
     font-family: "Noto Sans Sinhala";
     src: url(https://archive.org/cors/NotoFonts/NotoSansSinhala-Regular.woff2) format('woff2'),

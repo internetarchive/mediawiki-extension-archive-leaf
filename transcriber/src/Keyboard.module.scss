@@ -1,12 +1,14 @@
 @import './vars.scss';
 
+$keyboardFontSize: vh(3.9);
+
 .keyboard {
   @include pane;
   @include balinese;
   display: grid;
   top: $keyboardTop;
   height: $keyboardHeight;
-  font-size: vh(4);
+  font-size: $keyboardFontSize;
   background-color: white;
 }
 
@@ -29,7 +31,7 @@
 }
 
 .key img {
-  block-size: vh(4);
+  block-size: $keyboardFontSize;
   margin: 8px;
 }
 
@@ -47,19 +49,10 @@
 }
 
 /* .icon {
-  block-size: vh(4);
+  block-size: $keyboardFontSize;
 } */
 
 #phys-key-buffer {
   position: fixed;
   top: 99999px;
-}
-
-@media screen and (max-width: 420px) {
-  .keyboard {
-    font-size: vh(3.8);
-  }
-  .key img {
-    block-size: vh(3.8);
-  }
 }
