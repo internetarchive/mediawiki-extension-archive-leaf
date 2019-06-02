@@ -30,7 +30,8 @@ $keyboardHeight: 100% - $keyboardTop;
 }
 
 @mixin balinese {
-  font-family: "Vimala Noto", "Noto Serif Balinese", sans-serif;
+  //font-family: "Vimala Noto", "Noto Serif Balinese", sans-serif;
+  font-family: "Noto Serif Balinese", sans-serif;
 }
 
 @mixin button {
