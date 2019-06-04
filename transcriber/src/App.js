@@ -93,7 +93,7 @@ export default class App extends Component {
   }
 
   componentDidUpdate = (prevProps, prevState) => {
-    if (this.state.keyboardOpen &&
+    if (this.state.open && !this.state.error && this.state.keyboardOpen &&
       (this.state.caretPos !== prevState.caretPos || this.state.text !== prevState.text)) {
       this.scrollToCaret();
     }
@@ -103,7 +103,10 @@ export default class App extends Component {
     let error = false;
     let openTags = this.textbox.value.match(/<transcription>/g);
     let closeTags = this.textbox.value.match(/<\/transcription>/g);
-    if (!openTags || !closeTags || (openTags && openTags.length !== 1) || (closeTags && closeTags.length !== 1)) {
+    if ((openTags || closeTags) &&
+      (!(openTags && openTags.length === 1 && closeTags && closeTags.length === 1) ||
+      !(this.textbox.value.indexOf("<transcription>") < this.textbox.value.indexOf("</transcription>")))
+    ) {
       error = true;
       alert("Transcription tags are malformed!");
     }
