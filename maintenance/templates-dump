@@ -1,3 +1,4 @@
 #!/bin/bash
 
-php ../../maintenance/dumpBackup.php --current --filter=namespace:10 > sources/templates.xml
+php ../../maintenance/getText.php Template:Entry > sources/template_entry.txt
+php ../../maintenance/getText.php Template:EntryImage > sources/template_entryimage.txt
