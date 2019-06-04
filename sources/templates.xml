@@ -1,9 +1,9 @@
 <mediawiki xmlns="http://www.mediawiki.org/xml/export-0.10/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mediawiki.org/xml/export-0.10/ http://www.mediawiki.org/xml/export-0.10.xsd" version="0.10" xml:lang="en">
   <siteinfo>
-    <sitename>Wiki8</sitename>
-    <dbname>mw8</dbname>
-    <base>http://mw8.local/index.php/Main_Page</base>
-    <generator>MediaWiki 1.28.0</generator>
+    <sitename>Bali test wiki</sitename>
+    <dbname>wikidb</dbname>
+    <base>https://bali.panlex.org/wiki/Main_Page</base>
+    <generator>MediaWiki 1.32.0</generator>
     <case>case-sensitive</case>
     <namespaces>
       <namespace key="-2" case="case-sensitive">Media</namespace>
@@ -12,8 +12,8 @@
       <namespace key="1" case="case-sensitive">Talk</namespace>
       <namespace key="2" case="first-letter">User</namespace>
       <namespace key="3" case="first-letter">User talk</namespace>
-      <namespace key="4" case="case-sensitive">Project</namespace>
-      <namespace key="5" case="case-sensitive">Project talk</namespace>
+      <namespace key="4" case="case-sensitive">Bali test wiki</namespace>
+      <namespace key="5" case="case-sensitive">Bali test wiki talk</namespace>
       <namespace key="6" case="case-sensitive">File</namespace>
       <namespace key="7" case="case-sensitive">File talk</namespace>
       <namespace key="8" case="first-letter">MediaWiki</namespace>
@@ -29,52 +29,45 @@
   <page>
     <title>Template:Entry</title>
     <ns>10</ns>
-    <id>6</id>
+    <id>10</id>
     <revision>
-      <id>86</id>
-      <parentid>72</parentid>
-      <timestamp>2017-04-22T20:27:45Z</timestamp>
+      <id>92</id>
+      <parentid>91</parentid>
+      <timestamp>2019-06-04T18:54:26Z</timestamp>
       <contributor>
-        <username>Admin</username>
+        <username>Panlex</username>
         <id>1</id>
       </contributor>
       <model>wikitext</model>
       <format>text/x-wiki</format>
-      <text xml:space="preserve" bytes="335">&lt;includeonly&gt;__NOTOC__
+      <text xml:space="preserve" bytes="170">&lt;includeonly&gt;__NOTOC__
 &lt;p&gt;{{{Description|}}}&lt;/p&gt;
 [{{{Url|}}} Original on Archive.org]&lt;!--
 --&gt;{{DISPLAYTITLE:{{#sanitize_leaf_title:{{{Title|}}}}}}}&lt;!--
 --&gt;
-&lt;!-- remove line below if you want to disable Mirador viewer at top of the page 
---&gt;{{#mirador:https://iiif.archivelab.org/iiif/{{{Title|}}}/manifest.json}}
-&lt;!--
---&gt;&lt;/includeonly&gt;</text>
-      <sha1>546u0dwjawilnl3ml6tg2s1it4h53nm</sha1>
+&lt;/includeonly&gt;</text>
+      <sha1>mndupu2bujkix979veeiqrejpz7gu02</sha1>
     </revision>
   </page>
   <page>
     <title>Template:EntryImage</title>
     <ns>10</ns>
-    <id>9</id>
+    <id>11</id>
     <revision>
-      <id>79</id>
-      <parentid>78</parentid>
-      <timestamp>2017-04-22T20:12:10Z</timestamp>
+      <id>32</id>
+      <parentid>31</parentid>
+      <timestamp>2019-04-24T23:56:13Z</timestamp>
       <contributor>
-        <username>Admin</username>
+        <username>Panlex</username>
         <id>1</id>
       </contributor>
       <model>wikitext</model>
       <format>text/x-wiki</format>
-      <text xml:space="preserve" bytes="231">&lt;includeonly&gt;
-{|
-|- style=&quot;vertical-align: top;&quot;
-|{{#if:{{{LocalFileName|}}}|[[File:{{{LocalFileName|}}}|400px|thumb|left]]|Image not imported}}
-|&lt;p&gt;{{{Description|}}}&lt;/p&gt;
+      <text xml:space="preserve" bytes="165">&lt;includeonly&gt;
+{{#if:{{{LocalFileName|}}}|[[File:{{{LocalFileName|}}}|400px|thumb|none]]|Image not imported}}
 [{{{ImageBrowse|}}} Image on Archive.org]
-|}
 &lt;/includeonly&gt;</text>
-      <sha1>69vfyzfwyu9qu26sfmxkgwm5wwfesx9</sha1>
+      <sha1>ehldugmf7v8ugmm7itxtg0d8aspvar7</sha1>
     </revision>
   </page>
 </mediawiki>
