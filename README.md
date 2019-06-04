@@ -14,10 +14,8 @@ ArchiveLeaf is a [MediaWiki](https://mediawiki.org) extension which implements e
 2. From the `ArchiveLeaf` directory:
     * Run `maintenance/transcriber-install` to install the transcriber’s dependencies with `yarn`.
     * Run `maintenance/transcriber-build` to create a production build of the transcriber React app.
+    * Run `maintenance/templates-import` to import the required `Template:Entry` and `Template:EntryImage` pages into MediaWiki.
 3. Install the [Metrolook](https://www.mediawiki.org/wiki/Skin:Metrolook) skin into the MediaWiki install’s `skins` directory (as `Metrolook`).
-4. Import templates:
-    * Login into your wiki as administrator and navigate to `Special:Import`.
-    * Import the `templates.xml` file located in this repository’s `sources` directory.
 
 In order to pull a new version from GitHub and build it, you can run the following command from the `ArchiveLeaf` directory:
 
