@@ -1,0 +1,4 @@
+<includeonly>
+{{#if:{{{LocalFileName|}}}|[[File:{{{LocalFileName|}}}|400px|thumb|none]]|Image not imported}}
+[{{{ImageBrowse|}}} Image on Archive.org]
+</includeonly>

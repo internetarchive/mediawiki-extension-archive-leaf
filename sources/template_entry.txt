@@ -1,0 +1,6 @@
+<includeonly>__NOTOC__
+<p>{{{Description|}}}</p>
+[{{{Url|}}} Original on Archive.org]<!--
+-->{{DISPLAYTITLE:{{#sanitize_leaf_title:{{{Title|}}}}}}}<!--
+-->
+</includeonly>
