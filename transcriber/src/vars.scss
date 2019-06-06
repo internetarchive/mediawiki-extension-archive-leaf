@@ -29,10 +29,6 @@ $keyboardHeight: 100% - $keyboardTop;
   word-break: break-all;
 }
 
-@mixin balinese {
-  font-family: "Vimala Noto", "Noto Serif Balinese", sans-serif;
-}
-
 @mixin button {
   height: 32px;
   cursor: pointer;

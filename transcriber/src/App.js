@@ -76,13 +76,14 @@ export default class App extends Component {
     this.textbox = document.getElementById("wpTextbox1");
 
     this.state = {
-      text: "",
-      caretPos: 0,
       open: true,
       error: false,
+      text: "",
+      caretPos: 0,
+      keyboardOpen: !(window.localStorage.getItem("keyboardOpen") === "false"),
+      font: "vimala",
       transliteration: "",
       transliterationOpen: false,
-      keyboardOpen: !(window.localStorage.getItem("keyboardOpen") === "false"),
       imageUrl: window.entryImageUrl,
     };
   }
@@ -287,7 +288,7 @@ export default class App extends Component {
   }
 
   render() {
-    let { open, error, text, caretPos, keyboardOpen } = this.state;
+    let { open, error, text, caretPos, keyboardOpen, font } = this.state;
 
     return (
       <div className={styles.App}>
@@ -307,7 +308,7 @@ export default class App extends Component {
               onSwipedLeft={this.showTransliteration}
               onSwipedRight={this.showTransliteration}
             >
-              <div className={cx(styles.text)} onClick={this.handleCaretMove}>
+              <div className={cx(styles.text, styles[font])} onClick={this.handleCaretMove}>
                 {text.slice(0, caretPos)}
                 <span className={styles.caret} ref={this.caretRef}></span>
                 {text.slice(caretPos)}
@@ -315,7 +316,7 @@ export default class App extends Component {
             </Swipeable>
           :
             <textarea
-              className={cx(styles.text, !keyboardOpen && styles.expanded)}
+              className={cx(styles.text, styles[font], !keyboardOpen && styles.expanded)}
               value={text}
               onChange={this.textChangeTextArea}
             />
@@ -331,6 +332,7 @@ export default class App extends Component {
           {open && !error && keyboardOpen &&
             <Keyboard
               script="bali"
+              className={styles[font]}
               onTextChange={this.textChange}
               text={text}
               caretPos={caretPos}

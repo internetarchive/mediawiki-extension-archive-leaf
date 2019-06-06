@@ -8,10 +8,19 @@
 
 /* © Aditya Bayu Perdana, CC-BY-NC-ND */
 @font-face {
-    font-family: "Vimala Noto";
-    src: url(https://bali.panlex.org/transcriber/fonts/VimalaNoto.woff2) format('woff2'),
-         url(https://bali.panlex.org/transcriber/fonts/VimalaNoto.woff) format('woff'),
-         url(https://bali.panlex.org/transcriber/fonts/VimalaNoto.otf) format('opentype');
+    font-family: "Vimala";
+    src: url(https://bali.panlex.org/transcriber/fonts/Vimala.woff2) format('woff2'),
+         url(https://bali.panlex.org/transcriber/fonts/Vimala.woff) format('woff'),
+         url(https://bali.panlex.org/transcriber/fonts/Vimala.otf) format('opentype');
+    unicode-range: U+1B00-1B7F;
+}
+
+/* © Aditya Bayu Perdana, CC-BY-NC-ND */
+@font-face {
+    font-family: "Pustaka";
+    src: url(https://bali.panlex.org/transcriber/fonts/Pustaka.woff2) format('woff2'),
+         url(https://bali.panlex.org/transcriber/fonts/Pustaka.woff) format('woff'),
+         url(https://bali.panlex.org/transcriber/fonts/Pustaka.otf) format('opentype');
     unicode-range: U+1B00-1B7F;
 }
 

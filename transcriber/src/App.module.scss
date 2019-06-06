@@ -30,6 +30,14 @@ body.noscroll {
   margin: 10px;
 }
 
+.vimala {
+  font-family: "Vimala", "Noto Serif Balinese", "Noto Sans Balinese", sans-serif;
+}
+
+.pustaka {
+  font-family: "Pustaka", "Noto Serif Balinese", "Noto Sans Balinese", sans-serif;
+}
+
 .transcriber {
   position: fixed;
   top: 0;
@@ -55,7 +63,6 @@ body.noscroll {
 
 .text {
   @include pane;
-  @include balinese;
   @include wrap;
   font-size: $fontSize;
   line-height: 2.3;

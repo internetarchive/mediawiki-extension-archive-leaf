@@ -4,7 +4,6 @@ $keyboardFontSize: vh(3.9);
 
 .keyboard {
   @include pane;
-  @include balinese;
   display: grid;
   top: $keyboardTop;
   height: $keyboardHeight;

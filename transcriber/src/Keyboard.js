@@ -24,7 +24,7 @@ const stringInsert = (string, addition, caretPos) => {
 }
 
 const Key = props => {
-  const [zoom, setZoom] = useState(false);
+  let [zoom, setZoom] = useState(false);
   return (
     <div
       style={{ gridArea: props.gridArea }}
@@ -186,17 +186,20 @@ export default class Keyboard extends Component {
   }
 
   render() {
-    let keySet = new Set(this.state.layout.grid.flat());
+    let { script, className } = this.props;
+    let { layout, layoutMatches, currLayout, shiftLevel } = this.state;
+    let keySet = new Set(layout.grid.flat());
+
     return (
       <div
-        className={styles.keyboard}
-        style={gridToStyle(this.state.layout.grid)}
+        className={cx(styles.keyboard, className)}
+        style={gridToStyle(layout.grid)}
       >
-        {Object.entries(this.state.currLayout).map(([type, keys]) => keys.map((key, k) => (
+        {Object.entries(currLayout).map(([type, keys]) => keys.map((key, k) => (
           <Key
             gridArea={type + k}
             className={styles[type]}
-            text={key ? stringInsert(this.state.layoutMatches[type], key).join("") : ""}
+            text={key ? stringInsert(layoutMatches[type], key).join("") : ""}
             key={type + k}
             onClick={e => this.handleKeypress(key)}
           />
@@ -208,7 +211,7 @@ export default class Keyboard extends Component {
           <Key gridArea="zwj" img={zwj} text="zwj" onClick={() => this.handleKeypress("\u200d")} />
         }
         {keySet.has("shift") &&
-          <Key gridArea="shift" text={this.state.shiftLevel ? "⬆" : "⇧"} onClick={() => this.setState({ shiftLevel: this.state.shiftLevel === 0 ? 1 : 0 })} unzoomable flash />
+          <Key gridArea="shift" text={shiftLevel ? "⬆" : "⇧"} onClick={() => this.setState({ shiftLevel: shiftLevel === 0 ? 1 : 0 })} unzoomable flash />
         }
         {keySet.has("backspace") &&
           <Key gridArea="backspace" text="⌫" onClick={() => this.handleKeypress("\u0008")} unzoomable flash />
@@ -217,10 +220,10 @@ export default class Keyboard extends Component {
           <Key gridArea="delete" text="⌦" onClick={() => this.handleKeypress("\u007f")} unzoomable flash />
         }
         {keySet.has("numbers") &&
-          <Key gridArea="numbers" text="᭗᭘᭙" unzoomable flash onClick={e => this.setState({ layout: layouts[this.props.script].numbers })} />
+          <Key gridArea="numbers" text="᭗᭘᭙" unzoomable flash onClick={e => this.setState({ layout: layouts[script].numbers })} />
         }
         {keySet.has("letters") &&
-          <Key gridArea="letters" text="ᬳᬦᬘ" unzoomable flash onClick={e => this.setState({ layout: layouts[this.props.script].letters })} />
+          <Key gridArea="letters" text="ᬳᬦᬘ" unzoomable flash onClick={e => this.setState({ layout: layouts[script].letters })} />
         }
         {keySet.has("space") &&
           <Key gridArea="space" text="␣" className={styles.space} onClick={e => this.handleKeypress(" ")} unzoomable flash />
