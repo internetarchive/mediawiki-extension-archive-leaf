@@ -33,11 +33,11 @@
 }
 
 body {
-  font-family: "Vimala", "Noto Serif Balinese", sans-serif;
+  font-family: "Vimala", "Noto Serif Balinese", sans-serif !important;
 }
 
 .mw-editfont-monospace {
-  font-family: "Vimala", "Noto Serif Balinese", monospace, monospace;
+  font-family: "Vimala", "Noto Serif Balinese", monospace, monospace !important;
 }
 
 .mw-jump {
@@ -45,10 +45,10 @@ body {
 }
 
 .thumbinner {
-  max-width: 100%;
+  max-width: 100% !important;
 }
 
 img.thumbimage {
-  width: 100%;
-  height: auto;
+  width: 100% !important;
+  height: auto !important;
 }
