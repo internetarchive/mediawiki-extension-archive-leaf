@@ -11,7 +11,7 @@
     "react-app-polyfill": "^1.0.1",
     "react-dom": "^16.8.6",
     "react-responsive-pinch-zoom-pan": "https://github.com/kamholz/react-responsive-pinch-zoom-pan.git",
-    "react-swipeable": "^5.2.3"
+    "reactjs-popup": "^1.4.1"
   },
   "devDependencies": {
     "react-scripts": "3.0.1"

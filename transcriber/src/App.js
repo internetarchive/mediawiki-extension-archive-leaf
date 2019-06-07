@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PinchZoomPan from 'react-responsive-pinch-zoom-pan';
-import { Swipeable } from 'react-swipeable';
 import cx from 'clsx';
+import Popup from 'reactjs-popup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faKeyboard, faFont } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faKeyboard, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 
 import styles from './App.module.scss';
 import Keyboard from './Keyboard';
@@ -81,7 +81,7 @@ export default class App extends Component {
       text: "",
       caretPos: 0,
       keyboardOpen: !(window.localStorage.getItem("keyboardOpen") === "false"),
-      font: "vimala",
+      font: window.localStorage.getItem("font") || "vimala",
       transliteration: "",
       transliterationOpen: false,
       imageUrl: window.entryImageUrl,
@@ -210,12 +210,6 @@ export default class App extends Component {
     }
   }
 
-  toggleKeyboard = () => {
-    let keyboardOpen = !this.state.keyboardOpen;
-    this.setState({ keyboardOpen });
-    window.localStorage.setItem("keyboardOpen", keyboardOpen);
-  }
-
   handleCaretMove = e => {
     let sel = getSelection && getSelection(e);
     if (sel) {
@@ -234,6 +228,23 @@ export default class App extends Component {
   scrollToCaret = () => {
     let caret = this.caretRef.current;
     caret.offsetParent.scrollTop = caret.offsetTop;
+  }
+
+  chooseMenuItem = (func, close) => {
+    close();
+    func();
+  }
+
+  toggleKeyboard = () => {
+    let keyboardOpen = !this.state.keyboardOpen;
+    this.setState({ keyboardOpen });
+    window.localStorage.setItem("keyboardOpen", keyboardOpen);
+  }
+
+  toggleFont = () => {
+    let font = this.state.font === "vimala" ? "pustaka" : "vimala";
+    this.setState({ font });
+    window.localStorage.setItem("font", font);
   }
 
   setTransliterationOpen = transliterationOpen => {
@@ -288,7 +299,7 @@ export default class App extends Component {
   }
 
   render() {
-    let { open, error, text, caretPos, keyboardOpen, font } = this.state;
+    let { open, error, text, caretPos, keyboardOpen, transliterationOpen, font } = this.state;
 
     return (
       <div className={styles.App}>
@@ -304,16 +315,11 @@ export default class App extends Component {
             </PinchZoomPan>
           </div>
           {keyboardOpen ?
-            <Swipeable
-              onSwipedLeft={this.showTransliteration}
-              onSwipedRight={this.showTransliteration}
-            >
-              <div className={cx(styles.text, styles[font])} onClick={this.handleCaretMove}>
-                {text.slice(0, caretPos)}
-                <span className={styles.caret} ref={this.caretRef}></span>
-                {text.slice(caretPos)}
-              </div>
-            </Swipeable>
+            <div className={cx(styles.text, styles[font])} onClick={this.handleCaretMove}>
+              {text.slice(0, caretPos)}
+              <span className={styles.caret} ref={this.caretRef}></span>
+              {text.slice(caretPos)}
+            </div>
           :
             <textarea
               className={cx(styles.text, styles[font], !keyboardOpen && styles.expanded)}
@@ -322,7 +328,7 @@ export default class App extends Component {
             />
           }
           <div
-            className={cx(styles.transliteration, this.state.transliterationOpen && styles.visible, !keyboardOpen && styles.expanded)}
+            className={cx(styles.transliteration, transliterationOpen && styles.visible, !keyboardOpen && styles.expanded)}
             onClick={platform.mobile && this.hideTransliteration}
           >
             <div className={styles.transliterationText}>
@@ -341,22 +347,6 @@ export default class App extends Component {
         </div>
         {(open && !error) ?
           <div className={styles.buttons}>
-            {!platform.mobile &&
-              <>
-                <button
-                  className={styles.button}
-                  onClick={this.toggleTransliteration}
-                >
-                  <FontAwesomeIcon icon={faFont} />
-                </button>
-                <button
-                  className={styles.button}
-                  onClick={this.toggleKeyboard}
-                >
-                  <FontAwesomeIcon icon={faKeyboard} />
-                </button>
-              </>
-            }
             <button
               className={styles.button}
               onClick={this.handleClose}
@@ -364,6 +354,25 @@ export default class App extends Component {
               <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
               <FontAwesomeIcon icon={faTimes} />
             </button>
+            <Popup
+              contentStyle={{width: '200px'}}
+              trigger={<button className={styles.button}><FontAwesomeIcon icon={faEllipsisV} /></button>}
+              position="bottom right"
+            >
+              {close => (
+                <>
+                  <div className={styles.menuItem} onClick={() => this.chooseMenuItem(this.toggleKeyboard, close)}>
+                    {keyboardOpen ? "Hide" : "Show"} Keyboard
+                  </div>
+                  <div className={styles.menuItem} onClick={() => this.chooseMenuItem(this.toggleTransliteration, close)}>
+                    {transliterationOpen ? "Hide" : "Show"} Transliteration
+                  </div>
+                  <div className={styles.menuItem} onClick={() => this.chooseMenuItem(this.toggleFont, close)}>
+                    Set Font to {font === "vimala" ? "Pustaka" : "Vimala"}
+                  </div>
+                </>
+              )}
+            </Popup>
           </div>
           :
           <button

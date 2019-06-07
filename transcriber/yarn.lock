@@ -8242,13 +8242,6 @@ react-scripts@3.0.1:
   optionalDependencies:
     fsevents "2.0.6"
 
-react-swipeable@^5.2.3:
-  version "5.2.3"
-  resolved "https://registry.yarnpkg.com/react-swipeable/-/react-swipeable-5.2.3.tgz#392d6cba328090d10fcb25a06047f5ad808f7e6c"
-  integrity sha512-J92RJNIZ7wE5czNWtVUTnTTOdgsnWXcj5fcKiEhf7ZU5JYSh5wOFosKWu8FyTFa6FXwmHKMzhaKUC/p9L2n2Lw==
-  dependencies:
-    prop-types "^15.6.2"
-
 react@^16.8.6:
   version "16.8.6"
   resolved "https://registry.yarnpkg.com/react/-/react-16.8.6.tgz#ad6c3a9614fd3a4e9ef51117f54d888da01f2bbe"
@@ -8258,6 +8251,11 @@ react@^16.8.6:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
     scheduler "^0.13.6"
+
+reactjs-popup@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/reactjs-popup/-/reactjs-popup-1.4.1.tgz#d5ec829a0f94d4480144f8c52f71cc73b7941083"
+  integrity sha512-Q1yLwo4X+on6k/45usKuOdmIkJr5TnL+8LUNtFvNLNmGLEdOnZn1uR57iq36E8RrMJc+d+tSGdgo8uaJKkxNNA==
 
 read-pkg-up@^1.0.1:
   version "1.0.1"
