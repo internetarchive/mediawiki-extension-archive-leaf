@@ -357,6 +357,7 @@ export default class App extends Component {
               <FontAwesomeIcon icon={faTimes} />
             </button>
             <Popup
+              on="click"
               contentStyle={{width: '12em'}}
               trigger={<button className={styles.button}><FontAwesomeIcon icon={faEllipsisV} /></button>}
               position="bottom right"
