@@ -70,11 +70,11 @@ Add the following to the `MediaWiki:Common.css` page on the wiki:
 
 ```css
 body {
-  font-family: "Vimala Noto", "Noto Serif Balinese", sans-serif;
+  font-family: "Vimala", "Noto Serif Balinese", sans-serif;
 }
 
 .mw-editfont-monospace {
-  font-family: "Vimala Noto", "Noto Serif Balinese", monospace, monospace;
+  font-family: "Vimala", "Noto Serif Balinese", monospace, monospace;
 }
 
 .mw-jump {
