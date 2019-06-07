@@ -348,7 +348,7 @@ export default class App extends Component {
           }
         </div>
         {(open && !error) ?
-          <div className={styles.buttons}>
+          <div className={cx(styles.buttons, platform.mobile ? styles.vert : styles.horiz)}>
             <button
               className={styles.button}
               onClick={this.handleClose}

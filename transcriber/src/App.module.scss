@@ -16,12 +16,26 @@ body.noscroll {
   right: 0;
   margin: 10px;
   display: flex;
+}
+
+.buttons.horiz {
+  flex-direction: row-reverse;
+}
+
+.buttons.vert {
   flex-direction: column;
+}
+
+.buttons.horiz .button {
+  margin-left: 12px;
+}
+
+.buttons.vert .button {
+  margin-bottom: 12px;
 }
 
 .button {
   @include button;
-  margin-bottom: 12px;
 }
 
 .openButton {
