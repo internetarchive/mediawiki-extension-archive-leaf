@@ -69,6 +69,13 @@ function blockPinchZoom(e) {
 //   e.target.click();
 // }
 
+const MenuItem = props => {
+  let { label, close, onClick } = props;
+  return (
+    <div className={styles.menuItem} onClick={e => { close(); onClick(e); }}>{label}</div>
+  )
+}
+
 export default class App extends Component {
   constructor(props) {
     super(props);
@@ -230,11 +237,6 @@ export default class App extends Component {
     caret.offsetParent.scrollTop = caret.offsetTop;
   }
 
-  chooseMenuItem = (func, close) => {
-    close();
-    func();
-  }
-
   toggleKeyboard = () => {
     let keyboardOpen = !this.state.keyboardOpen;
     this.setState({ keyboardOpen });
@@ -355,21 +357,26 @@ export default class App extends Component {
               <FontAwesomeIcon icon={faTimes} />
             </button>
             <Popup
-              contentStyle={{width: '200px'}}
+              contentStyle={{width: '12em'}}
               trigger={<button className={styles.button}><FontAwesomeIcon icon={faEllipsisV} /></button>}
               position="bottom right"
             >
               {close => (
                 <>
-                  <div className={styles.menuItem} onClick={() => this.chooseMenuItem(this.toggleKeyboard, close)}>
-                    {keyboardOpen ? "Hide" : "Show"} Keyboard
-                  </div>
-                  <div className={styles.menuItem} onClick={() => this.chooseMenuItem(this.toggleTransliteration, close)}>
-                    {transliterationOpen ? "Hide" : "Show"} Transliteration
-                  </div>
-                  <div className={styles.menuItem} onClick={() => this.chooseMenuItem(this.toggleFont, close)}>
-                    Set Font to {font === "vimala" ? "Pustaka" : "Vimala"}
-                  </div>
+                  <MenuItem close={close}
+                    label={(transliterationOpen ? "Hide" : "Show") + " Transliteration"}
+                    onClick={this.toggleTransliteration}
+                  />
+                  <MenuItem close={close}
+                    label={"Set Font to " + (font === "vimala" ? "Pustaka" : "Vimala")}
+                    onClick={this.toggleFont}
+                  />
+                  {!platform.mobile &&
+                    <MenuItem close={close}
+                      label={(keyboardOpen ? "Hide" : "Show") + " Keyboard"}
+                      onClick={this.toggleKeyboard}
+                    />
+                  }
                 </>
               )}
             </Popup>
