@@ -44,10 +44,10 @@
       ],
       "position": "top"
     },
-    "ext.archiveleaf.font": {
+    "ext.archiveleaf.common": {
       "scripts": [],
       "styles": [
-        "modules/ext.archiveleaf.font.css"
+        "modules/ext.archiveleaf.common.css"
       ],
       "position": "top"
     },

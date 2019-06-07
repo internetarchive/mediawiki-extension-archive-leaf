@@ -31,3 +31,24 @@
          url(https://archive.org/cors/NotoFonts/NotoSansSinhala-Regular.ttf) format('truetype');
     unicode-range: U+0D80-0DFF;
 }
+
+body {
+  font-family: "Vimala", "Noto Serif Balinese", sans-serif;
+}
+
+.mw-editfont-monospace {
+  font-family: "Vimala", "Noto Serif Balinese", monospace, monospace;
+}
+
+.mw-jump {
+  display: none;
+}
+
+.thumbinner {
+  max-width: 100%;
+}
+
+img.thumbimage {
+  width: 100%;
+  height: auto;
+}

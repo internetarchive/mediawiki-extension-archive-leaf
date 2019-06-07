@@ -62,7 +62,7 @@ class ArchiveLeafHooks {
     }
 
     public static function onBeforePageDisplay( OutputPage &$out, Skin &$skin ) {
-        $out->addModules( 'ext.archiveleaf.font' );
+        $out->addModules( 'ext.archiveleaf.common' );
     }
 
     public static function onShowEditForm( EditPage &$editor, OutputPage &$out ) {

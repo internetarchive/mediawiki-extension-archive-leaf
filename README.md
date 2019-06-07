@@ -64,33 +64,6 @@ $wgArchiveLeafTemplateName = 'Entry'; # primary template (default shown)
 $wgArchiveLeafTemplateImageName = 'EntryImage'; # per-image template (default shown)
 ```
 
-### Common.css
-
-Add the following to the `MediaWiki:Common.css` page on the wiki:
-
-```css
-body {
-  font-family: "Vimala", "Noto Serif Balinese", sans-serif;
-}
-
-.mw-editfont-monospace {
-  font-family: "Vimala", "Noto Serif Balinese", monospace, monospace;
-}
-
-.mw-jump {
-  display: none;
-}
-
-.thumbinner {
-  max-width: 100%;
-}
-
-img.thumbimage {
-  width: 100%;
-  height: auto;
-}
-```
-
 ### Web server
 
 Make sure that `/transcriber/static` is aliased to the `transcriber/build/static` directory. Nginx example:
