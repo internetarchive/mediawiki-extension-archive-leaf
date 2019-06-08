@@ -11,7 +11,7 @@
     font-family: "Vimala";
     src: url(https://bali.panlex.org/transcriber/fonts/Vimala.woff2) format('woff2'),
          url(https://bali.panlex.org/transcriber/fonts/Vimala.woff) format('woff'),
-         url(https://bali.panlex.org/transcriber/fonts/Vimala.ttf) format('truetype');
+         url(https://bali.panlex.org/transcriber/fonts/Vimala.otf) format('opentype');
     unicode-range: U+1B00-1B7F;
 }
 
@@ -20,7 +20,7 @@
     font-family: "Pustaka";
     src: url(https://bali.panlex.org/transcriber/fonts/Pustaka.woff2) format('woff2'),
          url(https://bali.panlex.org/transcriber/fonts/Pustaka.woff) format('woff'),
-         url(https://bali.panlex.org/transcriber/fonts/Pustaka.ttf) format('truetype');
+         url(https://bali.panlex.org/transcriber/fonts/Pustaka.otf) format('opentype');
     unicode-range: U+1B00-1B7F;
 }
 
