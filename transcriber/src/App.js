@@ -81,6 +81,7 @@ export default class App extends Component {
     super(props);
     this.caretRef = React.createRef();
     this.textbox = document.getElementById("wpTextbox1");
+    this.imageUrl = window.entryImageUrl;
 
     this.state = {
       open: true,
@@ -91,7 +92,6 @@ export default class App extends Component {
       font: window.localStorage.getItem("font") || "vimala",
       transliteration: "",
       transliterationOpen: false,
-      imageUrl: window.entryImageUrl,
     };
   }
 
@@ -162,6 +162,7 @@ export default class App extends Component {
     if (matches) {
       this.archiveItem = { id: matches[1], leaf: matches[2] };
       this.archiveItemKey = this.archiveItem.id + "$" + this.archiveItem.leaf;
+      this.iiifUrl = `${iiifBaseUrl}/${this.archiveItem.id}%24${this.archiveItem.leaf}`;
     }
   }
 
@@ -311,9 +312,10 @@ export default class App extends Component {
               maxScale={5}
               doubleTapBehavior="zoom"
               zoomButtons={!platform.mobile}
-              onChange={state => this.imageState = state}
+              iiifUrl={this.iiifUrl}
+              enhanceClassName={styles.enhance}
             >
-              <img id="lontar" alt="lontar" src={this.state.imageUrl} />
+              <img alt="lontar" src={this.imageUrl} />
             </PinchZoomPan>
           </div>
           {keyboardOpen ?
