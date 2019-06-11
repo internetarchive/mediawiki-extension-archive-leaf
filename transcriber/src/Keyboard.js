@@ -65,18 +65,18 @@ export default class Keyboard extends Component {
     }
   }
 
-  componentDidMount = () => {
+  componentDidMount() {
     window.addEventListener("keydown", this.handlePhysKeyDown);
     window.addEventListener("keyup", this.handlePhysKeyUp);
     this.updateKeyboard(this.props.text);
   }
 
-  componentWillUnmount = () => {
+  componentWillUnmount() {
     window.removeEventListener("keydown", this.handlePhysKeyDown);
     window.removeEventListener("keyup", this.handlePhysKeyUp);
   }
 
-  componentDidUpdate = (prevProps, prevState) => {
+  componentDidUpdate(prevProps, prevState) {
     if (
       this.props.text !== prevProps.text ||
       this.props.caretPos !== prevProps.caretPos ||
@@ -87,7 +87,7 @@ export default class Keyboard extends Component {
     }
   }
 
-  updateKeyboard = () => {
+  updateKeyboard() {
     let buffer = this.props.text.slice(0, this.props.caretPos);
     let layout = this.state.layout.keys;
     let currLayout = this.state.currLayout;
@@ -107,13 +107,13 @@ export default class Keyboard extends Component {
     this.setState({ currLayout, layoutMatches });
   }
 
-  handleKeypress = k => {
+  handleKeypress(k) {
     this.setState({ shiftLevel: 0 });
     let [preText, postText] = stringInsert(this.props.text, k, this.props.caretPos);
     this.props.onTextChange(preText + postText, preText.length);
   }
 
-  handleArrow = dir => {
+  handleArrow(dir) {
     let caretPos = this.props.caretPos;
     if (dir === "←") {
       caretPos--;

@@ -95,19 +95,19 @@ export default class App extends Component {
     };
   }
 
-  componentDidMount = () => {
+  componentDidMount() {
     this.checkTags();
     this.afterOpen();
   }
 
-  componentDidUpdate = (prevProps, prevState) => {
+  componentDidUpdate(prevProps, prevState) {
     if (this.state.open && !this.state.error && this.state.keyboardOpen &&
       (this.state.caretPos !== prevState.caretPos || this.state.text !== prevState.text)) {
       this.scrollToCaret();
     }
   }
 
-  checkTags = () => {
+  checkTags() {
     let error = false;
     let openTags = this.textbox.value.match(/<transcription>/g);
     let closeTags = this.textbox.value.match(/<\/transcription>/g);
@@ -136,6 +136,7 @@ export default class App extends Component {
       document.addEventListener("keydown", this.handleKeydown);
 
       this.getArchiveItem();
+      this.getIiifDimensions();
       this.getTranscription();
     }
   }
@@ -157,7 +158,7 @@ export default class App extends Component {
     }
   }
 
-  getArchiveItem = () => {
+  getArchiveItem() {
     let matches = this.textbox.value.match(/\bEntryID=(\S+).*\bTitle=(\S+)/s);
     if (matches) {
       this.archiveItem = { id: matches[1], leaf: matches[2] };
@@ -166,7 +167,14 @@ export default class App extends Component {
     }
   }
 
-  getTranscription = () => {
+  getIiifDimensions() {
+    let matches = this.textbox.value.match(/\bFullSize=([0-9]+)x([0-9]+)/);
+    if (matches) {
+      this.iiifDimensions = { width: matches[1], height: matches[2] };
+    }
+  }
+
+  getTranscription() {
     let matches = this.textbox.value.match(/(?:.*<transcription>)(.*?)(?:<\/transcription>.*)/s);
     if (matches) {
       let text = matches[1].trim();
@@ -175,7 +183,7 @@ export default class App extends Component {
     }
   }
 
-  checkStoredText = text => {
+  checkStoredText(text) {
     if (this.archiveItemKey) {
       let savedText = window.localStorage.getItem(this.archiveItemKey);
       if (savedText) {
@@ -233,7 +241,7 @@ export default class App extends Component {
     }
   }
 
-  scrollToCaret = () => {
+  scrollToCaret() {
     let caret = this.caretRef.current;
     caret.offsetParent.scrollTop = caret.offsetTop;
   }
@@ -250,7 +258,7 @@ export default class App extends Component {
     window.localStorage.setItem("font", font);
   }
 
-  setTransliterationOpen = transliterationOpen => {
+  setTransliterationOpen(transliterationOpen) {
     if (transliterationOpen !== this.state.transliterationOpen) {
       if (transliterationOpen) {
         if (this.state.text.trim().length) {
@@ -264,19 +272,11 @@ export default class App extends Component {
     }
   }
 
-  showTransliteration = () => {
-    this.setTransliterationOpen(true);
-  }
-
-  hideTransliteration = () => {
-    this.setTransliterationOpen(false);
-  }
-
   toggleTransliteration = () => {
     this.setTransliterationOpen(!this.state.transliterationOpen);
   }
 
-  getTransliteration = () => {
+  getTransliteration() {
     return new Promise((resolve, reject) => {
       window.fetch(transliteratorUrl, {
         method: "POST",
@@ -287,20 +287,6 @@ export default class App extends Component {
     });
   }
 
-  getImageRegionUrl = () => {
-    if (this.imageState && this.archiveItem) {
-      let { left, top, scale, containerDimensions, imageDimensions } = this.imageState;
-      let xPct = (-100 * left / (imageDimensions.width * scale)).toFixed(2);
-      let yPct = (-100 * top / (imageDimensions.height * scale)).toFixed(2);
-      let widthPct = (100 * containerDimensions.width / (imageDimensions.width * scale)).toFixed(2);
-      let heightPct = (100 * containerDimensions.height / (imageDimensions.height * scale)).toFixed(2);
-
-      return `${iiifBaseUrl}/${this.archiveItem.id}%24${this.archiveItem.leaf}/pct:${xPct},${yPct},${widthPct},${heightPct}/full/0/default.jpg`;
-    } else {
-      return null;
-    }
-  }
-
   render() {
     let { open, error, text, caretPos, keyboardOpen, transliterationOpen, font } = this.state;
 
@@ -309,14 +295,13 @@ export default class App extends Component {
         <div className={cx(styles.transcriber, (!open || error) && styles.closed)}>
           <div className={cx(styles.image, !keyboardOpen && styles.expanded)}>
             <PinchZoomPan
+              imageUrl={this.imageUrl}
+              iiifUrl={this.iiifUrl}
+              iiifDimensions={this.iiifDimensions}
               maxScale={5}
               doubleTapBehavior="zoom"
               zoomButtons={!platform.mobile}
-              iiifUrl={this.iiifUrl}
-              enhanceClassName={styles.enhance}
-            >
-              <img alt="lontar" src={this.imageUrl} />
-            </PinchZoomPan>
+            />
           </div>
           {keyboardOpen ?
             <div className={cx(styles.text, styles[font])} onClick={this.handleCaretMove}>
@@ -333,7 +318,7 @@ export default class App extends Component {
           }
           <div
             className={cx(styles.transliteration, transliterationOpen && styles.visible, !keyboardOpen && styles.expanded)}
-            onClick={platform.mobile && this.hideTransliteration}
+            onClick={platform.mobile && this.setTransliterationOpen(false)}
           >
             <div className={styles.transliterationText}>
               {this.state.transliteration}
