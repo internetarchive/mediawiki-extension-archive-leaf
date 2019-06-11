@@ -138,6 +138,7 @@ class ArchiveLeaf {
             $template .= "\n|Title=" . $imageNum;
             //$template .= "\n|Image=" . $wgArchiveLeafBaseURL.'/download/'.$id.'/page/leaf'.$leaf.'_w400.jpg';
             //$template .= "\n|ImageBig=" . $wgArchiveLeafBaseURL.'/download/'.$id.'/page/leaf'.$leaf.'_w800.jpg';
+            $template .= "\n|FullSize=" . $response['pageWidths'][$imageNum] . 'x' . $response['pageHeights'][$imageNum];
             $template .= "\n|ImageBrowse=" . $leafBrowseUrl;
             $template .= "\n|LocalFileName=" . $localFileName;
             $template .= "\n}}";
