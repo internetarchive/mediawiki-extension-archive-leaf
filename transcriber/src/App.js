@@ -299,6 +299,7 @@ export default class App extends Component {
               iiifUrl={this.iiifUrl}
               iiifDimensions={this.iiifDimensions}
               maxScale={5}
+              enhanceScale={1.5}
               doubleTapBehavior="zoom"
               zoomButtons={!platform.mobile}
             />
