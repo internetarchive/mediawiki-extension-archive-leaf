@@ -11,9 +11,9 @@ class ArchiveLeafHooks {
     public static function onParserFirstCallInit( Parser &$parser ) {
         $parser->setFunctionHook( 'sanitize_leaf_title', [ self::class, 'renderFunctionSanitize' ] );
 
-        $parser->setHook( 'transcription', [ self::class, 'renderTagTranscription' ] );
-        $parser->setHook( 'transliteration', [ self::class, 'renderTagTransliteration' ] );
-        $parser->setHook( 'translation', [ self::class, 'renderTagTranslation' ] );
+        $parser->setHook( 'transcription', [ self::class, 'renderTag' ] );
+        $parser->setHook( 'transliteration', [ self::class, 'renderTag' ] );
+        $parser->setHook( 'translation', [ self::class, 'renderTag' ] );
     }
 
     /**
@@ -46,18 +46,9 @@ class ArchiveLeafHooks {
         return join(' ', $result);
     }
 
-    public static function renderTagTranscription( $input, array $args, Parser $parser, PPFrame $frame ) {
+    public static function renderTag( $input, array $args, Parser $parser, PPFrame $frame ) {
         $input = trim( $input );
-        return $parser->recursiveTagParse( $input, $frame );
-    }
-
-    public static function renderTagTransliteration( $input, array $args, Parser $parser, PPFrame $frame ) {
-        $input = trim( $input );
-        return $parser->recursiveTagParse( $input, $frame );
-    }
-
-    public static function renderTagTranslation( $input, array $args, Parser $parser, PPFrame $frame ) {
-        $input = trim( $input );
+        $input = preg_replace( '/\n/', "<br>\n", $input );
         return $parser->recursiveTagParse( $input, $frame );
     }
 
