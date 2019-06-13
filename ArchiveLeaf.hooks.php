@@ -11,9 +11,9 @@ class ArchiveLeafHooks {
     public static function onParserFirstCallInit( Parser &$parser ) {
         $parser->setFunctionHook( 'sanitize_leaf_title', [ self::class, 'renderFunctionSanitize' ] );
 
-        $parser->setHook( 'transcription', [ self::class, 'renderTag' ] );
-        $parser->setHook( 'transliteration', [ self::class, 'renderTag' ] );
-        $parser->setHook( 'translation', [ self::class, 'renderTag' ] );
+        $parser->setHook( 'transcription', self::renderTag( 'transcription' ) );
+        $parser->setHook( 'transliteration', self::renderTag( 'transliteration' ) );
+        $parser->setHook( 'translation', self::renderTag( 'translation' ) );
     }
 
     /**
@@ -46,10 +46,12 @@ class ArchiveLeafHooks {
         return join(' ', $result);
     }
 
-    public static function renderTag( $input, array $args, Parser $parser, PPFrame $frame ) {
-        $input = trim( $input );
-        $input = preg_replace( '/\n/', "<br>\n", $input );
-        return $parser->recursiveTagParse( $input, $frame );
+    public static function renderTag( $tagName ) {
+        return function ( $input, array $args, Parser $parser, PPFrame $frame ) use ( $tagName ) {
+            $input = trim( $input );
+            $input = preg_replace( '/\n/', "<br>\n", $input );
+            return '<div class="' . $tagName . '">' . $parser->recursiveTagParse( $input, $frame ) . '</div>';
+        };
     }
 
     public static function onBeforePageDisplay( OutputPage &$out, Skin &$skin ) {
