@@ -36,6 +36,16 @@ body {
   font-family: "Vimala", "Noto Serif Balinese", sans-serif;
 }
 
+.transcription, .transliteration, .translation {
+  white-space: pre-wrap;
+  word-break: break-all;
+  margin: 20px 0;
+}
+
+.transcription {
+  line-height: 1.9;
+}
+
 .mw-editfont-monospace {
   font-family: "Vimala", "Noto Serif Balinese", monospace, monospace;
 }

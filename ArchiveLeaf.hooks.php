@@ -16,6 +16,12 @@ class ArchiveLeafHooks {
         $parser->setHook( 'translation', self::renderTag( 'translation' ) );
     }
 
+    public static function onParserBeforeInternalParse( Parser &$parser, &$text, StripState &$stripState ) {
+        $text = preg_replace( '/\n{2,}(<(?:transcription|transliteration|translation)[> ])/', "\n$1", $text );
+        $text = preg_replace( '/(<\/(?:transcription|transliteration|translation)>)\n{2,}/', "$1\n", $text );
+        return true;
+    }
+
     /**
      * @param Parser $parser
      * @param string $value
@@ -48,10 +54,8 @@ class ArchiveLeafHooks {
 
     public static function renderTag( $tagName ) {
         return function ( $input, array $args, Parser $parser, PPFrame $frame ) use ( $tagName ) {
-            $input = trim( $input );
-            $input = preg_replace( '/\n/', "<br>\n", $input );
-            return '<div class="' . $tagName . '">' . $input . '</div>';
-            //return '<div class="' . $tagName . '">' . $parser->recursiveTagParse( $input, $frame ) . '</div>';
+            $html = '<div class="' . $tagName . '">' . trim( $input ) . '</div>';
+            return array( $html, 'markerType' => 'nowiki' );
         };
     }
 

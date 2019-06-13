@@ -27,7 +27,8 @@
   "Hooks": {
     "ParserFirstCallInit": "ArchiveLeafHooks::onParserFirstCallInit",
     "BeforePageDisplay": "ArchiveLeafHooks::onBeforePageDisplay",
-    "EditPage::showEditForm:initial": "ArchiveLeafHooks::onShowEditForm"
+    "EditPage::showEditForm:initial": "ArchiveLeafHooks::onShowEditForm",
+    "ParserBeforeInternalParse": "ArchiveLeafHooks::onParserBeforeInternalParse"
   },
   "MessagesDirs": {
     "ArchiveLeaf": [
