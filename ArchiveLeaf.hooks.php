@@ -50,7 +50,8 @@ class ArchiveLeafHooks {
         return function ( $input, array $args, Parser $parser, PPFrame $frame ) use ( $tagName ) {
             $input = trim( $input );
             $input = preg_replace( '/\n/', "<br>\n", $input );
-            return '<div class="' . $tagName . '">' . $parser->recursiveTagParse( $input, $frame ) . '</div>';
+            return '<div class="' . $tagName . '">' . $input . '</div>';
+            //return '<div class="' . $tagName . '">' . $parser->recursiveTagParse( $input, $frame ) . '</div>';
         };
     }
 
