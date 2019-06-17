@@ -66,13 +66,13 @@ export default class Keyboard extends Component {
   }
 
   componentDidMount() {
-    window.addEventListener("keydown", this.emulateTextEdit ? this.handlePhysKeyDownEmulated : this.handlePhysKeyDown);
+    window.addEventListener("keydown", this.props.emulateTextEdit ? this.handlePhysKeyDownEmulated : this.handlePhysKeyDown);
     window.addEventListener("keyup", this.handlePhysKeyUp);
     this.updateKeyboard(this.props.text);
   }
 
   componentWillUnmount() {
-    window.removeEventListener("keydown", this.emulateTextEdit ? this.handlePhysKeyDownEmulated : this.handlePhysKeyDown);
+    window.removeEventListener("keydown", this.props.emulateTextEdit ? this.handlePhysKeyDownEmulated : this.handlePhysKeyDown);
     window.removeEventListener("keyup", this.handlePhysKeyUp);
   }
 
@@ -249,7 +249,7 @@ export default class Keyboard extends Component {
         {keySet.has("arrowright") &&
           <Key gridArea="arrowright" text="→" className={styles.arrowright} onClick={e => this.handleArrow("→")} unzoomable flash />
         }
-        {this.emulateTextEdit &&
+        {this.props.emulateTextEdit &&
           <input id="phys-key-buffer" ref={this.physBufferRef} onKeyUp={this.handlePhysBufferInput} onInput={this.handlePhysBufferInput} />
         }
       </div>
