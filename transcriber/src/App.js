@@ -103,9 +103,14 @@ export default class App extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.open && !this.state.error && this.state.keyboardOpen &&
-      (this.state.caretPos !== prevState.caretPos || this.state.text !== prevState.text)) {
-      this.scrollToCaret();
+    if (this.state.open && !this.state.error) {
+      if (this.state.keyboardOpen &&
+        (this.state.caretPos !== prevState.caretPos || this.state.text !== prevState.text))
+      {
+        this.scrollToCaret();
+      } else if (!this.emulateTextEdit && document.activeElement !== this.textAreaRef.current) {
+        this.textAreaRef.current.focus();
+      }
     }
   }
 
@@ -180,7 +185,7 @@ export default class App extends Component {
     let matches = this.textbox.value.match(/(?:.*<transcription>)(.*?)(?:<\/transcription>.*)/s);
     if (matches) {
       let text = matches[1].trim();
-      this.setState({ text, caretPos: text.length }, this.refreshTextArea);
+      this.setState({ text, caretPos: text.length });
       setTimeout(() => this.checkStoredText(text), 1000);
     }
   }
@@ -224,7 +229,7 @@ export default class App extends Component {
 
   handleTextChangeTextArea = e => {
     if (e.target.value !== this.state.text) {
-      this.handleTextChange(e.target.value, this.getTextAreaCaretPos());
+      this.handleTextChange(e.target.value, e.target.selectionStart);
     }
   }
 
@@ -235,20 +240,9 @@ export default class App extends Component {
     }
   }
 
-  refreshTextArea = () => {
-    if (!this.emulateTextEdit) {
-      let { caretPos } = this.state;
-      this.textAreaRef.current.setSelectionRange(caretPos, caretPos);
-      this.textAreaRef.current.focus();
-    }
-  }
-
   handleKeyPress = preText => {
-    let textarea = this.textAreaRef.current;
-    this.setState({
-      text: preText + textarea.value.slice(textarea.selectionEnd),
-      caretPos: preText.length
-    }, this.refreshTextArea);
+    let ta = this.textAreaRef.current;
+    this.setState({ text: preText + ta.value.slice(ta.selectionEnd), caretPos: preText.length });
   }
 
   handleCaretMove = e => {
@@ -271,23 +265,25 @@ export default class App extends Component {
       let caret = this.caretRef.current;
       caret.offsetParent.scrollTop = caret.offsetTop;
     } else {
-      this.textAreaRef.current.focus();
+      let ta = this.textAreaRef.current;
+      let { caretPos } = this.state;
+      if (ta.selectionStart !== caretPos || ta.selectionEnd !== caretPos) {
+        ta.setSelectionRange(caretPos, caretPos);
+      }
+      ta.focus();
     }
-  }
-
-  getTextAreaCaretPos() {
-    return this.textAreaRef.current.selectionStart;
   }
 
   toggleKeyboard = () => {
     let keyboardOpen = !this.state.keyboardOpen;
-    this.setState({ keyboardOpen }, this.refreshTextArea);
+    if (keyboardOpen && !this.emulateTextEdit) this.handleSelectionChangeTextArea();
+    this.setState({ keyboardOpen });
     window.localStorage.setItem("keyboardOpen", keyboardOpen);
   }
 
   toggleFont = () => {
     let font = this.state.font === "vimala" ? "pustaka" : "vimala";
-    this.setState({ font }, this.refreshTextArea);
+    this.setState({ font });
     window.localStorage.setItem("font", font);
   }
 
