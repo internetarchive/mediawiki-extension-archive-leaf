@@ -337,7 +337,7 @@ export default class App extends Component {
               zoomButtons={!platform.mobile}
             />
           </div>
-          {this.emulateTextEdit ?
+          {this.emulateTextEdit && keyboardOpen ?
             <div className={cx(styles.text, styles[font])} onClick={this.handleCaretMove}>
               {text.slice(0, caretPos)}
               <span className={styles.caret} ref={this.caretRef}></span>
