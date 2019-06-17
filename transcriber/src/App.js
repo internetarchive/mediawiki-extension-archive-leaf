@@ -108,8 +108,8 @@ export default class App extends Component {
         (this.state.caretPos !== prevState.caretPos || this.state.text !== prevState.text))
       {
         this.scrollToCaret();
-      } else if (!this.emulateTextEdit && document.activeElement !== this.textAreaRef.current) {
-        this.textAreaRef.current.focus();
+      } else {
+        this.focusTextArea();
       }
     }
   }
@@ -140,7 +140,7 @@ export default class App extends Component {
         //document.addEventListener("touchend", blockTapZoom, { passive: false });
       }
       document.body.classList.add(styles.noscroll);
-      document.addEventListener("keydown", this.handleKeydown);
+      document.addEventListener("keydown", this.handleKeyDown);
 
       this.getArchiveItem();
       this.getIiifDimensions();
@@ -154,14 +154,16 @@ export default class App extends Component {
       //document.removeEventListener("touchend", blockTapZoom);
     }
     document.body.classList.remove(styles.noscroll);
-    document.removeEventListener("keydown", this.handleKeydown);
+    document.removeEventListener("keydown", this.handleKeyDown);
     this.setState({ open: false }, this.setTranscription);
   }
 
-  handleKeydown = e => {
+  handleKeyDown = e => {
     if (e.key === "Escape" && !(e.altKey || e.ctrlKey || e.metaKey || e.shiftKey)) {
       this.handleClose();
       e.preventDefault();
+    } else {
+      this.focusTextArea();
     }
   }
 
@@ -271,6 +273,12 @@ export default class App extends Component {
         ta.setSelectionRange(caretPos, caretPos);
       }
       ta.focus();
+    }
+  }
+
+  focusTextArea() {
+    if (!this.emulateTextEdit && document.activeElement !== this.textAreaRef.current) {
+      this.textAreaRef.current.focus();
     }
   }
 
