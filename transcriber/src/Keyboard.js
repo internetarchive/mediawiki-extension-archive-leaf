@@ -66,14 +66,18 @@ export default class Keyboard extends Component {
   }
 
   componentDidMount() {
-    window.addEventListener("keydown", this.handlePhysKeyDown);
-    window.addEventListener("keyup", this.handlePhysKeyUp);
+    if (this.props.emulateTextEdit) {
+      window.addEventListener("keydown", this.handlePhysKeyDown);
+      window.addEventListener("keyup", this.handlePhysKeyUp);
+    }
     this.updateKeyboard(this.props.text);
   }
 
   componentWillUnmount() {
-    window.removeEventListener("keydown", this.handlePhysKeyDown);
-    window.removeEventListener("keyup", this.handlePhysKeyUp);
+    if (this.props.emulateTextEdit) {
+      window.removeEventListener("keydown", this.handlePhysKeyDown);
+      window.removeEventListener("keyup", this.handlePhysKeyUp);
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -107,14 +111,19 @@ export default class Keyboard extends Component {
     this.setState({ currLayout, layoutMatches });
   }
 
-  handleKeypress(k) {
+  handleKeyPress(k) {
     this.setState({ shiftLevel: 0 });
     let [preText, postText] = stringInsert(this.props.text, k, this.props.caretPos);
-    this.props.onTextChange(preText + postText, preText.length);
+
+    if (this.props.emulateTextEdit) {
+      this.props.onTextChange(preText + postText, preText.length);
+    } else {
+      this.props.onKeyPress(preText);
+    }
   }
 
   handleArrow(dir) {
-    let caretPos = this.props.caretPos;
+    let { caretPos } = this.props;
     if (dir === "←") {
       caretPos--;
     } else if (dir === "→") {
@@ -131,13 +140,13 @@ export default class Keyboard extends Component {
       preventDefault = true;
     } else if (!e.isComposing) {
       if (e.key === "Backspace") {
-        this.handleKeypress("\u0008");
+        this.handleKeyPress("\u0008");
         preventDefault = true;
       } else if (e.key === "Delete") {
-        this.handleKeypress("\u007f");
+        this.handleKeyPress("\u007f");
         preventDefault = true;
       } else if (e.key === "Enter") {
-        this.handleKeypress("\n");
+        this.handleKeyPress("\n");
         preventDefault = true;
       } else if (e.key === "ArrowLeft") {
         this.handleArrow("←");
@@ -180,7 +189,7 @@ export default class Keyboard extends Component {
 
   handlePhysBufferInput = e => {
     if (e.target.value.length && !e.nativeEvent.isComposing) {
-      this.handleKeypress(e.target.value);
+      this.handleKeyPress(e.target.value);
       e.target.value = "";
     }
   }
@@ -201,23 +210,23 @@ export default class Keyboard extends Component {
             className={styles[type]}
             text={key ? stringInsert(layoutMatches[type], key).join("") : ""}
             key={type + k}
-            onClick={e => this.handleKeypress(key)}
+            onClick={e => this.handleKeyPress(key)}
           />
         )))}
         {keySet.has("zwnj") &&
-          <Key gridArea="zwnj" img={zwnj} text="zwnj" onClick={() => this.handleKeypress("\u200c")} />
+          <Key gridArea="zwnj" img={zwnj} text="zwnj" onClick={() => this.handleKeyPress("\u200c")} />
         }
         {keySet.has("zwj") &&
-          <Key gridArea="zwj" img={zwj} text="zwj" onClick={() => this.handleKeypress("\u200d")} />
+          <Key gridArea="zwj" img={zwj} text="zwj" onClick={() => this.handleKeyPress("\u200d")} />
         }
         {keySet.has("shift") &&
           <Key gridArea="shift" text={shiftLevel ? "⬆" : "⇧"} onClick={() => this.setState({ shiftLevel: shiftLevel === 0 ? 1 : 0 })} unzoomable flash />
         }
         {keySet.has("backspace") &&
-          <Key gridArea="backspace" text="⌫" onClick={() => this.handleKeypress("\u0008")} unzoomable flash />
+          <Key gridArea="backspace" text="⌫" onClick={() => this.handleKeyPress("\u0008")} unzoomable flash />
         }
         {keySet.has("delete") &&
-          <Key gridArea="delete" text="⌦" onClick={() => this.handleKeypress("\u007f")} unzoomable flash />
+          <Key gridArea="delete" text="⌦" onClick={() => this.handleKeyPress("\u007f")} unzoomable flash />
         }
         {keySet.has("numbers") &&
           <Key gridArea="numbers" text="᭗᭘᭙" unzoomable flash onClick={e => this.setState({ layout: layouts[script].numbers })} />
@@ -226,10 +235,10 @@ export default class Keyboard extends Component {
           <Key gridArea="letters" text="ᬳᬦᬘ" unzoomable flash onClick={e => this.setState({ layout: layouts[script].letters })} />
         }
         {keySet.has("space") &&
-          <Key gridArea="space" text="␣" className={styles.space} onClick={e => this.handleKeypress(" ")} unzoomable flash />
+          <Key gridArea="space" text="␣" className={styles.space} onClick={e => this.handleKeyPress(" ")} unzoomable flash />
         }
         {keySet.has("return") &&
-          <Key gridArea="return" text="⏎" className={styles.return} onClick={e => this.handleKeypress("\n")} unzoomable flash />
+          <Key gridArea="return" text="⏎" className={styles.return} onClick={e => this.handleKeyPress("\n")} unzoomable flash />
         }
         {keySet.has("arrowleft") &&
           <Key gridArea="arrowleft" text="←" className={styles.arrowleft} onClick={e => this.handleArrow("←")} unzoomable flash />
@@ -237,7 +246,9 @@ export default class Keyboard extends Component {
         {keySet.has("arrowright") &&
           <Key gridArea="arrowright" text="→" className={styles.arrowright} onClick={e => this.handleArrow("→")} unzoomable flash />
         }
-        <input id="phys-key-buffer" ref={this.physBufferRef} onKeyUp={this.handlePhysBufferInput} onInput={this.handlePhysBufferInput} />
+        {this.emulateTextEdit &&
+          <input id="phys-key-buffer" ref={this.physBufferRef} onKeyUp={this.handlePhysBufferInput} onInput={this.handlePhysBufferInput} />
+        }
       </div>
     )
   }

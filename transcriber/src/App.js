@@ -80,8 +80,10 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     this.caretRef = React.createRef();
+    this.textAreaRef = React.createRef();
     this.textbox = document.getElementById("wpTextbox1");
     this.imageUrl = window.entryImageUrl;
+    this.emulateTextEdit = platform.mobile;
 
     this.state = {
       open: true,
@@ -178,7 +180,7 @@ export default class App extends Component {
     let matches = this.textbox.value.match(/(?:.*<transcription>)(.*?)(?:<\/transcription>.*)/s);
     if (matches) {
       let text = matches[1].trim();
-      this.setState({ text, caretPos: text.length });
+      this.setState({ text, caretPos: text.length }, this.refreshTextArea);
       setTimeout(() => this.checkStoredText(text), 1000);
     }
   }
@@ -213,17 +215,40 @@ export default class App extends Component {
     }
   }
 
-  textChange = (text, caretPos = 0) => {
+  handleTextChange = (text, caretPos) => {
     this.setState({ text, caretPos });
     if (this.archiveItemKey) {
       window.localStorage.setItem(this.archiveItemKey, text);
     }
   }
 
-  textChangeTextArea = e => {
+  handleTextChangeTextArea = e => {
     if (e.target.value !== this.state.text) {
-      this.textChange(e.target.value);
+      this.handleTextChange(e.target.value, this.getTextAreaCaretPos());
     }
+  }
+
+  handleSelectionChangeTextArea = e => {
+    let caretPos = this.textAreaRef.current.selectionStart;
+    if (caretPos !== this.state.caretPos) {
+      this.setState({ caretPos });
+    }
+  }
+
+  refreshTextArea = () => {
+    if (!this.emulateTextEdit) {
+      let { caretPos } = this.state;
+      this.textAreaRef.current.setSelectionRange(caretPos, caretPos);
+      this.textAreaRef.current.focus();
+    }
+  }
+
+  handleKeyPress = preText => {
+    let textarea = this.textAreaRef.current;
+    this.setState({
+      text: preText + textarea.value.slice(textarea.selectionEnd),
+      caretPos: preText.length
+    }, this.refreshTextArea);
   }
 
   handleCaretMove = e => {
@@ -242,19 +267,27 @@ export default class App extends Component {
   }
 
   scrollToCaret() {
-    let caret = this.caretRef.current;
-    caret.offsetParent.scrollTop = caret.offsetTop;
+    if (this.emulateTextEdit) {
+      let caret = this.caretRef.current;
+      caret.offsetParent.scrollTop = caret.offsetTop;
+    } else {
+      this.textAreaRef.current.focus();
+    }
+  }
+
+  getTextAreaCaretPos() {
+    return this.textAreaRef.current.selectionStart;
   }
 
   toggleKeyboard = () => {
     let keyboardOpen = !this.state.keyboardOpen;
-    this.setState({ keyboardOpen });
+    this.setState({ keyboardOpen }, this.refreshTextArea);
     window.localStorage.setItem("keyboardOpen", keyboardOpen);
   }
 
   toggleFont = () => {
     let font = this.state.font === "vimala" ? "pustaka" : "vimala";
-    this.setState({ font });
+    this.setState({ font }, this.refreshTextArea);
     window.localStorage.setItem("font", font);
   }
 
@@ -304,7 +337,7 @@ export default class App extends Component {
               zoomButtons={!platform.mobile}
             />
           </div>
-          {keyboardOpen ?
+          {this.emulateTextEdit ?
             <div className={cx(styles.text, styles[font])} onClick={this.handleCaretMove}>
               {text.slice(0, caretPos)}
               <span className={styles.caret} ref={this.caretRef}></span>
@@ -314,7 +347,10 @@ export default class App extends Component {
             <textarea
               className={cx(styles.text, styles[font], !keyboardOpen && styles.expanded)}
               value={text}
-              onChange={this.textChangeTextArea}
+              ref={this.textAreaRef}
+              onChange={this.handleTextChangeTextArea}
+              onClick={!this.emulateTextEdit && this.handleSelectionChangeTextArea}
+              onKeyDown={!this.emulateTextEdit && this.handleSelectionChangeTextArea}
             />
           }
           <div
@@ -329,7 +365,9 @@ export default class App extends Component {
             <Keyboard
               script="bali"
               className={styles[font]}
-              onTextChange={this.textChange}
+              emulateTextEdit={this.emulateTextEdit}
+              onTextChange={this.handleTextChange}
+              onKeyPress={this.handleKeyPress}
               text={text}
               caretPos={caretPos}
             />
