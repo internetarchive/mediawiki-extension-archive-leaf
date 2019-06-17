@@ -66,18 +66,14 @@ export default class Keyboard extends Component {
   }
 
   componentDidMount() {
-    if (this.props.emulateTextEdit) {
-      window.addEventListener("keydown", this.handlePhysKeyDown);
-      window.addEventListener("keyup", this.handlePhysKeyUp);
-    }
+    window.addEventListener("keydown", this.emulateTextEdit ? this.handlePhysKeyDownEmulated : this.handlePhysKeyDown);
+    window.addEventListener("keyup", this.handlePhysKeyUp);
     this.updateKeyboard(this.props.text);
   }
 
   componentWillUnmount() {
-    if (this.props.emulateTextEdit) {
-      window.removeEventListener("keydown", this.handlePhysKeyDown);
-      window.removeEventListener("keyup", this.handlePhysKeyUp);
-    }
+    window.removeEventListener("keydown", this.emulateTextEdit ? this.handlePhysKeyDownEmulated : this.handlePhysKeyDown);
+    window.removeEventListener("keyup", this.handlePhysKeyUp);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -133,6 +129,13 @@ export default class Keyboard extends Component {
   }
 
   handlePhysKeyDown = e => {
+    if (e.key === "Shift") {
+      this.setState({ shiftLevel: 1 });
+      e.preventDefault();
+    }
+  }
+
+  handlePhysKeyDownEmulated = e => {
     let preventDefault = false;
 
     if (e.key === "Shift") {

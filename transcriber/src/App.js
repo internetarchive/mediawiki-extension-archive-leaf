@@ -267,7 +267,7 @@ export default class App extends Component {
     } else {
       let ta = this.textAreaRef.current;
       let { caretPos } = this.state;
-      if (ta.selectionStart !== caretPos || ta.selectionEnd !== caretPos) {
+      if (ta.selectionStart !== caretPos) {
         ta.setSelectionRange(caretPos, caretPos);
       }
       ta.focus();
@@ -346,7 +346,7 @@ export default class App extends Component {
               ref={this.textAreaRef}
               onChange={this.handleTextChangeTextArea}
               onClick={keyboardOpen && this.handleSelectionChangeTextArea}
-              onKeyDown={keyboardOpen && this.handleSelectionChangeTextArea}
+              onKeyUp={keyboardOpen && this.handleSelectionChangeTextArea}
             />
           }
           <div
