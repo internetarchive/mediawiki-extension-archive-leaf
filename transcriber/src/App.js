@@ -337,7 +337,7 @@ export default class App extends Component {
               zoomButtons={!platform.mobile}
             />
           </div>
-          {this.emulateTextEdit && keyboardOpen ?
+          {this.emulateTextEdit ?
             <div className={cx(styles.text, styles[font])} onClick={this.handleCaretMove}>
               {text.slice(0, caretPos)}
               <span className={styles.caret} ref={this.caretRef}></span>
@@ -349,8 +349,8 @@ export default class App extends Component {
               value={text}
               ref={this.textAreaRef}
               onChange={this.handleTextChangeTextArea}
-              onClick={!this.emulateTextEdit && this.handleSelectionChangeTextArea}
-              onKeyDown={!this.emulateTextEdit && this.handleSelectionChangeTextArea}
+              onClick={keyboardOpen && this.handleSelectionChangeTextArea}
+              onKeyDown={keyboardOpen && this.handleSelectionChangeTextArea}
             />
           }
           <div
