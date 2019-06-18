@@ -223,7 +223,7 @@ export default class App extends Component {
   }
 
   handleTextChange = (text, caretPos) => {
-    if (text) {
+    if (text !== null) {
       this.setState({ text, caretPos });
       if (this.archiveItemKey) {
         window.localStorage.setItem(this.archiveItemKey, text);
