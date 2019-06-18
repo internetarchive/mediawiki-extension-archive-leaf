@@ -284,7 +284,9 @@ export default class App extends Component {
 
   toggleKeyboard = () => {
     let keyboardOpen = !this.state.keyboardOpen;
-    if (keyboardOpen && !this.emulateTextEdit) this.handleSelectionChangeTextArea();
+    if (keyboardOpen && !this.emulateTextEdit) {
+      this.handleSelectionChangeTextArea();
+    }
     this.setState({ keyboardOpen });
     window.localStorage.setItem("keyboardOpen", keyboardOpen);
   }
