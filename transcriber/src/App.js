@@ -223,21 +223,12 @@ export default class App extends Component {
   }
 
   handleTextChange = (text, caretPos) => {
-    this.setState({ text, caretPos });
-    if (this.archiveItemKey) {
-      window.localStorage.setItem(this.archiveItemKey, text);
-    }
-  }
-
-  handleTextChangeTextArea = e => {
-    if (e.target.value !== this.state.text) {
-      this.handleTextChange(e.target.value, e.target.selectionStart);
-    }
-  }
-
-  handleSelectionChangeTextArea = e => {
-    let caretPos = this.textAreaRef.current.selectionStart;
-    if (caretPos !== this.state.caretPos) {
+    if (text) {
+      this.setState({ text, caretPos });
+      if (this.archiveItemKey) {
+        window.localStorage.setItem(this.archiveItemKey, text);
+      }
+    } else if (this.state.caretPos !== caretPos) {
       this.setState({ caretPos });
     }
   }
@@ -258,7 +249,10 @@ export default class App extends Component {
           caretPos += node.nodeValue.length;
         }
       }
-      this.setState({ caretPos });
+
+      if (this.state.caretPos !== caretPos) {
+        this.setState({ caretPos });
+      }
     }
   }
 
@@ -284,10 +278,10 @@ export default class App extends Component {
 
   toggleKeyboard = () => {
     let keyboardOpen = !this.state.keyboardOpen;
-    if (keyboardOpen && !this.emulateTextEdit) {
-      this.handleSelectionChangeTextArea();
-    }
     this.setState({ keyboardOpen });
+    if (keyboardOpen && !this.emulateTextEdit) {
+      this.setState({ caretPos: this.textAreaRef.current.selectionStart });
+    }
     window.localStorage.setItem("keyboardOpen", keyboardOpen);
   }
 
@@ -354,9 +348,8 @@ export default class App extends Component {
               className={cx(styles.text, styles[font], !keyboardOpen && styles.expanded)}
               value={text}
               ref={this.textAreaRef}
-              onChange={this.handleTextChangeTextArea}
-              onClick={keyboardOpen && this.handleSelectionChangeTextArea}
-              onKeyUp={keyboardOpen && this.handleSelectionChangeTextArea}
+              onChange={e => this.handleTextChange(e.target.value, e.target.selectionStart)}
+              onSelect={keyboardOpen ? (e => this.handleTextChange(null, e.target.selectionStart)) : undefined}
             />
           }
           <div
