@@ -122,10 +122,11 @@ class SpecialArchiveLeaf extends SpecialPage {
                 $this->printNormal( $id, $this->msg('archiveleaf-special-page-remote-not-exists-error')->plain() );
             } else {
                 // Process
-                $title = ArchiveLeaf::importPageByID( $id );
+                $result = ArchiveLeaf::importPageByID( $id );
 
-                if ( $title ) {
-                    $this->printSuccess( $title );
+                if ( $result ) {
+                    ArchiveLeaf::addLinkOnCollectionPage( $result['title'], $result['collection'] );
+                    $this->printSuccess( $result['title'], $result['collection'] );
                 } else {
                     $this->printNormal( $id, $this->msg('archiveleaf-special-page-unknown-error')->plain() );
                 }
@@ -135,11 +136,18 @@ class SpecialArchiveLeaf extends SpecialPage {
 
     /**
      * @param Title $title
+     * @param WikiPage $collection
      */
-    private function printSuccess( $title ) {
+    private function printSuccess( $title, $collection ) {
 
         $this->getOutput()->addHTML( wfMessage('archiveleaf-special-page-success-text')
-            ->params( $title->getFullURL(), $title->getBaseText(), SpecialPage::getTitleFor('ArchiveLeaf')->getFullURL() )->plain() );
+            ->params(
+                $title->getFullURL(),
+                $title->getBaseText(),
+                $collection->getFullURL(),
+                $collection->getBaseText(),
+                SpecialPage::getTitleFor('ArchiveLeaf')->getFullURL() )->plain()
+            );
 
     }
 

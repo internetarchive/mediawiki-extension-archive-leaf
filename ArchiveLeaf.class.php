@@ -26,7 +26,7 @@ class ArchiveLeaf {
     /**
      * @param string $id
      *
-     * @return bool|Title
+     * @return bool|array('title' => Title, 'collection' => WikiPage)
      */
     public static function importPageByID( $id ) {
 
@@ -60,6 +60,14 @@ class ArchiveLeaf {
             $iso639 = json_decode( $iso639, true );
             $language = $iso639[ $response['language'] ];
         }
+
+        // collection
+        $collection_map = file_get_contents( 'extensions/ArchiveLeaf/collection_to_wiki.json' );
+        $collection_map = json_decode( $collection_map, true );
+        $collection = array_key_exists( $response['collection'], $collection_map )
+            ? $collection_map[ $response['collection'] ]
+            : $response['collection'];
+        $collection = WikiPage::factory( Title::newFromText( $collection ) );
 
         $template = "{{" . $wgArchiveLeafTemplateName;
         $template .= "\n|Description=<!-- put your general description text here -->";
@@ -149,7 +157,7 @@ class ArchiveLeaf {
 
         }
 
-        if ( $language ) {
+        if ( isset($language) ) {
             $template .= "\n\n[[Category:" . $language . "]]";
         }
 
@@ -165,7 +173,10 @@ class ArchiveLeaf {
             wfDebug('[ArchiveLeaf]: '.$l);
         }
 
-        return $title;
+        return array(
+            'title'         => $title,
+            'collection'    => $collection,
+        );
 
     }
 
@@ -182,6 +193,45 @@ class ArchiveLeaf {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Adds link to page on collection page
+     *
+     * @param Title $title
+     * @param WikiPage $page
+     */
+    public static function addLinkOnCollectionPage( $title, $page ) {
+
+        $revision = $page->getRevision();
+        $text = $revision ? $revision->getContent( Revision::RAW ) : '';
+        $key = $title->getDBKey();
+
+        if ( preg_match( '/\[\[' . preg_quote( $key, '/' ) . '\b/', $text ) ) return;
+
+        $text = rtrim( $text );
+        $text .= "\n* [[$key|" . self::sanitizeValue( $key ) . "]]\n";
+
+        $page->doEditContent( $text, "added link to '$key'", EDIT_NEW );
+        $page->doEditUpdates( $revision, $wgUser );
+
+    }
+
+   /**
+     * Title sanitization
+     *
+     * @param string $value
+     *
+     * @return mixed
+     */
+    public static function sanitizeValue( $value ) {
+        $result = array();
+        $value = str_replace('-', ' ', $value);
+        $value = explode(' ', $value);
+        foreach ($value as $word) {
+            $result[] = ucfirst( $word );
+        }
+        return join(' ', $result);
     }
 
 }
