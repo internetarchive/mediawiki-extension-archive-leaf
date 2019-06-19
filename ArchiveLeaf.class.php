@@ -1,5 +1,7 @@
 <?php
 
+use MediaWiki\Revision\SlotRecord;
+
 /**
  * Class for ArchiveLeaf extension
  *
@@ -67,7 +69,7 @@ class ArchiveLeaf {
         $collection = array_key_exists( $response['collection'], $collection_map )
             ? $collection_map[ $response['collection'] ]
             : $response['collection'];
-        $collection = WikiPage::factory( Title::newFromText( $collection ) );
+        $collection = new WikiPage( Title::newFromText( $collection ) );
 
         $template = "{{" . $wgArchiveLeafTemplateName;
         $template .= "\n|Description=<!-- put your general description text here -->";
@@ -164,8 +166,10 @@ class ArchiveLeaf {
         $title = Title::newFromText($id);
         $page = new WikiPage($title);
 
-        $page->doEditContent( new WikitextContent( $template ), 'Imported from Archive.org' );
-        $page->doEditUpdates( $page->getRevision(), $wgUser );
+        $updater = $page->newPageUpdater( $wgUser );
+        $updater->setContent( SlotRecord::MAIN, new WikitextContent( $template ) );
+        #$updater->setRcPatrolStatus( RecentChange::PRC_PATROLLED );
+        $updater->saveRevision( new CommentStoreComment( null, 'Imported from Archive.org' ) );
 
         $log[] = "Page '{$id}' successfully created.";
 
@@ -203,17 +207,32 @@ class ArchiveLeaf {
      */
     public static function addLinkOnCollectionPage( $title, $page ) {
 
-        $revision = $page->getRevision();
-        $text = $revision ? $revision->getContent( Revision::RAW ) : '';
+        global $wgUser;
+
         $key = $title->getDBKey();
 
-        if ( preg_match( '/\[\[' . preg_quote( $key, '/' ) . '\b/', $text ) ) return;
+        $updater = $page->newPageUpdater( $wgUser );
 
-        $text = rtrim( $text );
-        $text .= "\n* [[$key|" . self::sanitizeValue( $key ) . "]]\n";
+        if ($page->exists()) {
+            $parent = $updater->grabParentRevision();
+            $content = $parent->getContent( SlotRecord::MAIN );
+            $text = ContentHandler::getContentText( $content );
 
-        $page->doEditContent( $text, "added link to '$key'", EDIT_NEW );
-        $page->doEditUpdates( $revision, $wgUser );
+            if ( preg_match( '/\[\[' . preg_quote( $key, '/' ) . '\b/', $text ) ) return;
+
+            $text = rtrim( $text ) . "\n";
+            $flag = EDIT_UPDATE;
+
+        } else {
+            $text = '';
+            $flag = EDIT_NEW;
+        }
+
+        $text .= "* [[$key|" . self::sanitizeValue( $key ) . "]]\n";
+
+        $updater->setContent( SlotRecord::MAIN, new WikitextContent( $text ) );
+        #$updater->setRcPatrolStatus( RecentChange::PRC_PATROLLED );
+        $result = $updater->saveRevision( new CommentStoreComment( null, "added link to '$key'" ), $flag );
 
     }
 
