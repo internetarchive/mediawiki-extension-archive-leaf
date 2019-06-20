@@ -8,7 +8,7 @@
     "archiveleaf": "Import pages from Archive.org",
     "archiveleaf-desc": "Integrates Archive.org leafs database with Mediawiki",
     "archiveleaf-special-title": "Generate page from Archive.org",
-    "archiveleaf-special-text": "Emitter of a greatly exaggerated alignment, unite the plasma! Red alert, metamorphosis! Surprisingly, indeed, biological modification! This mineral has only been beamed by a real crew. Parasites yell with mystery! Twisted, united crewmates pedantically disrupt a cold, human machine.",
+    "archiveleaf-special-text": "Enter the identifier of the Internet Archive item to import:",
     "archiveleaf-special-input-label": "Page ID",
     "archiveleaf-special-input-submit": "Create Page",
     "archiveleaf-special-page-exists-error": "Page with given ID already exists, see [[$1]].",
