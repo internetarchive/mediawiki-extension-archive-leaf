@@ -162,8 +162,9 @@ class SpecialArchiveLeaf extends SpecialPage {
 
         $data = array(
             'error' => $error,
-            'value' => $value,
-            'loading_message' => wfMessage('archiveleaf-special-page-loading-message')->plain()
+            'import_id_value' => $value,
+            'loading_message' => wfMessage('archiveleaf-special-page-loading-message')->plain(),
+            'submit_value' => wfMessage('archiveleaf-special-input-submit')->plain(),
         );
 
         $formHtml = $this->templater->processTemplate('form', $data);

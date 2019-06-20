@@ -6,9 +6,9 @@
         </div>
     {{/error}}
 
-    <input type="text" name="import_id" id="import_id" autocomplete="off" class="awdawdawda-search"
-           required placeholder="some-page-id" value="{{ value }}" />
-    <input type="submit" value="Create Page" id="import_submit" />
+    <input type="text" name="import_id" id="import_id" autocomplete="off"
+           required placeholder="some-item-id" value="{{ import_id_value }}" />
+    <input type="submit" value="{{ submit_value }}" id="import_submit" />
 
     <div id="loading_form">
         {{ loading_message }}
