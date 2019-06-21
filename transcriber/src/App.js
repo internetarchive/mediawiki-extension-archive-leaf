@@ -86,24 +86,20 @@ export default class App extends Component {
     this.emulateTextEdit = platform.mobile;
 
     this.state = {
-      open: true,
-      error: false,
-      text: "",
-      caretPos: 0,
+      open: this.checkTags(),
       keyboardOpen: !(window.localStorage.getItem("keyboardOpen") === "false"),
       font: window.localStorage.getItem("font") || "vimala",
       transliteration: "",
       transliterationOpen: false,
     };
-  }
 
-  componentDidMount() {
-    this.checkTags();
-    this.afterOpen();
+    if (this.state.open) {
+      this.state = { ...this.state, ...this.finalizeOpen() };
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.open && !this.state.error) {
+    if (this.state.open) {
       if (this.state.keyboardOpen &&
         (this.state.caretPos !== prevState.caretPos || this.state.text !== prevState.text))
       {
@@ -115,37 +111,36 @@ export default class App extends Component {
   }
 
   checkTags() {
-    let error = false;
+    let shouldOpen = true;
     let openTags = this.textbox.value.match(/<transcription>/g);
     let closeTags = this.textbox.value.match(/<\/transcription>/g);
     if ((openTags || closeTags) &&
       (!(openTags && openTags.length === 1 && closeTags && closeTags.length === 1) ||
       !(this.textbox.value.indexOf("<transcription>") < this.textbox.value.indexOf("</transcription>")))
     ) {
-      error = true;
+      shouldOpen = false;
       alert("Transcription tags are malformed!");
     }
-    this.setState({ error });
+    return shouldOpen;
   }
 
   handleOpen = () => {
-    this.checkTags();
-    this.setState({ open: true }, this.afterOpen);
+    if (this.checkTags()) {
+      this.setState({ open: true, ...this.finalizeOpen() });
+    }
   }
 
-  afterOpen = () => {
-    if (!this.error) {
-      if (platform.iOSSafari) {
-        document.addEventListener("touchmove", blockPinchZoom, { passive: false });
-        //document.addEventListener("touchend", blockTapZoom, { passive: false });
-      }
-      document.body.classList.add(styles.noscroll);
-      document.addEventListener("keydown", this.handleKeyDown);
-
-      this.getArchiveItem();
-      this.getIiifDimensions();
-      this.getTranscription();
+  finalizeOpen = () => {
+    if (platform.iOSSafari) {
+      document.addEventListener("touchmove", blockPinchZoom, { passive: false });
+      //document.addEventListener("touchend", blockTapZoom, { passive: false });
     }
+    document.body.classList.add(styles.noscroll);
+    document.addEventListener("keydown", this.handleKeyDown);
+
+    this.loadArchiveItem();
+    this.loadIiifDimensions();
+    return this.loadTranscription();
   }
 
   handleClose = () => {
@@ -155,7 +150,8 @@ export default class App extends Component {
     }
     document.body.classList.remove(styles.noscroll);
     document.removeEventListener("keydown", this.handleKeyDown);
-    this.setState({ open: false }, this.setTranscription);
+    this.setState({ open: false });
+    this.saveTranscription();
   }
 
   handleKeyDown = e => {
@@ -167,7 +163,7 @@ export default class App extends Component {
     }
   }
 
-  getArchiveItem() {
+  loadArchiveItem() {
     let matches = this.textbox.value.match(/\bEntryID=(\S+).*\bTitle=(\S+)/s);
     if (matches) {
       this.archiveItem = { id: matches[1], leaf: matches[2] };
@@ -176,19 +172,21 @@ export default class App extends Component {
     }
   }
 
-  getIiifDimensions() {
+  loadIiifDimensions() {
     let matches = this.textbox.value.match(/\bFullSize=([0-9]+)x([0-9]+)/);
     if (matches) {
       this.iiifDimensions = { width: matches[1], height: matches[2] };
     }
   }
 
-  getTranscription() {
+  loadTranscription() {
     let matches = this.textbox.value.match(/(?:.*<transcription>)(.*?)(?:<\/transcription>.*)/s);
     if (matches) {
       let text = matches[1].trim();
-      this.setState({ text, caretPos: text.length });
       setTimeout(() => this.checkStoredText(text), 1000);
+      return { text, caretPos: text.length };
+    } else {
+      return { text: "", caretPos: 0 };
     }
   }
 
@@ -208,7 +206,7 @@ export default class App extends Component {
     }
   }
 
-  setTranscription = () => {
+  saveTranscription = () => {
     let transcription = (this.state.text).trim();
     let matches = this.textbox.value.match(/(.*<transcription>).*(<\/transcription>.*)/s);
     if (matches) {
@@ -321,11 +319,11 @@ export default class App extends Component {
   }
 
   render() {
-    let { open, error, text, caretPos, keyboardOpen, transliterationOpen, font } = this.state;
+    let { open, text, caretPos, keyboardOpen, transliterationOpen, font } = this.state;
 
     return (
       <div className={styles.App}>
-        <div className={cx(styles.transcriber, (!open || error) && styles.closed)}>
+        <div className={cx(styles.transcriber, !open && styles.closed)}>
           <div className={cx(styles.image, !keyboardOpen && styles.expanded)}>
             <PinchZoomPan
               imageUrl={this.imageUrl}
@@ -360,7 +358,7 @@ export default class App extends Component {
               {this.state.transliteration}
             </div>
           </div>
-          {open && !error && keyboardOpen &&
+          {open && keyboardOpen &&
             <Keyboard
               script="bali"
               className={styles[font]}
@@ -372,7 +370,7 @@ export default class App extends Component {
             />
           }
         </div>
-        {(open && !error) ?
+        {open ?
           <div className={cx(styles.buttons, platform.mobile ? styles.vert : styles.horiz)}>
             <button
               className={styles.button}
