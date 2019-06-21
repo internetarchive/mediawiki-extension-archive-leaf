@@ -10,7 +10,7 @@
     "archiveleaf-special-title": "Import item from Archive.org",
     "archiveleaf-special-text": "Enter the identifier of the Internet Archive item to import:",
     "archiveleaf-special-input-label": "Page ID",
-    "archiveleaf-special-input-submit": "Import item",
+    "archiveleaf-special-input-submit": "Import Item",
     "archiveleaf-special-page-exists-error": "Page with given ID already exists, see [[$1]].",
     "archiveleaf-special-page-remote-not-exists-error": "Item with given ID does not exist at archive.org, please check for typos.",
     "archiveleaf-special-page-unknown-error": "Unknown error importing item from archive.org.",

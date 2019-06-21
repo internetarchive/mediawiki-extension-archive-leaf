@@ -30,7 +30,7 @@ class ArchiveLeaf {
      *
      * @return bool|array('title' => Title, 'collection' => WikiPage)
      */
-    public static function importPageByID( $id ) {
+    public static function importItemByID( $id ) {
 
         global $wgArchiveLeafBaseURL, $wgArchiveLeafApiURL, $wgArchiveLeafTemplateName,
                $wgArchiveLeafTemplateImageName, $wgUser;
@@ -56,14 +56,14 @@ class ArchiveLeaf {
         // Sub-preifx for browse url
         $subPrefix = $response['subPrefix'];
 
-        // language
+        // look up language (for category)
         if ( $response['language'] ) {
             $iso639 = file_get_contents( 'extensions/ArchiveLeaf/iso-639-3.json' );
             $iso639 = json_decode( $iso639, true );
             $language = $iso639[ $response['language'] ];
         }
 
-        // collection
+        // look up collection page
         $collection_map = file_get_contents( 'extensions/ArchiveLeaf/collection_to_wiki.json' );
         $collection_map = json_decode( $collection_map, true );
         $collection = array_key_exists( $response['collection'], $collection_map )
@@ -85,8 +85,8 @@ class ArchiveLeaf {
 
             $leafBrowseUrl = $wgArchiveLeafBaseURL.'/stream/'.$id.'/'.$subPrefix.'#page/n'.$imageNum.'/mode/1up';
 
-            // Import image
-            // TODO: actually we can't import so large images into wiki, shrink to 2000px
+            // import images
+            // not efficient to import large images into wiki, shrink to 2000px
             $imageUrlFull = $wgArchiveLeafBaseURL.'/download/'.$id.'/page/leaf'.$leaf.'_w2000.jpg';
             $uploader = new UploadFromUrl();
             $localFileName = '';
@@ -163,8 +163,8 @@ class ArchiveLeaf {
             $template .= "\n\n[[Category:" . $language . "]]";
         }
 
-        $title = Title::newFromText($id);
-        $page = new WikiPage($title);
+        $title = Title::newFromText( $id );
+        $page = new WikiPage( $title );
 
         $updater = $page->newPageUpdater( $wgUser );
         $updater->setContent( SlotRecord::MAIN, new WikitextContent( $template ) );

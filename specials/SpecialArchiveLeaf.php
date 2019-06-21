@@ -122,7 +122,7 @@ class SpecialArchiveLeaf extends SpecialPage {
                 $this->printNormal( $id, $this->msg('archiveleaf-special-page-remote-not-exists-error')->plain() );
             } else {
                 // Process
-                $result = ArchiveLeaf::importPageByID( $id );
+                $result = ArchiveLeaf::importItemByID( $id );
 
                 if ( $result ) {
                     ArchiveLeaf::addLinkOnCollectionPage( $result['title'], $result['collection'] );
