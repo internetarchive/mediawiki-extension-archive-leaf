@@ -409,7 +409,7 @@ export default class App extends Component {
           </div>
           :
           <button
-            className={styles.openButton}
+            className={cx(styles.button,styles.open)}
             onClick={this.handleOpen}
           >
             <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes" />

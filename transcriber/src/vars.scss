@@ -28,13 +28,3 @@ $keyboardHeight: 100% - $keyboardTop;
   overflow-wrap: break-word;
   word-break: break-all;
 }
-
-@mixin button {
-  height: 32px;
-  width: 32px;
-  cursor: pointer;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}

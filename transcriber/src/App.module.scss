@@ -35,11 +35,16 @@ body.noscroll {
 }
 
 .button {
-  @include button;
+  height: 32px;
+  width: 32px;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.openButton {
-  @include button;
+.button.open {
   position: fixed;
   bottom: 0;
   left: 0;
