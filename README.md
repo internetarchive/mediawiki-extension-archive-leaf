@@ -76,7 +76,7 @@ location /transcriber/static {
 
 ### Common.css (optional)
 
-To improve page rendering, add the following to the `MediaWiki:Common.css` page on the wiki:
+To improve page rendering, add the following CSS to the `MediaWiki:Common.css` page on the wiki:
 
 ```css
 .mw-jump {
