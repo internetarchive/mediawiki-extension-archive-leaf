@@ -82,6 +82,15 @@ To improve page rendering, add the following to the `MediaWiki:Common.css` page 
 .mw-jump {
   display: none;
 }
+
+.thumbinner {
+  max-width: 100%;
+}
+
+img.thumbimage {
+  width: 100%;
+  height: auto;
+}
 ```
 
 ## Usage
