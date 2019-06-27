@@ -74,6 +74,16 @@ location /transcriber/static {
 }
 ```
 
+### Common.css (optional)
+
+To improve page rendering, add the following to the `MediaWiki:Common.css` page on the wiki:
+
+```css
+.mw-jump {
+  display: none;
+}
+```
+
 ## Usage
 
 * To import items from Archive.org, navigate to wiki page `Special:ArchiveLeaf`. When the import completes, a link to the imported page will appear.
