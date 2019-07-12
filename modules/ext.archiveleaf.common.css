@@ -9,18 +9,18 @@
 /* © Aditya Bayu Perdana, CC-BY-NC-ND */
 @font-face {
     font-family: "Vimala";
-    src: url(https://bali.panlex.org/transcriber/fonts/Vimala.woff2?v3) format('woff2'),
-         url(https://bali.panlex.org/transcriber/fonts/Vimala.woff?v3) format('woff'),
-         url(https://bali.panlex.org/transcriber/fonts/Vimala.ttf?v3) format('truetype');
+    src: url(https://bali.panlex.org/transcriber/fonts/Vimala.woff2?v4) format('woff2'),
+         url(https://bali.panlex.org/transcriber/fonts/Vimala.woff?v4) format('woff'),
+         url(https://bali.panlex.org/transcriber/fonts/Vimala.ttf?v4) format('truetype');
     unicode-range: U+1B00-1B7F;
 }
 
 /* © Aditya Bayu Perdana, CC-BY-NC-ND */
 @font-face {
     font-family: "Pustaka";
-    src: url(https://bali.panlex.org/transcriber/fonts/Pustaka.woff2?v3) format('woff2'),
-         url(https://bali.panlex.org/transcriber/fonts/Pustaka.woff?v3) format('woff'),
-         url(https://bali.panlex.org/transcriber/fonts/Pustaka.ttf?v3) format('truetype');
+    src: url(https://bali.panlex.org/transcriber/fonts/Pustaka.woff2?v4) format('woff2'),
+         url(https://bali.panlex.org/transcriber/fonts/Pustaka.woff?v4) format('woff'),
+         url(https://bali.panlex.org/transcriber/fonts/Pustaka.ttf?v4) format('truetype');
     unicode-range: U+1B00-1B7F;
 }
 
