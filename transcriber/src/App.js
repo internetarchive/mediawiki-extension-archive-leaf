@@ -352,7 +352,7 @@ export default class App extends Component {
           }
           <div
             className={cx(styles.transliteration, transliterationOpen && styles.visible, !keyboardOpen && styles.expanded)}
-            onClick={platform.mobile && this.setTransliterationOpen(false)}
+            onClick={platform.mobile && (() => this.setTransliterationOpen(false))}
           >
             <div className={styles.transliterationText}>
               {this.state.transliteration}
