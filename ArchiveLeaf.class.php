@@ -120,7 +120,7 @@ class ArchiveLeaf {
                                 $localFile->createThumb(400);
 
                                 //TODO: apparently thumb being purged during deferred update for uploaded files
-                                DeferredUpdates::clearPendingUpdates();
+                                //DeferredUpdates::clearPendingUpdates();
 
                                 $log[] = "Image was imported successfully.";
                             } else {
