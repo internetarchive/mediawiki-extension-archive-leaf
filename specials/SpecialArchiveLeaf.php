@@ -110,7 +110,7 @@ class SpecialArchiveLeaf extends SpecialPage {
         $id = $this->getRequest()->getVal('import_id');
 
         // Sanitize to common format
-        $id = mb_strtolower($id);
+        $id = preg_replace( '/\//', '', mb_strtolower($id) );
 
         if ( ArchiveLeaf::isPageExists( $id ) ) {
             // Display error
