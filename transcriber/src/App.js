@@ -312,6 +312,7 @@ export default class App extends Component {
       window.fetch("/w/api.php", {
         method: "POST",
         body: queryString.stringify({
+          action: "transliterate",
           format: "json",
           transliterator: "Balinese-ban_001",
           text: this.state.text
