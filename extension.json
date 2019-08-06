@@ -19,12 +19,12 @@
   },
   "AutoloadClasses": {
     "ArchiveLeaf": "ArchiveLeaf.class.php",
-    "ArchiveLeafApi": "ArchiveLeaf.api.php",
     "ArchiveLeafHooks": "ArchiveLeaf.hooks.php",
+    "ArchiveLeafTransliterateApi": "ArchiveLeaf.transliterate.api.php",
     "SpecialArchiveLeaf": "specials/SpecialArchiveLeaf.php"
   },
   "APIModules": {
-    "transliterate": "ArchiveLeafApi"
+    "transliterate": "ArchiveLeafTransliterateApi"
   },
   "ExtensionMessagesFiles": {
     "ArchiveLeafAlias": "ArchiveLeaf.i18n.alias.php",
