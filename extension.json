@@ -19,6 +19,7 @@
     "ArchiveLeafApiURL": "https://api.archivelab.org",
     "ArchiveLeafTemplateName": "Entry",
     "ArchiveLeafTemplateImageName": "EntryImage",
+    "ArchiveLeafAutoTransliterate": "1",
     "ArchiveLeafTransliterateUrl": "http://localhost:3000"
   },
   "ExtensionMessagesFiles": {
@@ -29,6 +30,7 @@
     "ParserFirstCallInit": "ArchiveLeafHooks::onParserFirstCallInit",
     "BeforePageDisplay": "ArchiveLeafHooks::onBeforePageDisplay",
     "EditPage::showEditForm:initial": "ArchiveLeafHooks::onShowEditForm",
+    "EditPage::attemptSave": "ArchiveLeafHooks::onAttemptSave",
     "ParserBeforeInternalParse": "ArchiveLeafHooks::onParserBeforeInternalParse"
   },
   "MessagesDirs": {

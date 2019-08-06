@@ -47,18 +47,49 @@ class ArchiveLeafHooks {
     }
 
     public static function onShowEditForm( EditPage &$editor, OutputPage &$out ) {
-        if ( $editor->section
-          && !($editor->preview || $editor->diff)
+
+        global $wgArchiveLeafAutoTransliterate;
+
+        if ( !($editor->preview || $editor->diff)
           && preg_match( '/\{\{EntryImage/', $editor->textbox1 )
           && preg_match( '/LocalFileName=(.+?)\s*\n/', $editor->textbox1, $matches ) ) {
 
-            $file = wfFindFile( $matches[1] );
+            if ( $wgArchiveLeafAutoTransliterate ) {
+                $editor->textbox1 = preg_replace( '/<transliteration>.*?<\/transliteration>/s', '', $editor->textbox1 );
+            }
 
-            if ( $file && $file->exists() ) {
-                $out->addHTML( '<script>var entryImageUrl = "' . $file->getUrl() . '";</script>' );
-                $out->addModules( 'ext.archiveleaf.transcriber' );
+            if ( $editor->section ) {
+
+                $file = wfFindFile( $matches[1] );
+
+                if ( $file && $file->exists() ) {
+                    $out->addHTML( '<script>var entryImageUrl = "' . $file->getUrl() . '";</script>' );
+                    $out->addModules( 'ext.archiveleaf.transcriber' );
+                }
+
             }
         }
+    }
+
+    public static function onAttemptSave( EditPage $editor ) {
+
+        global $wgArchiveLeafAutoTransliterate;
+
+        if ( $wgArchiveLeafAutoTransliterate ) {
+
+            $editor->textbox1 = preg_replace( '/<transliteration>.*?<\/transliteration>/', 'blah', $editor->textbox1 );
+
+            $editor->textbox1 = preg_replace_callback( '/<transcription>\s*(.*?)\s*<\/transcription>/s', function( $match ) {
+                if (strlen( $match[1] ) ) {
+                    return $match[0] . '<transliteration>' . ArchiveLeaf::transliterate( 'Balinese-ban000', $match[1] ) . '</transliteration>';
+                } else {
+                    return $match[0];
+                }
+
+            }, $editor->textbox1 );
+
+        }
+
     }
 
 }
