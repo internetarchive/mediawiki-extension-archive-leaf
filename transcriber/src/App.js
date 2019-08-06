@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PinchZoomPan from 'react-responsive-pinch-zoom-pan';
 import cx from 'clsx';
 import Popup from 'reactjs-popup';
-import queryString from 'query-string';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faKeyboard, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 
@@ -311,7 +310,7 @@ export default class App extends Component {
     return new Promise((resolve, reject) => {
       window.fetch("/w/api.php", {
         method: "POST",
-        body: queryString.stringify({
+        body: new URLSearchParams({
           action: "transliterate",
           format: "json",
           transliterator: "Balinese-ban_001",
