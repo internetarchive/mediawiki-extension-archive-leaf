@@ -9,11 +9,6 @@
   "descriptionmsg": "archiveleaf-desc",
   "license-name": "MIT",
   "type": "other",
-  "AutoloadClasses": {
-    "ArchiveLeaf": "ArchiveLeaf.class.php",
-    "ArchiveLeafHooks": "ArchiveLeaf.hooks.php",
-    "SpecialArchiveLeaf": "specials/SpecialArchiveLeaf.php"
-  },
   "config": {
     "ArchiveLeafBaseURL": "https://archive.org",
     "ArchiveLeafApiURL": "https://api.archivelab.org",
@@ -21,6 +16,15 @@
     "ArchiveLeafTemplateImageName": "EntryImage",
     "ArchiveLeafAutoTransliterate": "1",
     "ArchiveLeafTransliterateUrl": "http://localhost:3000"
+  },
+  "AutoloadClasses": {
+    "ArchiveLeaf": "ArchiveLeaf.class.php",
+    "ArchiveLeafApi": "ArchiveLeaf.api.php",
+    "ArchiveLeafHooks": "ArchiveLeaf.hooks.php",
+    "SpecialArchiveLeaf": "specials/SpecialArchiveLeaf.php"
+  },
+  "APIModules": {
+    "transliterate": "ArchiveLeafApi"
   },
   "ExtensionMessagesFiles": {
     "ArchiveLeafAlias": "ArchiveLeaf.i18n.alias.php",
