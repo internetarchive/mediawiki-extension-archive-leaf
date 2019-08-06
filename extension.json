@@ -18,7 +18,8 @@
     "ArchiveLeafBaseURL": "https://archive.org",
     "ArchiveLeafApiURL": "https://api.archivelab.org",
     "ArchiveLeafTemplateName": "Entry",
-    "ArchiveLeafTemplateImageName": "EntryImage"
+    "ArchiveLeafTemplateImageName": "EntryImage",
+    "ArchiveLeafTransliterateUrl": "http://localhost:3000"
   },
   "ExtensionMessagesFiles": {
     "ArchiveLeafAlias": "ArchiveLeaf.i18n.alias.php",
