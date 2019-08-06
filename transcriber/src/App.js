@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PinchZoomPan from 'react-responsive-pinch-zoom-pan';
 import cx from 'clsx';
 import Popup from 'reactjs-popup';
+import queryString from 'query-string';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faKeyboard, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 
@@ -9,7 +10,6 @@ import styles from './App.module.scss';
 import Keyboard from './Keyboard';
 
 const iiifBaseUrl = "https://iiif.archivelab.org/iiif";
-const transliteratorUrl = "https://bali.panlex.org/transliterate";
 const platform = detectPlatform();
 const getSelection = detectGetSelection();
 
@@ -309,11 +309,15 @@ export default class App extends Component {
 
   getTransliteration() {
     return new Promise((resolve, reject) => {
-      window.fetch(transliteratorUrl, {
+      window.fetch("/w/api.php", {
         method: "POST",
-        body: this.state.text
+        body: queryString.stringify({
+          format: "json",
+          transliterator: "Balinese-ban_001",
+          text: this.state.text
+        })
       }).then(res => {
-        res.text().then(resolve, reject);
+        res.json().then(json => resolve(json.transliteration), reject);
       }, reject);
     });
   }
