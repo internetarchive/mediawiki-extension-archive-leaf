@@ -77,7 +77,7 @@ class ArchiveLeafHooks {
 
         if ( $wgArchiveLeafAutoTransliterate ) {
 
-            $editor->textbox1 = preg_replace( '/<transliteration>.*?<\/transliteration>/', 'blah', $editor->textbox1 );
+            $editor->textbox1 = preg_replace( '/<transliteration>.*?<\/transliteration>/', '', $editor->textbox1 );
 
             $editor->textbox1 = preg_replace_callback( '/<transcription>\s*(.*?)\s*<\/transcription>/s', function( $match ) {
                 if (strlen( $match[1] ) ) {
