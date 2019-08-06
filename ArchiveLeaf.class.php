@@ -257,7 +257,7 @@ class ArchiveLeaf {
         global $wgArchiveLeafTransliterateURL;
 
         return @file_get_contents( $wgArchiveLeafTransliterateURL.'/'.$transliterator, false,
-            stream_context_create(array( 'content' => $str ) );
+            stream_context_create(array( 'content' => $str ) ) );
     }
 
 }
