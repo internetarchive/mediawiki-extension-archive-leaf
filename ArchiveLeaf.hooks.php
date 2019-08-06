@@ -81,7 +81,7 @@ class ArchiveLeafHooks {
 
             $editor->textbox1 = preg_replace_callback( '/<transcription>\s*(.*?)\s*<\/transcription>/s', function( $match ) {
                 if (strlen( $match[1] ) ) {
-                    return $match[0] . '<transliteration>' . ArchiveLeaf::transliterate( 'Balinese-ban000', $match[1] ) . '</transliteration>';
+                    return $match[0] . '<transliteration>' . ArchiveLeaf::transliterate( 'Balinese-ban_001', $match[1] ) . '</transliteration>';
                 } else {
                     return $match[0];
                 }
