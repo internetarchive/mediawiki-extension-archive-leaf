@@ -254,10 +254,15 @@ class ArchiveLeaf {
     }
 
     public static function transliterate( $transliterator, $str ) {
-        global $wgArchiveLeafTransliterateURL;
+        global $wgArchiveLeafTransliterateUrl;
 
-        return @file_get_contents( $wgArchiveLeafTransliterateURL.'/'.$transliterator, false,
-            stream_context_create(array( 'content' => $str ) ) );
+        $opts = array('http' =>
+            array(
+                'method' => 'POST',
+                'content' => $str,
+            )
+        );
+
+        return @file_get_contents( $wgArchiveLeafTransliterateUrl.'/'.$transliterator, false, stream_context_create($opts) );
     }
-
 }
