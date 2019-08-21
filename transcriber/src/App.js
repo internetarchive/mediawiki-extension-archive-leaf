@@ -9,6 +9,10 @@ import styles from './App.module.scss';
 import Keyboard from './Keyboard';
 
 const iiifBaseUrl = "https://iiif.archivelab.org/iiif";
+const mediawikiApi = process.env.NODE_ENV === "development"
+  ? "http://palmleaf.org/w/api.php"
+  : "/w/api.php";
+
 const platform = detectPlatform();
 const getSelection = detectGetSelection();
 
@@ -302,17 +306,14 @@ export default class App extends Component {
     }
   }
 
-  toggleTransliteration = () => {
-    this.setTransliterationOpen(!this.state.transliterationOpen);
-  }
-
   getTransliteration() {
     return new Promise((resolve, reject) => {
-      window.fetch("/w/api.php", {
+      window.fetch(mediawikiApi, {
         method: "POST",
         body: new URLSearchParams({
           action: "transliterate",
           format: "json",
+          origin: "*",
           transliterator: "Balinese-ban_001",
           text: this.state.text
         })
@@ -358,6 +359,12 @@ export default class App extends Component {
             className={cx(styles.transliteration, transliterationOpen && styles.visible, !keyboardOpen && styles.expanded)}
             onClick={platform.mobile && (() => this.setTransliterationOpen(false))}
           >
+            <button
+              className={cx(styles.button,styles.closeTransliteration)}
+              onClick={() => this.setTransliterationOpen(false)}
+            >
+              <FontAwesomeIcon icon={faTimes} />
+            </button>
             <div className={styles.transliterationText}>
               {this.state.transliteration}
             </div>
@@ -392,12 +399,8 @@ export default class App extends Component {
               {close => (
                 <>
                   <MenuItem close={close}
-                    label={(transliterationOpen ? "Hide" : "Show") + " Transliteration"}
-                    onClick={this.toggleTransliteration}
-                  />
-                  <MenuItem close={close}
-                    label={"Set Font to " + (font === "vimala" ? "Pustaka" : "Vimala")}
-                    onClick={this.toggleFont}
+                    label="Show Transliteration"
+                    onClick={() => this.setTransliterationOpen(true)}
                   />
                   {!platform.mobile &&
                     <MenuItem close={close}
@@ -405,6 +408,10 @@ export default class App extends Component {
                       onClick={this.toggleKeyboard}
                     />
                   }
+                  <MenuItem close={close}
+                    label={"Set Font to " + (font === "vimala" ? "Pustaka" : "Vimala")}
+                    onClick={this.toggleFont}
+                  />
                 </>
               )}
             </Popup>
