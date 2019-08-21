@@ -72,10 +72,10 @@ class ArchiveLeaf {
         $collection = new WikiPage( Title::newFromText( $collection ) );
 
         $template = "{{" . $wgArchiveLeafTemplateName;
-        $template .= "\n|Description=<!-- put your general description text here -->";
         $template .= "\n|Title=" . $id;
         $template .= "\n|Url=" . $remoteUrl;
         $template .= "\n}}";
+        $template .= "\n==== Description ====";
 
         $log[] = "Parsing item '{$remoteUrl}' ...";
 
