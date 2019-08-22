@@ -8,17 +8,17 @@
 
 @font-face {
     font-family: "Vimala";
-    src: url(https://bali.panlex.org/transcriber/fonts/Vimala.woff2?v18) format('woff2'),
-         url(https://bali.panlex.org/transcriber/fonts/Vimala.woff?v18) format('woff'),
-         url(https://bali.panlex.org/transcriber/fonts/Vimala.ttf?v18) format('truetype');
+    src: url(https://bali.panlex.org/transcriber/fonts/Vimala.woff2?v19) format('woff2'),
+         url(https://bali.panlex.org/transcriber/fonts/Vimala.woff?v19) format('woff'),
+         url(https://bali.panlex.org/transcriber/fonts/Vimala.ttf?v19) format('truetype');
     unicode-range: U+1B00-1B7F;
 }
 
 @font-face {
     font-family: "Pustaka";
-    src: url(https://bali.panlex.org/transcriber/fonts/Pustaka.woff2?v18) format('woff2'),
-         url(https://bali.panlex.org/transcriber/fonts/Pustaka.woff?v18) format('woff'),
-         url(https://bali.panlex.org/transcriber/fonts/Pustaka.ttf?v18) format('truetype');
+    src: url(https://bali.panlex.org/transcriber/fonts/Pustaka.woff2?v19) format('woff2'),
+         url(https://bali.panlex.org/transcriber/fonts/Pustaka.woff?v19) format('woff'),
+         url(https://bali.panlex.org/transcriber/fonts/Pustaka.ttf?v19) format('truetype');
     unicode-range: U+1B00-1B7F;
 }
 
