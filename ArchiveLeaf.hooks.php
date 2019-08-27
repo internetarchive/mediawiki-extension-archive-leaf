@@ -36,11 +36,11 @@ class ArchiveLeafHooks {
     }
 
     public static function renderTag( $tagName, $headingTitle = NULL ) {
-        return function ( $input, array $args, Parser $parser, PPFrame $frame ) use ( $tagName ) {
+        return function ( $input, array $args, Parser $parser, PPFrame $frame ) use ( $tagName, $headingTitle ) {
             $html = '';
 
             if ( isset( $headingTitle) ) {
-                $html .= $parser->recursiveTagParse( "===== $headingTitle =====", $frame );
+                #$html .= $parser->recursiveTagParse( "===== $headingTitle =====", $frame );
             }
 
             $html .= '<div class="' . $tagName . '">' . trim( $input ) . '</div>';
