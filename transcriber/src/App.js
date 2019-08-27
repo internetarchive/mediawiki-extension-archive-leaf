@@ -399,7 +399,7 @@ export default class App extends Component {
             </button>
             <Popup
               on="click"
-              contentStyle={{width: '12em'}}
+              contentStyle={{width: '14em'}}
               trigger={<button className={styles.button}><FontAwesomeIcon icon={faEllipsisV} /></button>}
               position="bottom right"
             >
