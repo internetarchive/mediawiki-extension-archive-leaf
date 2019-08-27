@@ -86,7 +86,6 @@ export default class App extends Component {
     this.textAreaRef = React.createRef();
     this.textbox = document.getElementById("wpTextbox1");
     this.imageUrl = window.entryImageUrl;
-    this.emulateTextEdit = platform.mobile;
 
     this.state = {
       open: this.checkTags(),
@@ -95,6 +94,7 @@ export default class App extends Component {
       transliteration: "",
       transliterationOpen: false,
     };
+    this.state.emulateTextEdit = platform.mobile && this.state.keyboardOpen;
 
     if (this.state.open) {
       this.state = { ...this.state, ...this.finalizeOpen() };
@@ -258,7 +258,7 @@ export default class App extends Component {
   }
 
   scrollToCaret() {
-    if (this.emulateTextEdit) {
+    if (this.state.emulateTextEdit) {
       let caret = this.caretRef.current;
       caret.offsetParent.scrollTop = caret.offsetTop;
     } else {
@@ -272,17 +272,24 @@ export default class App extends Component {
   }
 
   focusTextArea() {
-    if (!this.emulateTextEdit && document.activeElement !== this.textAreaRef.current) {
+    if (!this.state.emulateTextEdit && document.activeElement !== this.textAreaRef.current) {
       this.textAreaRef.current.focus();
     }
   }
 
   toggleKeyboard = () => {
     let keyboardOpen = !this.state.keyboardOpen;
-    this.setState({ keyboardOpen });
-    if (keyboardOpen && !this.emulateTextEdit) {
-      this.setState({ caretPos: this.textAreaRef.current.selectionStart });
+    let emulateTextEdit = platform.mobile && keyboardOpen;
+
+    let changedState = { keyboardOpen };
+    if (emulateTextEdit !== this.state.emulateTextEdit) {
+      changedState.emulateTextEdit = emulateTextEdit;
     }
+    if (keyboardOpen && !emulateTextEdit) {
+      changedState.caretPos = this.textAreaRef.current.selectionStart;
+    }
+
+    this.setState(changedState);
     window.localStorage.setItem("keyboardOpen", keyboardOpen);
   }
 
@@ -324,7 +331,7 @@ export default class App extends Component {
   }
 
   render() {
-    let { open, text, caretPos, keyboardOpen, transliterationOpen, font } = this.state;
+    let { open, text, caretPos, keyboardOpen, emulateTextEdit, transliterationOpen, font } = this.state;
 
     return (
       <div className={styles.App}>
@@ -340,7 +347,7 @@ export default class App extends Component {
               zoomButtons={!platform.mobile}
             />
           </div>
-          {this.emulateTextEdit ?
+          {emulateTextEdit ?
             <div className={cx(styles.text, styles[font])} onClick={this.handleCaretMove}>
               {text.slice(0, caretPos)}
               <span className={styles.caret} ref={this.caretRef}></span>
@@ -373,7 +380,7 @@ export default class App extends Component {
             <Keyboard
               script="bali"
               className={styles[font]}
-              emulateTextEdit={this.emulateTextEdit}
+              emulateTextEdit={emulateTextEdit}
               onTextChange={this.handleTextChange}
               onKeyPress={this.handleKeyPress}
               text={text}
@@ -402,12 +409,10 @@ export default class App extends Component {
                     label="Show Transliteration"
                     onClick={() => this.setTransliterationOpen(true)}
                   />
-                  {!platform.mobile &&
-                    <MenuItem close={close}
-                      label={(keyboardOpen ? "Hide" : "Show") + " Keyboard"}
-                      onClick={this.toggleKeyboard}
-                    />
-                  }
+                  <MenuItem close={close}
+                    label={(keyboardOpen ? "Hide" : "Show") + " Keyboard"}
+                    onClick={this.toggleKeyboard}
+                  />
                   <MenuItem close={close}
                     label={"Set Font to " + (font === "vimala" ? "Pustaka" : "Vimala")}
                     onClick={this.toggleFont}
