@@ -12,7 +12,7 @@ class ArchiveLeafHooks {
         $parser->setFunctionHook( 'sanitize_leaf_title', [ self::class, 'renderFunctionSanitize' ] );
 
         $parser->setHook( 'transcription', self::renderTag( 'transcription' ) );
-        $parser->setHook( 'transliteration', self::renderTag( 'transliteration' ) );
+        $parser->setHook( 'transliteration', self::renderTag( 'transliteration', 'Auto-transliteration' ) );
         $parser->setHook( 'translation', self::renderTag( 'translation' ) );
     }
 
@@ -35,9 +35,16 @@ class ArchiveLeafHooks {
         return $sanitized;
     }
 
-    public static function renderTag( $tagName ) {
+    public static function renderTag( $tagName, $headingTitle = NULL ) {
         return function ( $input, array $args, Parser $parser, PPFrame $frame ) use ( $tagName ) {
-            $html = '<div class="' . $tagName . '">' . trim( $input ) . '</div>';
+            $html = '';
+
+            if ( isset( $headingTitle) ) {
+                $html .= $parser->recursiveTagParse( "===== $headingTitle =====", $frame );
+            }
+
+            $html .= '<div class="' . $tagName . '">' . trim( $input ) . '</div>';
+
             return array( $html, 'markerType' => 'nowiki' );
         };
     }
