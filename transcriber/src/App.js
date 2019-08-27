@@ -410,7 +410,7 @@ export default class App extends Component {
                     onClick={() => this.setTransliterationOpen(true)}
                   />
                   <MenuItem close={close}
-                    label={(keyboardOpen ? "Hide" : "Show") + " Keyboard"}
+                    label={(keyboardOpen ? "Hide" : "Show") + " Onscreen Keyboard"}
                     onClick={this.toggleKeyboard}
                   />
                   <MenuItem close={close}
