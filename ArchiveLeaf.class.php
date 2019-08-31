@@ -76,6 +76,8 @@ class ArchiveLeaf {
         $template .= "\n|Url=" . $remoteUrl;
         $template .= "\n}}";
         $template .= "\n==== Description ====";
+        $template .= "\n===== Bahasa Indonesia =====";
+        $template .= "\n===== English =====";
 
         $log[] = "Parsing item '{$remoteUrl}' ...";
 
