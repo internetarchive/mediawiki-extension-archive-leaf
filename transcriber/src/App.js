@@ -272,7 +272,7 @@ export default class App extends Component {
   }
 
   focusTextArea() {
-    if (!this.state.emulateTextEdit && document.activeElement !== this.textAreaRef.current) {
+    if (!platform.mboile && !this.state.emulateTextEdit && document.activeElement !== this.textAreaRef.current) {
       this.textAreaRef.current.focus();
     }
   }
