@@ -40,7 +40,7 @@ class ArchiveLeafHooks {
             $html = '';
 
             if ( isset( $headingTitle) ) {
-                #$html .= $parser->recursiveTagParse( "===== $headingTitle =====", $frame );
+                $html .= "<div class='heading-small'><strong>$headingTitle</strong></div>";
             }
 
             $html .= '<div class="' . $tagName . '">' . trim( $input ) . '</div>';
