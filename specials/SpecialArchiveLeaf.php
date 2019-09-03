@@ -140,14 +140,21 @@ class SpecialArchiveLeaf extends SpecialPage {
      */
     private function printSuccess( $title, $collection ) {
 
-        $collection_title = $collection->getTitle();
+        if ( isset( $collection) ) {
+            $collection_title = $collection->getTitle();
+            $collection_url = $collection_title->getFullURL();
+            $collection_text = $collection_title->getBaseText();
+        } else {
+            $collection_url = '#';
+            $collection_text = '(unknown)';
+        }
 
         $this->getOutput()->addHTML( wfMessage('archiveleaf-special-page-success-text')
             ->params(
                 $title->getFullURL(),
                 $title->getBaseText(),
-                $collection_title->getFullURL(),
-                $collection_title->getBaseText(),
+                $collection_url,
+                $collection_text,
                 SpecialPage::getTitleFor('ArchiveLeaf')->getFullURL() )->plain()
             );
 

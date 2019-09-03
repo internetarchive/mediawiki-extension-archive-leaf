@@ -56,20 +56,25 @@ class ArchiveLeaf {
         // Sub-preifx for browse url
         $subPrefix = $response['subPrefix'];
 
-        // look up language (for category)
-        if ( $response['language'] ) {
-            $iso639 = file_get_contents( 'extensions/ArchiveLeaf/iso-639-3.json' );
-            $iso639 = json_decode( $iso639, true );
-            $language = $iso639[ $response['language'] ];
+        // look up collection page
+        $collection_map = file_get_contents( 'extensions/ArchiveLeaf/collection.json' );
+        $collection_map = json_decode( $collection_map, true );
+        if ( array_key_exists( $response['collection'], $collection_map ) ) {
+            $collection = $collection_map[ $response['collection'] ];
+            $collection_wikipage = new WikiPage( Title::newFromText( $collection['wikipage'] ) );
         }
 
-        // look up collection page
-        $collection_map = file_get_contents( 'extensions/ArchiveLeaf/collection_to_wiki.json' );
-        $collection_map = json_decode( $collection_map, true );
-        $collection = array_key_exists( $response['collection'], $collection_map )
-            ? $collection_map[ $response['collection'] ]
-            : $response['collection'];
-        $collection = new WikiPage( Title::newFromText( $collection ) );
+        // look up language (for category)
+        if ( $response['language'] && preg_match( '/^[a-z]{3}$/', $response['language'] ) ) {
+            $language_code = $response['language'];
+        } elseif ( $collection && $collection['language'] ) {
+            $language_code = $collection['language'];
+        }
+        if ( $language_code ) {
+            $iso639 = file_get_contents( 'extensions/ArchiveLeaf/iso-639-3.json' );
+            $iso639 = json_decode( $iso639, true );
+            $language = $iso639[ $language_code ];
+        }
 
         $template = "{{" . $wgArchiveLeafTemplateName;
         $template .= "\n|Title=" . $id;
@@ -181,7 +186,7 @@ class ArchiveLeaf {
 
         return array(
             'title'         => $title,
-            'collection'    => $collection,
+            'collection'    => $collection_wikipage,
         );
 
     }
@@ -208,6 +213,8 @@ class ArchiveLeaf {
      * @param WikiPage $page
      */
     public static function addLinkOnCollectionPage( $title, $page ) {
+
+        if ( ! isset( $page ) ) return;
 
         global $wgUser;
 
