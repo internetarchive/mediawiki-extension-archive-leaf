@@ -37,13 +37,13 @@ class ArchiveLeafHooks {
 
     public static function renderTag( $tagName, $headingTitle = NULL ) {
         return function ( $input, array $args, Parser $parser, PPFrame $frame ) use ( $tagName, $headingTitle ) {
-            $html = '';
+            $html = '<div class="' . $tagName . '">';
 
             if ( isset( $headingTitle) ) {
                 $html .= "<div class='heading-small'><strong>$headingTitle</strong></div>";
             }
 
-            $html .= '<div class="' . $tagName . '">' . trim( $input ) . '</div>';
+            $html .= trim( $input ) . '</div>';
 
             return array( $html, 'markerType' => 'nowiki' );
         };
