@@ -106,7 +106,7 @@ export default class App extends Component {
       if (this.state.keyboardOpen &&
         (this.state.caretPos !== prevState.caretPos || this.state.text !== prevState.text))
       {
-        this.scrollToCaret();
+        this.updateCaret();
       } else {
         this.focusTextArea();
       }
@@ -257,7 +257,7 @@ export default class App extends Component {
     }
   }
 
-  scrollToCaret() {
+  updateCaret() {
     if (this.state.emulateTextEdit) {
       let caret = this.caretRef.current;
       caret.offsetParent.scrollTop = caret.offsetTop;
@@ -267,13 +267,16 @@ export default class App extends Component {
       if (ta.selectionStart !== caretPos) {
         ta.setSelectionRange(caretPos, caretPos);
       }
-      ta.focus();
+      if (!platform.mobile && document.activeElement !== ta) {
+        ta.focus();
+      }
     }
   }
 
   focusTextArea() {
-    if (!platform.mobile && !this.state.emulateTextEdit && document.activeElement !== this.textAreaRef.current) {
-      this.textAreaRef.current.focus();
+    let ta = this.textAreaRef.current;
+    if (!platform.mobile && document.activeElement !== ta) {
+      ta.focus();
     }
   }
 
