@@ -31,10 +31,11 @@
     "ArchiveLeafMagic": "ArchiveLeaf.i18n.magic.php"
   },
   "Hooks": {
-    "ParserFirstCallInit": "ArchiveLeafHooks::onParserFirstCallInit",
+    "ArticleViewFooter": "ArchiveLeafHooks::onArticleViewFooter",
     "BeforePageDisplay": "ArchiveLeafHooks::onBeforePageDisplay",
     "EditPage::showEditForm:initial": "ArchiveLeafHooks::onShowEditForm",
     "EditPage::attemptSave": "ArchiveLeafHooks::onAttemptSave",
+    "ParserFirstCallInit": "ArchiveLeafHooks::onParserFirstCallInit",
     "ParserBeforeInternalParse": "ArchiveLeafHooks::onParserBeforeInternalParse"
   },
   "MessagesDirs": {

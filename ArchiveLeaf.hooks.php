@@ -59,7 +59,7 @@ class ArchiveLeafHooks {
 
         if ( !($editor->preview || $editor->diff)
           && preg_match( '/\{\{EntryImage/', $editor->textbox1 )
-          && preg_match( '/LocalFileName=(.+?)\s*\n/', $editor->textbox1, $matches ) ) {
+          && preg_match( '/\bEntryID=(\S+).*?\bTitle=(\S+).*?\bFullSize=([0-9]+)x([0-9]+).*?\bLocalFileName=(\S+)/s', $editor->textbox1, $matches ) ) {
 
             if ( $wgArchiveLeafAutoTransliterate ) {
                 $editor->textbox1 = preg_replace( '/<transliteration>.*?<\/transliteration>/s', '', $editor->textbox1 );
@@ -67,10 +67,17 @@ class ArchiveLeafHooks {
 
             if ( $editor->section ) {
 
-                $file = wfFindFile( $matches[1] );
+                $file = wfFindFile( $matches[5] );
 
                 if ( $file && $file->exists() ) {
-                    $out->addHTML( '<script>var entryImageUrl = "' . $file->getUrl() . '";</script>' );
+                    $transcriberData = array(
+                        'mode'              =>  'edit',
+                        'archiveItem'       =>  array('id' => $matches[1], 'leaf' => $matches[2]),
+                        'imageUrl'          =>  $file->getUrl(),
+                        'iiifDimensions'    =>  array('width' => $matches[3], 'height' => $matches[4]),
+                    );
+
+                    $out->addHTML( '<script>var transcriberData = ' . json_encode($transcriberData) . ';</script>' );
                     $out->addModules( 'ext.archiveleaf.transcriber' );
                 }
 
@@ -95,6 +102,41 @@ class ArchiveLeafHooks {
 
             }, $editor->textbox1 );
 
+        }
+
+    }
+
+    public static function onArticleViewFooter( $article, $patrolFooterShown ) {
+
+        $wikitext = $article->getPage()->getContent()->getNativeData();
+
+        if ( preg_match( '/\bTitle=(\S+).*?\bFullSize=([0-9]+)x([0-9]+).*?\bLocalFileName=(\S+)/s', $wikitext, $matches ) ) {
+
+            $filename = $matches[4];
+            $pages = array();
+
+            for ($i = 0; ; $i++) {
+                $file = wfFindFile("${filename}_${i}.jpeg");
+
+                if ( $file && $file->exists() ) {
+                    array_push( $pages, $file->getUrl() );
+                } else {
+                    break;
+                }
+            }
+
+            if ( count ( $pages) ) {
+                $transcriberData = array(
+                    'mode'              => 'view',
+                    'imageUrls'         => $pages,
+                    'archiveItem'       => array('id' => $matches[1], 'leaf' => 0),
+                    'iiifDimensions'    => array('width' => $matches[2], 'height' => $matches[3]),
+                );
+
+                $out = $article->getContext()->getOutput();
+                $out->addHTML('<script>var transcriberData = ' . json_encode($transcriberData) . ';</script>');
+                #$out->addModules( 'ext.archiveleaf.transcriber' );
+            }
         }
 
     }
