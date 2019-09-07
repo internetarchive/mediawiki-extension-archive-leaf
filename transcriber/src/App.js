@@ -266,7 +266,7 @@ export default class App extends Component {
           this.setLeaf(this.state.archiveItem.leaf - 1);
         }
       } else if (e.key === "ArrowRight") {
-        if (this.state.archiveItem.leaf < thisimageUrls.length-1) {
+        if (this.state.archiveItem.leaf < this.imageUrls.length-1) {
           this.setLeaf(this.state.archiveItem.leaf + 1);
         }
       }
