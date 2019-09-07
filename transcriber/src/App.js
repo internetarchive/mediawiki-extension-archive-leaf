@@ -224,15 +224,6 @@ export default class App extends Component {
     if (this.editMode) this.saveTranscription();
   }
 
-  handleKeyDown = e => {
-    if (e.key === "Escape" && !(e.altKey || e.ctrlKey || e.metaKey || e.shiftKey)) {
-      this.handleClose();
-      e.preventDefault();
-    } else if (this.editMode) {
-      this.focusTextArea();
-    }
-  }
-
   checkStoredText(text) {
     if (this.state.archiveItemKey) {
       let savedText = window.localStorage.getItem(this.state.archiveItemKey);
@@ -260,6 +251,25 @@ export default class App extends Component {
 
     if (this.state.archiveItemKey) {
       window.localStorage.removeItem(this.state.archiveItemKey);
+    }
+  }
+
+  handleKeyDown = e => {
+    if (e.key === "Escape" && !(e.altKey || e.ctrlKey || e.metaKey || e.shiftKey)) {
+      this.handleClose();
+      e.preventDefault();
+    } else if (this.editMode) {
+      this.focusTextArea();
+    } else if (!(e.altKey || e.ctrlKey || e.metaKey || e.shiftKey)) {
+      if (e.key === "ArrowLeft") {
+        if (this.state.archiveItem.leaf > 0) {
+          this.setLeaf(this.state.archiveItem.leaf - 1);
+        }
+      } else if (e.key === "ArrowRight") {
+        if (this.state.archiveItem.leaf < thisimageUrls.length-1) {
+          this.setLeaf(this.state.archiveItem.leaf + 1);
+        }
+      }
     }
   }
 
@@ -382,13 +392,17 @@ export default class App extends Component {
     }
   }
 
+  setLeaf(leaf) {
+    this.setState(...this.finalizeState({ id: this.state.archiveItem.id, leaf }));
+  }
+
   render() {
     let editMode = this.editMode;
     let {
         open, text, caretPos, keyboardOpen, emulateTextEdit, transliterationOpen, font,
         imageUrl, iiifUrl, iiifDimensions,
     } = this.state;
-    let { archiveItem: leaf } = this.state;
+    let { archiveItem: { leaf } } = this.state;
 
     return (
       <div className={styles.App}>
@@ -428,7 +442,7 @@ export default class App extends Component {
               {leaf > 0 &&
                 <button
                   className={cx(styles.button,styles.prev)}
-                  onClick={() => this.setLeaf(leaf-1)}
+                  onClick={() => this.setLeaf(leaf - 1)}
                 >
                   <FontAwesomeIcon icon={faChevronLeft} />
                 </button>
@@ -436,7 +450,7 @@ export default class App extends Component {
               {leaf < this.imageUrls.length-1 &&
                 <button
                   className={cx(styles.button,styles.next)}
-                  onClick={() => this.setLeaf(leaf+1)}
+                  onClick={() => this.setLeaf(leaf + 1)}
                 >
                   <FontAwesomeIcon icon={faChevronRight} />
                 </button>
