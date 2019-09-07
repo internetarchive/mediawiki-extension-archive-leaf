@@ -51,6 +51,20 @@ body.noscroll {
   margin: 10px;
 }
 
+.button.prev {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  margin: 10px;
+}
+
+.button.next {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  margin: 10px;
+}
+
 .button.closeTransliteration {
   float: right;
   margin: 10px 10px 4px 4px;
