@@ -174,6 +174,12 @@ export default class App extends Component {
   finalizeState(archiveItem) {
     let newState = {};
 
+    if (archiveItem) {
+      newState.archiveItem = archiveItem;
+    } else {
+      archiveItem = this.state.archiveItem;
+    }
+
     if (this.editMode) {
       let matches = this.textbox.value.match(/(?:.*<transcription>)(.*?)(?:<\/transcription>.*)/s);
       if (matches) {
@@ -184,12 +190,6 @@ export default class App extends Component {
         newState = { text: "", caretPos: 0 };
       }
     } else {
-      if (archiveItem) {
-        newState.archiveItem = archiveItem;
-      } else {
-        archiveItem = this.state.archiveItem;
-      }
-
       let elt = document.getElementById(archiveItem.leaf === 0 ? 'Front_and_Back_Covers' : `Leaf_${archiveItem.leaf}`);
       if (elt) {
         elt = elt.parentElement;
@@ -208,8 +208,8 @@ export default class App extends Component {
 
     return {
       ...newState,
-      archiveItemKey: this.state.archiveItem.id + "$" + this.state.archiveItem.leaf,
-      iiifUrl: `${iiifBaseUrl}/${this.state.archiveItem.id}%24${this.state.archiveItem.leaf}`,
+      archiveItemKey: archiveItem.id + "$" + archiveItem.leaf,
+      iiifUrl: `${iiifBaseUrl}/${archiveItem.id}%24${archiveItem.leaf}`,
     };
   }
 
@@ -393,7 +393,10 @@ export default class App extends Component {
   }
 
   setLeaf(leaf) {
-    this.setState(this.finalizeState({ id: this.state.archiveItem.id, leaf }));
+    this.setState({
+      imageUrl: this.imageUrls[leaf],
+      ...this.finalizeState({ id: this.state.archiveItem.id, leaf }),
+    });
   }
 
   render() {
