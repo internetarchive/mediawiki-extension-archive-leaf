@@ -392,6 +392,7 @@ export default class App extends Component {
   setLeaf(leaf) {
     this.setState({
       imageUrl: this.imageUrls[leaf],
+      transliterationOpen: false,
       ...this.finalizeState({ id: this.state.archiveItem.id, leaf }),
     });
   }
