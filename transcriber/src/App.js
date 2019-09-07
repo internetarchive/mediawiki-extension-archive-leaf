@@ -393,7 +393,7 @@ export default class App extends Component {
   }
 
   setLeaf(leaf) {
-    this.setState(...this.finalizeState({ id: this.state.archiveItem.id, leaf }));
+    this.setState(this.finalizeState({ id: this.state.archiveItem.id, leaf }));
   }
 
   render() {
