@@ -3,7 +3,7 @@ import PinchZoomPan from 'react-responsive-pinch-zoom-pan';
 import cx from 'clsx';
 import Popup from 'reactjs-popup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faKeyboard, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faKeyboard, faBookOpen, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 
 import styles from './App.module.scss';
 import Keyboard from './Keyboard';
@@ -82,19 +82,39 @@ const MenuItem = props => {
 export default class App extends Component {
   constructor(props) {
     super(props);
-    this.caretRef = React.createRef();
-    this.textAreaRef = React.createRef();
-    this.textbox = document.getElementById("wpTextbox1");
-    this.imageUrl = window.entryImageUrl;
 
-    this.state = {
-      open: this.checkTags(),
-      keyboardOpen: !(window.localStorage.getItem("keyboardOpen") === "false"),
-      font: window.localStorage.getItem("font") || "vimala",
-      transliteration: "",
-      transliterationOpen: false,
-    };
-    this.state.emulateTextEdit = platform.mobile && this.state.keyboardOpen;
+    let transcriberData = window.transcriberData || {};
+    this.editMode = transcriberData.mode === "edit";
+    this.archiveItem = transcriberData.archiveItem;
+    this.iiifDimensions = transcriberData.iiifDimensions;
+
+    if (this.editMode) {
+      this.caretRef = React.createRef();
+      this.textAreaRef = React.createRef();
+      this.textbox = document.getElementById("wpTextbox1");
+
+      this.state = {
+        open: this.checkTags(),
+        imageUrl: transcriberData.imageUrl,
+        keyboardOpen: !(window.localStorage.getItem("keyboardOpen") === "false"),
+        font: window.localStorage.getItem("font") || "vimala",
+        transliteration: "",
+        transliterationOpen: false,
+      };
+      this.state.emulateTextEdit = platform.mobile && this.state.keyboardOpen;
+    } else {
+      this.imageUrls = transcriberData.imageUrls;
+
+      this.state = {
+        open: false,
+        imageUrl: this.imageUrls[this.archiveItem.leaf],
+        keyboardOpen: false,
+        font: window.localStorage.getItem("font") || "vimala",
+        emulateTextEdit: false,
+        transliteration: "",
+        transliterationOpen: false,
+      };
+    }
 
     if (this.state.open) {
       this.state = { ...this.state, ...this.finalizeOpen() };
@@ -102,7 +122,7 @@ export default class App extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.open) {
+    if (this.editMode && this.state.open) {
       if (this.state.keyboardOpen &&
         (this.state.caretPos !== prevState.caretPos || this.state.text !== prevState.text))
       {
@@ -114,17 +134,21 @@ export default class App extends Component {
   }
 
   checkTags() {
-    let shouldOpen = true;
-    let openTags = this.textbox.value.match(/<transcription>/g);
-    let closeTags = this.textbox.value.match(/<\/transcription>/g);
-    if ((openTags || closeTags) &&
-      (!(openTags && openTags.length === 1 && closeTags && closeTags.length === 1) ||
-      !(this.textbox.value.indexOf("<transcription>") < this.textbox.value.indexOf("</transcription>")))
-    ) {
-      shouldOpen = false;
-      alert("Transcription tags are malformed!");
+    if (this.editMode) {
+      let shouldOpen = true;
+      let openTags = this.textbox.value.match(/<transcription>/g);
+      let closeTags = this.textbox.value.match(/<\/transcription>/g);
+      if ((openTags || closeTags) &&
+        (!(openTags && openTags.length === 1 && closeTags && closeTags.length === 1) ||
+        !(this.textbox.value.indexOf("<transcription>") < this.textbox.value.indexOf("</transcription>")))
+      ) {
+        shouldOpen = false;
+        alert("Transcription tags are malformed!");
+      }
+      return shouldOpen;
+    } else {
+      return true;
     }
-    return shouldOpen;
   }
 
   handleOpen = () => {
@@ -141,9 +165,7 @@ export default class App extends Component {
     document.body.classList.add(styles.noscroll);
     document.addEventListener("keydown", this.handleKeyDown);
 
-    this.loadArchiveItem();
-    this.loadIiifDimensions();
-    return this.loadTranscription();
+    return { ...this.finalizeArchiveItem(), ...this.loadTranscription() };
   }
 
   handleClose = () => {
@@ -154,42 +176,53 @@ export default class App extends Component {
     document.body.classList.remove(styles.noscroll);
     document.removeEventListener("keydown", this.handleKeyDown);
     this.setState({ open: false });
-    this.saveTranscription();
+    if (this.editMode) this.saveTranscription();
   }
 
   handleKeyDown = e => {
     if (e.key === "Escape" && !(e.altKey || e.ctrlKey || e.metaKey || e.shiftKey)) {
       this.handleClose();
       e.preventDefault();
-    } else {
+    } else if (this.editMode) {
       this.focusTextArea();
     }
   }
 
-  loadArchiveItem() {
-    let matches = this.textbox.value.match(/\bEntryID=(\S+).*\bTitle=(\S+)/s);
-    if (matches) {
-      this.archiveItem = { id: matches[1], leaf: matches[2] };
-      this.archiveItemKey = this.archiveItem.id + "$" + this.archiveItem.leaf;
-      this.iiifUrl = `${iiifBaseUrl}/${this.archiveItem.id}%24${this.archiveItem.leaf}`;
-    }
-  }
-
-  loadIiifDimensions() {
-    let matches = this.textbox.value.match(/\bFullSize=([0-9]+)x([0-9]+)/);
-    if (matches) {
-      this.iiifDimensions = { width: matches[1], height: matches[2] };
-    }
+  finalizeArchiveItem() {
+    this.archiveItemKey = this.archiveItem.id + "$" + this.archiveItem.leaf;
+    return { iiifUrl: `${iiifBaseUrl}/${this.archiveItem.id}%24${this.archiveItem.leaf}` };
   }
 
   loadTranscription() {
-    let matches = this.textbox.value.match(/(?:.*<transcription>)(.*?)(?:<\/transcription>.*)/s);
-    if (matches) {
-      let text = matches[1].trim();
-      setTimeout(() => this.checkStoredText(text), 1000);
-      return { text, caretPos: text.length };
+    if (this.editMode) {
+      let matches = this.textbox.value.match(/(?:.*<transcription>)(.*?)(?:<\/transcription>.*)/s);
+      if (matches) {
+        let text = matches[1].trim();
+        setTimeout(() => this.checkStoredText(text), 1000);
+        return { text, caretPos: text.length };
+      } else {
+        return { text: "", caretPos: 0 };
+      }
     } else {
-      return { text: "", caretPos: 0 };
+      let headingId = this.archiveItem.leaf === 0 ? 'Front_and_Back_Covers' : `Leaf_${this.archiveItem.leaf}`;
+      let elt = document.getElementById(headingId);
+
+      if (elt) {
+        elt = elt.parentElement;
+
+        while ((elt = elt.nextElementSibling)) {
+          if (elt.className === "transcription") {
+            break;
+          }
+        }
+
+        if (elt) {
+          this.transcriptionElt = elt;
+          return { text: elt.innerText };
+        }
+      }
+
+      return {};
     }
   }
 
@@ -317,32 +350,42 @@ export default class App extends Component {
   }
 
   getTransliteration() {
-    return new Promise((resolve, reject) => {
-      window.fetch(mediawikiApi, {
-        method: "POST",
-        body: new URLSearchParams({
-          action: "transliterate",
-          format: "json",
-          origin: "*",
-          transliterator: "Balinese-ban_001",
-          text: this.state.text
-        })
-      }).then(res => {
-        res.json().then(json => resolve(json.transliteration), reject);
-      }, reject);
-    });
+    if (this.editMode) {
+      return new Promise((resolve, reject) => {
+        window.fetch(mediawikiApi, {
+          method: "POST",
+          body: new URLSearchParams({
+            action: "transliterate",
+            format: "json",
+            origin: "*",
+            transliterator: "Balinese-ban_001",
+            text: this.state.text
+          })
+        }).then(res => {
+          res.json().then(json => resolve(json.transliteration), reject);
+        }, reject);
+      });
+    } else {
+      let elt = this.transcriptionElt.nextElementSibling;
+      if (elt.className === "transliteration") {
+        return new Promise((resolve, reject) => resolve(elt.innerText));
+      } else {
+        return new Promise((resolve, reject) => reject());
+      }
+    }
   }
 
   render() {
-    let { open, text, caretPos, keyboardOpen, emulateTextEdit, transliterationOpen, font } = this.state;
+    let editMode = this.editMode;
+    let { open, imageUrl, iiifUrl, text, caretPos, keyboardOpen, emulateTextEdit, transliterationOpen, font } = this.state;
 
     return (
       <div className={styles.App}>
         <div className={cx(styles.transcriber, !open && styles.closed)}>
           <div className={cx(styles.image, !keyboardOpen && styles.expanded)}>
             <PinchZoomPan
-              imageUrl={this.imageUrl}
-              iiifUrl={this.iiifUrl}
+              imageUrl={imageUrl}
+              iiifUrl={iiifUrl}
               iiifDimensions={this.iiifDimensions}
               maxScale={5}
               enhanceScale={1.5}
@@ -350,24 +393,29 @@ export default class App extends Component {
               zoomButtons={!platform.mobile}
             />
           </div>
-          {emulateTextEdit ?
-            <div className={cx(styles.text, styles[font])} onClick={this.handleCaretMove}>
-              {text.slice(0, caretPos)}
-              <span className={styles.caret} ref={this.caretRef}></span>
-              {text.slice(caretPos)}
-            </div>
+          {editMode ?
+            (emulateTextEdit ?
+              <div className={cx(styles.text, styles[font])} onClick={this.handleCaretMove}>
+                {text.slice(0, caretPos)}
+                <span className={styles.caret} ref={this.caretRef}></span>
+                {text.slice(caretPos)}
+              </div>
+            :
+              <textarea
+                className={cx(styles.text, styles[font], !keyboardOpen && styles.expanded)}
+                value={text}
+                ref={this.textAreaRef}
+                onChange={e => this.handleTextChange(e.target.value, e.target.selectionStart)}
+                onSelect={keyboardOpen ? (e => this.handleTextChange(null, e.target.selectionStart)) : undefined}
+              />
+            )
           :
-            <textarea
-              className={cx(styles.text, styles[font], !keyboardOpen && styles.expanded)}
-              value={text}
-              ref={this.textAreaRef}
-              onChange={e => this.handleTextChange(e.target.value, e.target.selectionStart)}
-              onSelect={keyboardOpen ? (e => this.handleTextChange(null, e.target.selectionStart)) : undefined}
-            />
+            <div className={cx(styles.text, styles[font], styles.expanded)}>
+              {text}
+            </div>
           }
           <div
             className={cx(styles.transliteration, transliterationOpen && styles.visible, !keyboardOpen && styles.expanded)}
-            onClick={platform.mobile && (() => this.setTransliterationOpen(false))}
           >
             <button
               className={cx(styles.button,styles.closeTransliteration)}
@@ -412,10 +460,12 @@ export default class App extends Component {
                     label="Show Transliteration"
                     onClick={() => this.setTransliterationOpen(true)}
                   />
-                  <MenuItem close={close}
-                    label={(keyboardOpen ? "Hide" : "Show") + " Onscreen Keyboard"}
-                    onClick={this.toggleKeyboard}
-                  />
+                  {editMode &&
+                    <MenuItem close={close}
+                      label={(keyboardOpen ? "Hide" : "Show") + " Onscreen Keyboard"}
+                      onClick={this.toggleKeyboard}
+                    />
+                  }
                   <MenuItem close={close}
                     label={"Set Font to " + (font === "vimala" ? "Pustaka" : "Vimala")}
                     onClick={this.toggleFont}
@@ -430,7 +480,7 @@ export default class App extends Component {
             onClick={this.handleOpen}
           >
             <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes" />
-            <FontAwesomeIcon icon={faKeyboard} />
+            <FontAwesomeIcon icon={editMode ? faKeyboard : faBookOpen } />
           </button>
         }
       </div>

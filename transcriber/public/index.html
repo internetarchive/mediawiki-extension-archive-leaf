@@ -57,7 +57,21 @@
       }
     </style>
     <script>
-      var entryImageUrl = "http://palmleaf.org/w/images/a/a7/tutur-smara-bhuwana_2.jpeg";
+      if (0) {
+        var transcriberData = {
+          "mode": "edit",
+          "archiveItem": { "id": "tutur-smara-bhuwana", "leaf": 2 },
+          "iiifDimensions": { "width": 5616, "height": 3744 },
+          "imageUrl": "http://palmleaf.org/w/images/a/a7/tutur-smara-bhuwana_2.jpeg"
+        };
+      } else {
+        var transcriberData = {
+          "mode": "view",
+          "archiveItem": { "id": "tutur-smara-bhuwana", "leaf": 0 },
+          "iiifDimensions": { "width": 5616, "height": 3744 },
+          "imageUrls": ["http://palmleaf.org/w/images/a/a7/tutur-smara-bhuwana_0.jpeg", "http://palmleaf.org/w/images/a/a7/tutur-smara-bhuwana_1.jpeg", "http://palmleaf.org/w/images/a/a7/tutur-smara-bhuwana_2.jpeg"]
+        };
+      }
     </script>
     <title>React App</title>
   </head>
