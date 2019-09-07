@@ -3,7 +3,7 @@ import PinchZoomPan from 'react-responsive-pinch-zoom-pan';
 import cx from 'clsx';
 import Popup from 'reactjs-popup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faKeyboard, faBookOpen, faChevronLeft, faChevronRight, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import { faBookOpen, faChevronLeft, faChevronRight, faEllipsisV, faKeyboard, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 import styles from './App.module.scss';
 import Keyboard from './Keyboard';
@@ -49,16 +49,16 @@ function detectGetSelection() {
 
 function viewportFix() {
   if (platform.mobile) {
+    let getVhPx = () => {
+      let height = document.documentElement.clientHeight;
+      return (height * 0.01) + "px";
+    };
+
     document.documentElement.style.setProperty("--vh", getVhPx());
     window.addEventListener("resize", () => {
       document.documentElement.style.setProperty("--vh", getVhPx());
     });
   }
-}
-
-function getVhPx() {
-  let height = document.documentElement.clientHeight;
-  return (height * 0.01) + "px";
 }
 
 function blockPinchZoom(e) {
@@ -136,25 +136,21 @@ export default class App extends Component {
   }
 
   checkTags() {
-    if (this.editMode) {
-      let shouldOpen = true;
-      let openTags = this.textbox.value.match(/<transcription>/g);
-      let closeTags = this.textbox.value.match(/<\/transcription>/g);
-      if ((openTags || closeTags) &&
-        (!(openTags && openTags.length === 1 && closeTags && closeTags.length === 1) ||
-        !(this.textbox.value.indexOf("<transcription>") < this.textbox.value.indexOf("</transcription>")))
-      ) {
-        shouldOpen = false;
-        alert("Transcription tags are malformed!");
-      }
-      return shouldOpen;
-    } else {
-      return true;
+    let shouldOpen = true;
+    let openTags = this.textbox.value.match(/<transcription>/g);
+    let closeTags = this.textbox.value.match(/<\/transcription>/g);
+    if ((openTags || closeTags) &&
+      (!(openTags && openTags.length === 1 && closeTags && closeTags.length === 1) ||
+      !(this.textbox.value.indexOf("<transcription>") < this.textbox.value.indexOf("</transcription>")))
+    ) {
+      shouldOpen = false;
+      alert("Transcription tags are malformed!");
     }
+    return shouldOpen;
   }
 
   handleOpen = () => {
-    if (this.checkTags()) {
+    if (!this.editMode || this.checkTags()) {
       this.setState({ open: true, ...this.finalizeOpen() });
     }
   }
@@ -400,8 +396,8 @@ export default class App extends Component {
   render() {
     let editMode = this.editMode;
     let {
-        open, text, caretPos, keyboardOpen, emulateTextEdit, transliterationOpen, font,
-        imageUrl, iiifUrl, iiifDimensions,
+      open, text, caretPos, keyboardOpen, emulateTextEdit, transliterationOpen, font,
+      imageUrl, iiifUrl, iiifDimensions,
     } = this.state;
     let { archiveItem: { leaf } } = this.state;
 
@@ -524,7 +520,7 @@ export default class App extends Component {
             onClick={this.handleOpen}
           >
             <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes" />
-            <FontAwesomeIcon icon={editMode ? faKeyboard : faBookOpen } />
+            <FontAwesomeIcon icon={editMode ? faKeyboard : faBookOpen} />
           </button>
         }
       </div>
