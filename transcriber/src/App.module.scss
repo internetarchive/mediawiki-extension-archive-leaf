@@ -44,14 +44,7 @@ body.noscroll {
   justify-content: center;
 }
 
-.button.open {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  margin: 10px;
-}
-
-.button.prev {
+.button.open, .button.prev {
   position: fixed;
   bottom: 0;
   left: 0;

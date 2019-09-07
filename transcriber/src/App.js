@@ -197,16 +197,12 @@ export default class App extends Component {
       let elt = document.getElementById(archiveItem.leaf === 0 ? 'Front_and_Back_Covers' : `Leaf_${archiveItem.leaf}`);
       if (elt) {
         elt = elt.parentElement;
-
         while ((elt = elt.nextElementSibling)) {
           if (elt.className === "transcription") {
+            newState.text = elt.innerText;
+            newState.transcriptionElt = elt;
             break;
           }
-        }
-
-        if (elt) {
-          newState.text = elt.innerText;
-          newState.transcriptionElt = elt;
         }
       }
     }
