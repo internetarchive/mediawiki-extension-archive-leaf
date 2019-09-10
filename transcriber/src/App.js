@@ -92,6 +92,7 @@ export default class App extends Component {
       font: window.localStorage.getItem("font") || "vimala",
       transliteration: "",
       transliterationOpen: false,
+      imageLoading: false,
     };
 
     if (this.editMode) {
@@ -167,9 +168,7 @@ export default class App extends Component {
   }
 
   finalizeState(archiveItem) {
-    let newState = {
-      imageLoading: true,
-    };
+    let newState = {};
 
     if (archiveItem) {
       newState.archiveItem = archiveItem;
@@ -390,6 +389,7 @@ export default class App extends Component {
   setLeaf(leaf) {
     this.setState({
       imageUrl: this.imageUrls[leaf],
+      imageLoading: true,
       transliterationOpen: false,
       ...this.finalizeState({ id: this.state.archiveItem.id, leaf }),
     });
@@ -415,7 +415,7 @@ export default class App extends Component {
               enhanceScale={1.5}
               doubleTapBehavior="zoom"
               zoomButtons={!platform.mobile}
-              onImageLoad={() => this.setState({ imageLoading: false })}
+              onImageLoad={() => this.state.imageLoading && this.setState({ imageLoading: false })}
             />
             {imageLoading &&
               <div className={styles.spinner}>
