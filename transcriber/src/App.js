@@ -3,7 +3,7 @@ import PinchZoomPan from 'react-responsive-pinch-zoom-pan';
 import cx from 'clsx';
 import Popup from 'reactjs-popup';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBookOpen, faChevronLeft, faChevronRight, faEllipsisV, faKeyboard, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faBookOpen, faChevronLeft, faChevronRight, faEllipsisV, faKeyboard, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 import styles from './App.module.scss';
 import Keyboard from './Keyboard';
@@ -167,7 +167,9 @@ export default class App extends Component {
   }
 
   finalizeState(archiveItem) {
-    let newState = {};
+    let newState = {
+      imageLoading: true,
+    };
 
     if (archiveItem) {
       newState.archiveItem = archiveItem;
@@ -397,7 +399,7 @@ export default class App extends Component {
     let editMode = this.editMode;
     let {
       open, text, caretPos, keyboardOpen, emulateTextEdit, transliterationOpen, font,
-      imageUrl, iiifUrl, iiifDimensions,
+      imageUrl, iiifUrl, iiifDimensions, imageLoading,
     } = this.state;
     let { archiveItem: { leaf } } = this.state;
 
@@ -413,7 +415,13 @@ export default class App extends Component {
               enhanceScale={1.5}
               doubleTapBehavior="zoom"
               zoomButtons={!platform.mobile}
+              onImageLoad={() => this.setState({ imageLoading: false })}
             />
+            {imageLoading &&
+              <div className={styles.spinner}>
+                <FontAwesomeIcon icon={faSpinner} size="2x" className="fa-spin" />
+              </div>
+            }
           </div>
           {editMode ?
             (emulateTextEdit ?
