@@ -8106,7 +8106,7 @@ raw-body@2.4.0:
     iconv-lite "0.4.24"
     unpipe "1.0.0"
 
-rbush@^3.0.0:
+rbush@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/rbush/-/rbush-3.0.1.tgz#5fafa8a79b3b9afdfe5008403a720cc1de882ecf"
   integrity sha512-XRaVO0YecOpEuIvbhbpTrZgoiI6xBlz6hnlr6EHhd+0x9ase6EmeN+hdwwUaJvLcsFFQ8iWVF1GAK1yB0BWi0w==
@@ -8193,13 +8193,13 @@ react-is@^16.8.4:
 
 "react-responsive-pinch-zoom-pan@https://github.com/kamholz/react-responsive-pinch-zoom-pan.git":
   version "0.2.2"
-  resolved "https://github.com/kamholz/react-responsive-pinch-zoom-pan.git#2310a3ba5e26c91f87a82ab7e401499a1015a2ae"
+  resolved "https://github.com/kamholz/react-responsive-pinch-zoom-pan.git#d08cf6a66d5de538db998914c6e43b50ac60884c"
   dependencies:
     "@fortawesome/fontawesome-svg-core" "^1.2.13"
     "@fortawesome/free-solid-svg-icons" "^5.7.0"
     "@fortawesome/react-fontawesome" "^0.1.4"
     prop-types "^15.7.2"
-    rbush "^3.0.0"
+    rbush "^3.0.1"
     reselect "^4.0.0"
     warning "^4.0.2"
 
