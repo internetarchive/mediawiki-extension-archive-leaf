@@ -107,6 +107,7 @@ body.noscroll {
 }
 
 .spinner {
+  z-index: 3000;
   position: absolute;
   top: 0;
   left: 0;
@@ -116,7 +117,6 @@ body.noscroll {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
 }
 
 .text {
