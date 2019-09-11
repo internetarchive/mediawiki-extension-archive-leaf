@@ -8193,7 +8193,7 @@ react-is@^16.8.4:
 
 "react-responsive-pinch-zoom-pan@https://github.com/kamholz/react-responsive-pinch-zoom-pan.git":
   version "0.2.2"
-  resolved "https://github.com/kamholz/react-responsive-pinch-zoom-pan.git#827fe3b1a8286726d828cf047956233808d9730f"
+  resolved "https://github.com/kamholz/react-responsive-pinch-zoom-pan.git#dd6f2440a58920dd0288c9e25587ea2d39270230"
   dependencies:
     "@fortawesome/fontawesome-svg-core" "^1.2.13"
     "@fortawesome/free-solid-svg-icons" "^5.7.0"
