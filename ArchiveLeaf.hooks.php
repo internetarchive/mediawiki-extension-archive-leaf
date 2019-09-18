@@ -13,7 +13,7 @@ class ArchiveLeafHooks {
 
         $parser->setHook( 'transcription', self::renderTag( 'transcription' ) );
         $parser->setHook( 'transliteration', self::renderTag( 'transliteration', 'Auto-transliteration' ) );
-        $parser->setHook( 'translation', self::renderTag( 'translation' ), self::getTranslationHeading );
+        $parser->setHook( 'translation', self::renderTag( 'translation', [ self::class, 'getTranslationHeading' ] ) );
     }
 
     public static function onParserBeforeInternalParse( Parser &$parser, &$text, StripState &$stripState ) {
@@ -40,7 +40,7 @@ class ArchiveLeafHooks {
             $html = '<div class="' . $tagName . '">';
 
             if ( isset( $headingTitle ) ) {
-                if (is_callable( $headingTitle) ) {
+                if ( is_callable( $headingTitle ) ) {
                     $headingTitle = $headingTitle( $args );
                 }
 
@@ -55,10 +55,10 @@ class ArchiveLeafHooks {
 
     public static function getTranslationHeading( $args ) {
         if ( array_key_exists( 'language', $args ) ) {
-            $language_map = json_decode( file_get_contents( 'extensions/ArchiveLeaf/data/language.json' ), true );
+            $iso639 = json_decode( file_get_contents( 'extensions/ArchiveLeaf/data/iso-639-3.json' ), true );
 
-            if ( array_key_exists( $args['language'], $language_map ) ) {
-                return $language_map[ $args['language'] ] . ' translation';
+            if ( array_key_exists( $args['language'], $iso639 ) ) {
+                return $iso639[ $args['language'] ] . ' translation';
             }
         }
 
