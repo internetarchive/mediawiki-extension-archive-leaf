@@ -23,6 +23,14 @@
 }
 
 @font-face {
+    font-family: "Noto Sans Grantha";
+    src: url(https://archive.org/cors/NotoFonts/NotoSansGrantha-Regular.woff2) format('woff2'),
+         url(https://archive.org/cors/NotoFonts/NotoSansGrantha-Regular.woff) format('woff'),
+         url(https://archive.org/cors/NotoFonts/NotoSansGrantha-Regular.ttf) format('truetype');
+    unicode-range: U+11300-1137F;
+}
+
+@font-face {
     font-family: "Noto Sans Sinhala";
     src: url(https://archive.org/cors/NotoFonts/NotoSansSinhala-Regular.woff2) format('woff2'),
          url(https://archive.org/cors/NotoFonts/NotoSansSinhala-Regular.woff) format('woff'),
@@ -30,8 +38,16 @@
     unicode-range: U+0D80-0DFF;
 }
 
+@font-face {
+    font-family: "Noto Sans Tamil";
+    src: url(https://archive.org/cors/NotoFonts/NotoSansTamil-Regular.woff2) format('woff2'),
+         url(https://archive.org/cors/NotoFonts/NotoSansTamil-Regular.woff) format('woff'),
+         url(https://archive.org/cors/NotoFonts/NotoSansTamil-Regular.ttf) format('truetype');
+    unicode-range: U+0B80-0BFF;
+}
+
 body {
-  font-family: "Vimala", "Noto Serif Balinese", sans-serif;
+  font-family: "Vimala", "Noto Serif Balinese", "Noto Sans Grantha", "Noto Sans Sinhala", "Noto Sans Tamil", sans-serif;
 }
 
 .transcription, .transliteration, .translation {

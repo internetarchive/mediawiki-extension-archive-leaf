@@ -57,22 +57,23 @@ class ArchiveLeaf {
         $subPrefix = $response['subPrefix'];
 
         // look up collection page
-        $collection_map = file_get_contents( 'extensions/ArchiveLeaf/collection.json' );
-        $collection_map = json_decode( $collection_map, true );
+        $collection_map = json_decode( file_get_contents( 'extensions/ArchiveLeaf/data/collection.json' ), true );
         if ( array_key_exists( $response['collection'], $collection_map ) ) {
             $collection = $collection_map[ $response['collection'] ];
             $collection_wikipage = new WikiPage( Title::newFromText( $collection['wikipage'] ) );
         }
 
         // look up language (for category)
-        if ( $response['language'] && preg_match( '/^[a-z]{3}$/', $response['language'] ) ) {
-            $language_code = $response['language'];
+        $language_map = json_decode( file_get_contents( 'extensions/ArchiveLeaf/data/language.json' ), true );
+        if ( $response['language'] && preg_match( '/^(?:[a-z]{3}|[A-Z]{3})$/', $response['language'] ) ) {
+            $language_code = strtolower( $response['language'] );
+        } elseif ( $response['language'] && array_key_exists( $response['language'], $language_map ) ) {
+            $language_code = $language_map[ $response['language'] ];
         } elseif ( $collection && $collection['language'] ) {
             $language_code = $collection['language'];
         }
         if ( $language_code ) {
-            $iso639 = file_get_contents( 'extensions/ArchiveLeaf/iso-639-3.json' );
-            $iso639 = json_decode( $iso639, true );
+            $iso639 = json_decode( file_get_contents( 'extensions/ArchiveLeaf/data/iso-639-3.json' ), true );
             $language = $iso639[ $language_code ];
         }
 
@@ -166,8 +167,13 @@ class ArchiveLeaf {
 
         }
 
+        $template .= "\n\n";
+
         if ( isset($language) ) {
-            $template .= "\n\n[[Category:" . $language . "]]";
+            $template .= "[[Category:" . $language . "]]\n";
+        }
+        if ( array_key_exists( 'category', $collection ) ) {
+            $template .= "[[Category:" . $collection['category'] . "]]\n";
         }
 
         $title = Title::newFromText( $id );
