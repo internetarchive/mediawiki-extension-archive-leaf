@@ -57,14 +57,14 @@ class ArchiveLeaf {
         $subPrefix = $response['subPrefix'];
 
         // look up collection page
-        $collection_map = json_decode( file_get_contents( 'extensions/ArchiveLeaf/data/collection.json' ), true );
+        $collection_map = self::getData( 'collection' );
         if ( array_key_exists( $response['collection'], $collection_map ) ) {
             $collection = $collection_map[ $response['collection'] ];
             $collection_wikipage = new WikiPage( Title::newFromText( $collection['wikipage'] ) );
         }
 
         // look up language (for category)
-        $language_map = json_decode( file_get_contents( 'extensions/ArchiveLeaf/data/language.json' ), true );
+        $language_map = self::getData( 'language' );
         if ( $response['language'] && preg_match( '/^(?:[a-z]{3}|[A-Z]{3})$/', $response['language'] ) ) {
             $language_code = strtolower( $response['language'] );
         } elseif ( $response['language'] && array_key_exists( $response['language'], $language_map ) ) {
@@ -73,7 +73,7 @@ class ArchiveLeaf {
             $language_code = $collection['language'];
         }
         if ( $language_code ) {
-            $iso639 = json_decode( file_get_contents( 'extensions/ArchiveLeaf/data/iso-639-3.json' ), true );
+            $iso639 = self::getData( 'iso-639-3' );
             $language = $iso639[ $language_code ];
         }
 
@@ -279,5 +279,15 @@ class ArchiveLeaf {
         );
 
         return @file_get_contents( $wgArchiveLeafTransliterateUrl.'/'.$transliterator, false, stream_context_create($opts) );
+    }
+
+    private static $data;
+
+    public static function getData( $id ) {
+        if ( !array_key_exists( $id, self::$data ) ) {
+            self::$data[ $id ] = json_decode( file_get_contents( "extensions/ArchiveLeaf/data/${id}.json" ), true );
+        }
+
+        return self::$data[ $id ];
     }
 }

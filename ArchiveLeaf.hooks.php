@@ -55,7 +55,7 @@ class ArchiveLeafHooks {
 
     public static function getTranslationHeading( $args ) {
         if ( array_key_exists( 'language', $args ) ) {
-            $iso639 = json_decode( file_get_contents( 'extensions/ArchiveLeaf/data/iso-639-3.json' ), true );
+            $iso639 = ArchiveLeaf::getData( 'iso-639-3' );
 
             if ( array_key_exists( $args['language'], $iso639 ) ) {
                 return $iso639[ $args['language'] ] . ' translation';
