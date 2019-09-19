@@ -7,6 +7,7 @@ import { faBookOpen, faChevronLeft, faChevronRight, faEllipsisV, faKeyboard, faS
 
 import styles from './App.module.scss';
 import Keyboard from './Keyboard';
+import layouts from './layouts.js';
 
 const iiifBaseUrl = "https://iiif.archivelab.org/iiif";
 const mediawikiApi = process.env.NODE_ENV === "development"
@@ -18,6 +19,10 @@ const scriptFont = {
     "fonts": ["Pustaka","Vimala"],
     "default": "Vimala"
   }
+};
+
+const transliterators = {
+  "bali": "Balinese-ban_001",
 };
 
 const platform = detectPlatform();
@@ -104,6 +109,7 @@ export default class App extends Component {
       transliterationOpen: false,
       imageLoading: false,
     };
+    this.state.transliteratorAvailable = !!transliterators[this.state.script];
 
     this.state.font = window.localStorage.getItem(`font-${this.state.script}`);
     if (!this.state.font) {
@@ -121,8 +127,9 @@ export default class App extends Component {
         ...this.state,
         open: this.checkTags(),
         imageUrl: transcriberData.imageUrl,
-        keyboardOpen: !(window.localStorage.getItem("keyboardOpen") === "false"),
+        keyboardAvailable: !!layouts[this.state.script],
       };
+      this.state.keyboardOpen = this.state.keyboardAvailable && !(window.localStorage.getItem(`keyboardOpen-${this.state.script}`) === "false");
       this.state.emulateTextEdit = platform.mobile && this.state.keyboardOpen;
     } else {
       this.imageUrls = transcriberData.imageUrls;
@@ -354,7 +361,7 @@ export default class App extends Component {
     }
 
     this.setState(changedState);
-    window.localStorage.setItem("keyboardOpen", keyboardOpen);
+    window.localStorage.setItem(`keyboardOpen-${this.state.script}`, keyboardOpen);
   }
 
   setFont = font => {
@@ -416,26 +423,11 @@ export default class App extends Component {
   render() {
     const editMode = this.editMode;
     const {
-      open, text, caretPos, keyboardOpen, emulateTextEdit, transliterationOpen, script, font,
+      open, text, caretPos, emulateTextEdit, script, font,
+      keyboardAvailable, keyboardOpen, transliteratorAvailable, transliterationOpen,
       imageUrl, iiifUrl, iiifDimensions, imageLoading,
     } = this.state;
     const { archiveItem: { leaf } } = this.state;
-
-    const makeFontMenuItems = close => {
-      return scriptFont[script].fonts.map(item =>
-        item === font ?
-          <MenuItem close={close}
-            label={item}
-            className={cx(styles.indented,styles.checked)}
-          />
-        :
-          <MenuItem close={close}
-            label={item}
-            className={styles.indented}
-            onClick={() => this.setFont(item)}
-          />
-      );
-    };
 
     return (
       <div className={styles.App}>
@@ -530,33 +522,49 @@ export default class App extends Component {
               <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
               <FontAwesomeIcon icon={faTimes} />
             </button>
-            <Popup
-              on="click"
-              contentStyle={{width: '14em'}}
-              trigger={<button className={styles.button}><FontAwesomeIcon icon={faEllipsisV} /></button>}
-              position="bottom right"
-            >
-              {close => (
-                <>
-                  <MenuItem close={close}
-                    label="Show Transliteration"
-                    onClick={() => this.setTransliterationOpen(true)}
-                  />
-                  {editMode &&
-                    <MenuItem close={close}
-                      label={(keyboardOpen ? "Hide" : "Show") + " Onscreen Keyboard"}
-                      onClick={this.toggleKeyboard}
-                    />
-                  }
-                  {scriptFont[script] &&
-                    <>
-                      <MenuItem close={close} label="Set Font:" />
-                      {makeFontMenuItems(close)}
-                    </>
-                  }
-                </>
-              )}
-            </Popup>
+            {(transliteratorAvailable || (editMode && keyboardAvailable) || (scriptFont[script] && scriptFont[script].fonts)) &&
+              <Popup
+                on="click"
+                contentStyle={{width: '14em'}}
+                trigger={<button className={styles.button}><FontAwesomeIcon icon={faEllipsisV} /></button>}
+                position="bottom right"
+              >
+                {close => (
+                  <>
+                    {transliteratorAvailable &&
+                      <MenuItem close={close}
+                        label="Show Transliteration"
+                        onClick={() => this.setTransliterationOpen(true)}
+                      />
+                    }
+                    {editMode && keyboardAvailable &&
+                      <MenuItem close={close}
+                        label={(keyboardOpen ? "Hide" : "Show") + " Onscreen Keyboard"}
+                        onClick={this.toggleKeyboard}
+                      />
+                    }
+                    {scriptFont[script] && scriptFont[script].fonts &&
+                      <>
+                        <MenuItem close={close} label="Set Font:" />
+                        {scriptFont[script].fonts.map(item =>
+                          item === font ?
+                            <MenuItem close={close}
+                              label={item}
+                              className={cx(styles.indented,styles.checked)}
+                            />
+                          :
+                            <MenuItem close={close}
+                              label={item}
+                              className={styles.indented}
+                              onClick={() => this.setFont(item)}
+                            />
+                        )}
+                      </>
+                    }
+                  </>
+                )}
+              </Popup>
+            }
           </div>
         :
           <button
