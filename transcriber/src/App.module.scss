@@ -75,6 +75,10 @@ body.noscroll {
   background-color: #eee;
 }
 
+.menuItem.disabled:hover {
+  background-color: inherit;
+}
+
 .menuItem .indented {
   display: inline-block;
   width: 1.25em;

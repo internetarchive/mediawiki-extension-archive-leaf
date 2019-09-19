@@ -85,12 +85,12 @@ function blockPinchZoom(e) {
 // }
 
 const MenuItem = props => {
-  let { label, className, close, onClick } = props;
+  let { label, className, spanClassName, close, onClick } = props;
   return (
     <div
-      className={styles.menuItem}
+      className={cx(styles.menuItem,className)}
       onClick={e => { close(); onClick && onClick(e); }}
-    >{className && <span className={className}></span>}{label}</div>
+    >{spanClassName && <span className={spanClassName}></span>}{label}</div>
   )
 }
 
@@ -545,17 +545,17 @@ export default class App extends Component {
                     }
                     {scriptFont[script] && scriptFont[script].fonts &&
                       <>
-                        <MenuItem close={close} label="Set Font:" />
+                        <MenuItem close={close} label="Set Font:" className={styles.disabled} />
                         {scriptFont[script].fonts.map(item =>
                           item === font ?
                             <MenuItem close={close}
                               label={item}
-                              className={cx(styles.indented,styles.checked)}
+                              spanClassName={cx(styles.indented,styles.checked)}
                             />
                           :
                             <MenuItem close={close}
                               label={item}
-                              className={styles.indented}
+                              spanClassName={styles.indented}
                               onClick={() => this.setFont(item)}
                             />
                         )}
