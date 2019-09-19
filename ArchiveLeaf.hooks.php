@@ -93,6 +93,11 @@ class ArchiveLeafHooks {
                         'iiifDimensions'    =>  array('width' => $matches[3], 'height' => $matches[4]),
                     );
 
+                    $wikitext = $editor->getArticle()->getPage()->getContent()->getNativeData();
+                    if ( preg_match( '/\bScript=(\S+)/', $wikitext, $matches ) ) {
+                        $transcriberData['script'] = strtolower( $matches[1] );
+                    }
+
                     $out->addHTML( '<script>var transcriberData = ' . json_encode($transcriberData) . ';</script>' );
                     $out->addModules( 'ext.archiveleaf.transcriber' );
                 }
@@ -149,6 +154,10 @@ class ArchiveLeafHooks {
                     'archiveItem'       => array('id' => $title, 'leaf' => 0),
                     'iiifDimensions'    => array('width' => $matches[2], 'height' => $matches[3]),
                 );
+
+                if ( preg_match( '/\bScript=(\S+)/', $wikitext, $matches ) ) {
+                    $transcriberData['script'] = strtolower( $matches[1] );
+                }
 
                 $out = $article->getContext()->getOutput();
                 $out->addHTML('<script>var transcriberData = ' . json_encode($transcriberData) . ';</script>');

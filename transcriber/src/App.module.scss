@@ -75,12 +75,25 @@ body.noscroll {
   background-color: #eee;
 }
 
-.vimala {
+.menuItem .indented {
+  display: inline-block;
+  width: 1.25em;
+}
+
+.menuItem .checked:before {
+  content: "√";
+}
+
+.Vimala {
   font-family: "Vimala", "Noto Serif Balinese", "Noto Sans Balinese", sans-serif;
 }
 
-.pustaka {
+.Pustaka {
   font-family: "Pustaka", "Noto Serif Balinese", "Noto Sans Balinese", sans-serif;
+}
+
+.defaultFont {
+  font-family: sans-serif;
 }
 
 .transcriber {

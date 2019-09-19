@@ -13,6 +13,13 @@ const mediawikiApi = process.env.NODE_ENV === "development"
   ? "http://palmleaf.org/w/api.php"
   : "/w/api.php";
 
+const scriptFont = {
+  "bali": {
+    "fonts": ["Pustaka","Vimala"],
+    "default": "Vimala"
+  }
+};
+
 const platform = detectPlatform();
 const getSelection = detectGetSelection();
 
@@ -73,9 +80,12 @@ function blockPinchZoom(e) {
 // }
 
 const MenuItem = props => {
-  let { label, close, onClick } = props;
+  let { label, className, close, onClick } = props;
   return (
-    <div className={styles.menuItem} onClick={e => { close(); onClick(e); }}>{label}</div>
+    <div
+      className={styles.menuItem}
+      onClick={e => { close(); onClick && onClick(e); }}
+    >{className && <span className={className}></span>}{label}</div>
   )
 }
 
@@ -89,11 +99,18 @@ export default class App extends Component {
     this.state = {
       archiveItem: transcriberData.archiveItem,
       iiifDimensions: transcriberData.iiifDimensions,
-      font: window.localStorage.getItem("font") || "vimala",
+      script: transcriberData.script || "bali",
       transliteration: "",
       transliterationOpen: false,
       imageLoading: false,
     };
+
+    this.state.font = window.localStorage.getItem(`font-${this.state.script}`);
+    if (!this.state.font) {
+      this.state.font = scriptFont[this.state.script]
+        ? scriptFont[this.state.script].default
+        : "defaultFont";
+    }
 
     if (this.editMode) {
       this.caretRef = React.createRef();
@@ -340,10 +357,11 @@ export default class App extends Component {
     window.localStorage.setItem("keyboardOpen", keyboardOpen);
   }
 
-  toggleFont = () => {
-    let font = this.state.font === "vimala" ? "pustaka" : "vimala";
-    this.setState({ font });
-    window.localStorage.setItem("font", font);
+  setFont = font => {
+    if (this.state.font !== font) {
+      this.setState({ font });
+      window.localStorage.setItem(`font-${this.state.script}`, font);
+    }
   }
 
   setTransliterationOpen(transliterationOpen) {
@@ -396,12 +414,28 @@ export default class App extends Component {
   }
 
   render() {
-    let editMode = this.editMode;
-    let {
-      open, text, caretPos, keyboardOpen, emulateTextEdit, transliterationOpen, font,
+    const editMode = this.editMode;
+    const {
+      open, text, caretPos, keyboardOpen, emulateTextEdit, transliterationOpen, script, font,
       imageUrl, iiifUrl, iiifDimensions, imageLoading,
     } = this.state;
-    let { archiveItem: { leaf } } = this.state;
+    const { archiveItem: { leaf } } = this.state;
+
+    const makeFontMenuItems = close => {
+      return scriptFont[script].fonts.map(item =>
+        item === font ?
+          <MenuItem close={close}
+            label={item}
+            className={cx(styles.indented,styles.checked)}
+          />
+        :
+          <MenuItem close={close}
+            label={item}
+            className={styles.indented}
+            onClick={() => this.setFont(item)}
+          />
+      );
+    };
 
     return (
       <div className={styles.App}>
@@ -477,7 +511,7 @@ export default class App extends Component {
           </div>
           {open && keyboardOpen &&
             <Keyboard
-              script="bali"
+              script={script}
               className={styles[font]}
               emulateTextEdit={emulateTextEdit}
               onTextChange={this.handleTextChange}
@@ -514,10 +548,12 @@ export default class App extends Component {
                       onClick={this.toggleKeyboard}
                     />
                   }
-                  <MenuItem close={close}
-                    label={"Set Font to " + (font === "vimala" ? "Pustaka" : "Vimala")}
-                    onClick={this.toggleFont}
-                  />
+                  {scriptFont[script] &&
+                    <>
+                      <MenuItem close={close} label="Set Font:" />
+                      {makeFontMenuItems(close)}
+                    </>
+                  }
                 </>
               )}
             </Popup>
