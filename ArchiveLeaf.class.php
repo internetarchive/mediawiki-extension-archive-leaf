@@ -64,11 +64,11 @@ class ArchiveLeaf {
         }
 
         // look up language (for category)
-        $language_map = self::getData( 'language' );
+        $language_name_map = self::getData( 'language_name' );
         if ( $response['language'] && preg_match( '/^(?:[a-z]{3}|[A-Z]{3})$/', $response['language'] ) ) {
             $language_code = strtolower( $response['language'] );
-        } elseif ( $response['language'] && array_key_exists( $response['language'], $language_map ) ) {
-            $language_code = $language_map[ $response['language'] ];
+        } elseif ( $response['language'] && array_key_exists( $response['language'], $language_name_map ) ) {
+            $language_code = $language_name_map[ $response['language'] ];
         } elseif ( $collection && $collection['language'] ) {
             $language_code = $collection['language'];
         }
@@ -77,9 +77,21 @@ class ArchiveLeaf {
             $language = $iso639[ $language_code ];
         }
 
+        if ( $response['script'] && preg_match( '/^[A-Z][a-z]{3}$/', $response['language'] ) ) {
+            $script_code = $response['script'];
+        } elseif ( $language_code ) {
+            $language_script = self::getData( 'language_script' );
+            if ( array_key_exists( $language_code, $language_script ) ) {
+                $script_code = $language_script[ $language_code ];
+            }
+        }
+
         $template = "{{" . $wgArchiveLeafTemplateName;
         $template .= "\n|Title=" . $id;
         $template .= "\n|Url=" . $remoteUrl;
+        if ( $script_code ) {
+            $template .= "\n|Script=" . $script_code;
+        }
         $template .= "\n}}";
         $template .= "\n==== Description ====";
         $template .= "\n===== Bahasa Indonesia =====";
