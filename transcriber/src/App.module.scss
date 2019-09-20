@@ -89,15 +89,15 @@ body.noscroll {
 }
 
 .Vimala {
-  font-family: "Vimala", "Noto Serif Balinese", "Noto Sans Balinese", sans-serif;
+  font-family: "Vimala", $fonts, sans-serif;
 }
 
 .Pustaka {
-  font-family: "Pustaka", "Noto Serif Balinese", "Noto Sans Balinese", sans-serif;
+  font-family: "Pustaka", $fonts, sans-serif;
 }
 
 .defaultFont {
-  font-family: sans-serif;
+  font-family: $fonts, sans-serif;
 }
 
 .transcriber {
