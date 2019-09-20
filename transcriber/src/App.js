@@ -103,7 +103,6 @@ export default class App extends Component {
 
     this.state = {
       archiveItem: transcriberData.archiveItem,
-      iiifDimensions: transcriberData.iiifDimensions,
       script: transcriberData.script || "bali",
       transliteration: "",
       transliterationOpen: false,
@@ -127,17 +126,20 @@ export default class App extends Component {
         ...this.state,
         open: this.checkTags(),
         imageUrl: transcriberData.imageUrl,
+        iiifDimensions: transcriberData.iiifDimensions,
         keyboardAvailable: !!layouts[this.state.script],
       };
       this.state.keyboardOpen = this.state.keyboardAvailable && !(window.localStorage.getItem(`keyboardOpen-${this.state.script}`) === "false");
       this.state.emulateTextEdit = platform.mobile && this.state.keyboardOpen;
     } else {
-      this.imageUrls = transcriberData.imageUrls;
+      this.imageData = transcriberData.imageData;
+      const currentLeaf = this.imageData[this.state.archiveItem.leaf];
 
       this.state = {
         ...this.state,
         open: false,
-        imageUrl: transcriberData.imageUrls[this.state.archiveItem.leaf],
+        imageUrl: currentLeaf.url,
+        iiifDimensions: { width: currentLeaf.w, height: currentLeaf.h },
         keyboardOpen: false,
         emulateTextEdit: false,
       };
@@ -288,7 +290,7 @@ export default class App extends Component {
           this.setLeaf(this.state.archiveItem.leaf - 1);
         }
       } else if (e.key === "ArrowRight") {
-        if (this.state.archiveItem.leaf < this.imageUrls.length-1) {
+        if (this.state.archiveItem.leaf < this.imageData.length-1) {
           this.setLeaf(this.state.archiveItem.leaf + 1);
         }
       }
@@ -416,9 +418,12 @@ export default class App extends Component {
   }
 
   setLeaf(leaf) {
+    const currentLeaf = this.imageData[leaf];
+
     this.setState({
-      imageUrl: this.imageUrls[leaf],
+      imageUrl: currentLeaf.url,
       imageLoading: true,
+      iiifDimensions: { width: currentLeaf.w, height: currentLeaf.h },
       transliterationOpen: false,
       ...this.finalizeState({ id: this.state.archiveItem.id, leaf }),
     });
