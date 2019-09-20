@@ -466,6 +466,7 @@ export default class App extends Component {
               <textarea
                 className={cx(styles.text, styles[font], !keyboardOpen && styles.expanded)}
                 value={text}
+                spellcheck="false"
                 ref={this.textAreaRef}
                 onChange={e => this.handleTextChange(e.target.value, e.target.selectionStart)}
                 onSelect={keyboardOpen ? (e => this.handleTextChange(null, e.target.selectionStart)) : undefined}
