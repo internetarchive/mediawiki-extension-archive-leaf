@@ -14,7 +14,7 @@
     "reactjs-popup": "^1.4.1"
   },
   "devDependencies": {
-    "react-scripts": "3.0.1"
+    "react-scripts": "3.1.2"
   },
   "scripts": {
     "start": "react-scripts start",
