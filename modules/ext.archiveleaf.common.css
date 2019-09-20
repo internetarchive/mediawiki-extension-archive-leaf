@@ -98,7 +98,7 @@ body {
 }
 
 .mw-editfont-monospace {
-  font-family: "Vimala", "Noto Serif Balinese", monospace, monospace;
+  font-family: "Vimala", "Noto Serif Balinese", "Noto Sans Grantha", "Noto Sans Khmer", "Noto Sans Malayalam", "Noto Sans Myanmar", "Noto Sans Sinhala", "Noto Sans Tamil", "Noto Sans Telugu", monospace, monospace;
 }
 
 .thumbinner {
