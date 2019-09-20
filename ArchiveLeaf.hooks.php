@@ -114,14 +114,27 @@ class ArchiveLeafHooks {
 
             $editor->textbox1 = preg_replace( '/<transliteration>.*?<\/transliteration>/', '', $editor->textbox1 );
 
-            $editor->textbox1 = preg_replace_callback( '/<transcription>\s*(.*?)\s*<\/transcription>/s', function( $match ) {
-                if (strlen( $match[1] ) ) {
-                    return $match[0] . '<transliteration>' . ArchiveLeaf::transliterate( 'Balinese-ban_001', $match[1] ) . '</transliteration>';
-                } else {
-                    return $match[0];
+            $wikitext = $editor->getArticle()->getPage()->getContent()->getNativeData();
+
+            if ( preg_match( '/\bScript=(\S+)/', $wikitext, $matches ) ) {
+
+                $script = strtolower( $matches[1] );
+                $transliterator = ArchiveLeaf::getData( 'transliterator' );
+
+                if ( array_key_exists( $script, $transliterator ) ) {
+
+                    $editor->textbox1 = preg_replace_callback( '/<transcription>\s*(.*?)\s*<\/transcription>/s', function( $match ) {
+                        if (strlen( $match[1] ) ) {
+                            return $match[0] . '<transliteration>' . ArchiveLeaf::transliterate( $transliterator[$script], $match[1] ) . '</transliteration>';
+                        } else {
+                            return $match[0];
+                        }
+
+                    }, $editor->textbox1 );
+
                 }
 
-            }, $editor->textbox1 );
+            }
 
         }
 

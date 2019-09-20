@@ -8,6 +8,7 @@ import { faBookOpen, faChevronLeft, faChevronRight, faEllipsisV, faKeyboard, faS
 import styles from './App.module.scss';
 import Keyboard from './Keyboard';
 import layouts from './layouts.js';
+import transliterators from './transliterator.json';
 
 const iiifBaseUrl = "https://iiif.archivelab.org/iiif";
 const mediawikiApi = process.env.NODE_ENV === "development"
@@ -19,10 +20,6 @@ const scriptFont = {
     "fonts": ["Pustaka","Vimala"],
     "default": "Vimala"
   }
-};
-
-const transliterators = {
-  "bali": "Balinese-ban_001",
 };
 
 const platform = detectPlatform();
@@ -400,7 +397,7 @@ export default class App extends Component {
             action: "transliterate",
             format: "json",
             origin: "*",
-            transliterator: "Balinese-ban_001",
+            transliterator: transliterators[this.state.script],
             text: this.state.text
           })
         }).then(res => {
