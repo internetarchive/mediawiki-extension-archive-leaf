@@ -143,11 +143,11 @@ class ArchiveLeafHooks {
                         'url' => $file->getUrl(),
                         'w'   => $matches[1],
                         'h'   => $matches[2],
-                    );
+                    ) );
                 }
             }
 
-            if ( count ( $pages ) ) {
+            if ( count ( $imageData ) ) {
                 $transcriberData = array(
                     'mode'          => 'view',
                     'imageData'     => $imageData,

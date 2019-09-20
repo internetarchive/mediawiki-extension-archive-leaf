@@ -487,7 +487,7 @@ export default class App extends Component {
                   <FontAwesomeIcon icon={faChevronLeft} />
                 </button>
               }
-              {leaf < this.imageUrls.length-1 &&
+              {leaf < this.imageData.length-1 &&
                 <button
                   className={cx(styles.button,styles.next)}
                   onClick={() => this.setLeaf(leaf + 1)}
