@@ -119,13 +119,15 @@ class ArchiveLeafHooks {
             if ( preg_match( '/\bScript=(\S+)/', $wikitext, $matches ) ) {
 
                 $script = strtolower( $matches[1] );
-                $transliterator = ArchiveLeaf::getData( 'transliterator' );
+                $transliterator_map = ArchiveLeaf::getData( 'transliterator' );
 
-                if ( array_key_exists( $script, $transliterator ) ) {
+                if ( array_key_exists( $script, $transliterator_map ) ) {
+
+                    $transliterator = $transliterator_map[$script];
 
                     $editor->textbox1 = preg_replace_callback( '/<transcription>\s*(.*?)\s*<\/transcription>/s', function( $match ) {
                         if (strlen( $match[1] ) ) {
-                            return $match[0] . '<transliteration>' . ArchiveLeaf::transliterate( $transliterator[$script], $match[1] ) . '</transliteration>';
+                            return $match[0] . '<transliteration>' . ArchiveLeaf::transliterate( $transliterator, $match[1] ) . '</transliteration>';
                         } else {
                             return $match[0];
                         }
