@@ -146,6 +146,10 @@ export default class App extends Component {
     if (this.state.open) {
       this.state = { ...this.state, ...this.finalizeOpen() };
     }
+
+    /*if (scriptFont[this.state.script]) {
+      document.body.style.setProperty("font-family", `"${scriptFont[this.state.script].default}", ${window.getComputedStyle(document.body).getPropertyValue("font-family")}`);
+    }*/
   }
 
   componentDidUpdate(prevProps, prevState) {
