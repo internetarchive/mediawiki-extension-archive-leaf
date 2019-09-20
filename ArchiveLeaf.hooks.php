@@ -166,7 +166,7 @@ class ArchiveLeafHooks {
                 $transcriberData = array(
                     'mode'          => 'view',
                     'imageData'     => $imageData,
-                    'archiveItem'   => array('id' => $article->getTitle(), 'leaf' => 0),
+                    'archiveItem'   => array('id' => $article->getTitle()->getText(), 'leaf' => 0),
                 );
 
                 if ( preg_match( '/\bScript=(\S+)/', $wikitext, $matches ) ) {
