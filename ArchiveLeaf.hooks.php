@@ -125,7 +125,7 @@ class ArchiveLeafHooks {
 
                     $transliterator = $transliterator_map[$script];
 
-                    $editor->textbox1 = preg_replace_callback( '/<transcription>\s*(.*?)\s*<\/transcription>/s', function( $match ) {
+                    $editor->textbox1 = preg_replace_callback( '/<transcription>\s*(.*?)\s*<\/transcription>/s', function( $match ) use ( $transliterator ) {
                         if (strlen( $match[1] ) ) {
                             return $match[0] . '<transliteration>' . ArchiveLeaf::transliterate( $transliterator, $match[1] ) . '</transliteration>';
                         } else {
