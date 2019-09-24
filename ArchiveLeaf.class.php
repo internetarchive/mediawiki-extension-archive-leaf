@@ -33,7 +33,7 @@ class ArchiveLeaf {
     public static function importItemByID( $id ) {
 
         global $wgArchiveLeafBaseURL, $wgArchiveLeafApiURL, $wgArchiveLeafTemplateName,
-               $wgArchiveLeafTemplateImageName, $wgUser;
+               $wgArchiveLeafTemplateImageName, $wgArchiveLeafImportScript, $wgUser;
 
         $log = array();
 
@@ -200,6 +200,11 @@ class ArchiveLeaf {
 
         foreach ($log as $l) {
             wfDebug('[ArchiveLeaf]: '.$l);
+        }
+
+        # update IA item metadata
+        if ( $wgArchiveLeafImportScript ) {
+            exec( $wgArchiveLeafImportScript . ' ' . escapeshellarg( $id ) . ' &' );
         }
 
         return array(

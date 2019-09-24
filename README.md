@@ -62,6 +62,9 @@ $wgArchiveLeafBaseURL = 'https://archive.org'; # base URL (default shown)
 $wgArchiveLeafApiURL = 'https://api.archivelab.org'; # API URL (default shown)
 $wgArchiveLeafTemplateName = 'Entry'; # primary template (default shown)
 $wgArchiveLeafTemplateImageName = 'EntryImage'; # per-image template (default shown)
+
+# script to run after importing IA item as a new wiki page. item identifier is passed as an argument.
+$wgArchiveLeafImportScript = '/path/to/script';
 ```
 
 ### Web server
