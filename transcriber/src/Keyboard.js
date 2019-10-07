@@ -1,17 +1,17 @@
-import React, { Component, useState } from 'react';
-import cx from 'clsx';
+import React, { Component, useState } from "react";
+import cx from "clsx";
 
-//import NonPrintingKeys from './NonPrintingKeys.js';
-import styles from './Keyboard.module.scss';
-import zwnj from './zwnj.svg';
-import zwj from './zwj.svg';
-import layouts from './layouts.js';
+//import NonPrintingKeys from "./NonPrintingKeys.js";
+import styles from "./Keyboard.module.scss";
+import zwnj from "./zwnj.svg";
+import zwj from "./zwj.svg";
+import layouts from "./layouts.js";
 
 const stringInsert = (string, addition, caretPos) => {
   caretPos = caretPos === undefined ? string.length : caretPos;
   let preString = string.slice(0, caretPos);
   let postString = string.slice(caretPos);
-  for (let c of addition) {
+  for (const c of addition) {
     if (c === "\u0008") {
       preString = preString.slice(0, -1);
     } else if (c === "\u007f") {
@@ -24,7 +24,7 @@ const stringInsert = (string, addition, caretPos) => {
 }
 
 const Key = props => {
-  let [zoom, setZoom] = useState(false);
+  const [zoom, setZoom] = useState(false);
   return (
     <div
       style={{ gridArea: props.gridArea }}
@@ -88,13 +88,13 @@ export default class Keyboard extends Component {
   }
 
   updateKeyboard() {
-    let buffer = this.props.text.slice(0, this.props.caretPos);
-    let layout = this.state.layout.keys;
-    let currLayout = this.state.currLayout;
-    let layoutMatches = this.state.layoutMatches;
-    for (let type in layout) {
+    const buffer = this.props.text.slice(0, this.props.caretPos);
+    const layout = this.state.layout.keys;
+    const currLayout = this.state.currLayout;
+    const layoutMatches = this.state.layoutMatches;
+    for (const type in layout) {
       layout[type].some(([rx, keys]) => {
-        let found = buffer.match(rx);
+        const found = buffer.match(rx);
         if (found) {
           currLayout[type] = keys[this.state.shiftLevel] || keys[0];
           layoutMatches[type] = found[0];
@@ -109,7 +109,7 @@ export default class Keyboard extends Component {
 
   handleKeyPress(k) {
     this.setState({ shiftLevel: 0 });
-    let [preText, postText] = stringInsert(this.props.text, k, this.props.caretPos);
+    const [preText, postText] = stringInsert(this.props.text, k, this.props.caretPos);
 
     if (this.props.emulateTextEdit) {
       this.props.onTextChange(preText + postText, preText.length);
@@ -198,9 +198,9 @@ export default class Keyboard extends Component {
   }
 
   render() {
-    let { script, className } = this.props;
-    let { layout, layoutMatches, currLayout, shiftLevel } = this.state;
-    let keySet = new Set(layout.grid.flat());
+    const { script, className } = this.props;
+    const { layout, layoutMatches, currLayout, shiftLevel } = this.state;
+    const keySet = new Set(layout.grid.flat());
 
     return (
       <div
@@ -213,7 +213,7 @@ export default class Keyboard extends Component {
             className={styles[type]}
             text={key ? stringInsert(layoutMatches[type], key).join("") : ""}
             key={type + k}
-            onClick={e => this.handleKeyPress(key)}
+            onClick={() => this.handleKeyPress(key)}
           />
         )))}
         {keySet.has("zwnj") &&
@@ -232,22 +232,22 @@ export default class Keyboard extends Component {
           <Key gridArea="delete" text="⌦" onClick={() => this.handleKeyPress("\u007f")} unzoomable flash />
         }
         {keySet.has("numbers") &&
-          <Key gridArea="numbers" text="᭗᭘᭙" unzoomable flash onClick={e => this.setState({ layout: layouts[script].numbers })} />
+          <Key gridArea="numbers" text="᭗᭘᭙" unzoomable flash onClick={() => this.setState({ layout: layouts[script].numbers })} />
         }
         {keySet.has("letters") &&
-          <Key gridArea="letters" text="ᬳᬦᬘ" unzoomable flash onClick={e => this.setState({ layout: layouts[script].letters })} />
+          <Key gridArea="letters" text="ᬳᬦᬘ" unzoomable flash onClick={() => this.setState({ layout: layouts[script].letters })} />
         }
         {keySet.has("space") &&
-          <Key gridArea="space" text="␣" className={styles.space} onClick={e => this.handleKeyPress(" ")} unzoomable flash />
+          <Key gridArea="space" text="␣" className={styles.space} onClick={() => this.handleKeyPress(" ")} unzoomable flash />
         }
         {keySet.has("return") &&
-          <Key gridArea="return" text="⏎" className={styles.return} onClick={e => this.handleKeyPress("\n")} unzoomable flash />
+          <Key gridArea="return" text="⏎" className={styles.return} onClick={() => this.handleKeyPress("\n")} unzoomable flash />
         }
         {keySet.has("arrowleft") &&
-          <Key gridArea="arrowleft" text="←" className={styles.arrowleft} onClick={e => this.handleArrow("←")} unzoomable flash />
+          <Key gridArea="arrowleft" text="←" className={styles.arrowleft} onClick={() => this.handleArrow("←")} unzoomable flash />
         }
         {keySet.has("arrowright") &&
-          <Key gridArea="arrowright" text="→" className={styles.arrowright} onClick={e => this.handleArrow("→")} unzoomable flash />
+          <Key gridArea="arrowright" text="→" className={styles.arrowright} onClick={() => this.handleArrow("→")} unzoomable flash />
         }
         {this.props.emulateTextEdit &&
           <input id="phys-key-buffer" ref={this.physBufferRef} onKeyUp={this.handlePhysBufferInput} onInput={this.handlePhysBufferInput} />

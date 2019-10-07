@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
-import PinchZoomPan from 'react-responsive-pinch-zoom-pan';
-import cx from 'clsx';
-import Popup from 'reactjs-popup';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBookOpen, faChevronLeft, faChevronRight, faEllipsisV, faKeyboard, faSpinner, faTimes } from '@fortawesome/free-solid-svg-icons';
+import React, { Component } from "react";
+import PinchZoomPan from "react-responsive-pinch-zoom-pan";
+import cx from "clsx";
+import Popup from "reactjs-popup";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBookOpen, faChevronLeft, faChevronRight, faEllipsisV, faKeyboard, faSpinner, faTimes } from "@fortawesome/free-solid-svg-icons";
 
-import styles from './App.module.scss';
-import Keyboard from './Keyboard';
-import layouts from './layouts.js';
-import transliterators from './transliterator.json';
+import styles from "./App.module.scss";
+import Keyboard from "./Keyboard";
+import layouts from "./layouts.js";
+import transliterators from "./transliterator.json";
 
 const iiifBaseUrl = "https://iiif.archivelab.org/iiif";
 const mediawikiApi = process.env.NODE_ENV === "development"
@@ -28,8 +28,8 @@ const getSelection = detectGetSelection();
 viewportFix();
 
 function detectPlatform() {
-  let ua = window.navigator.userAgent;
-  let platform = {};
+  const ua = window.navigator.userAgent;
+  const platform = {};
   platform.iOS = ua.match(/iPhone|iPod|iPad/);
   platform.iOSSafari = platform.iOS && ua.match(/WebKit/) && !ua.match(/CriOS/);
   platform.mobile = platform.iOS || ua.match(/Android/);
@@ -40,7 +40,7 @@ function detectGetSelection() {
   if (platform.iOS) {
     if (document.caretRangeFromPoint) {
       return e => {
-        let range = document.caretRangeFromPoint(e.clientX, e.clientY);
+        const range = document.caretRangeFromPoint(e.clientX, e.clientY);
         return range && range.collapsed
           && { node: range.commonAncestorContainer, caretPos: range.startOffset };
       };
@@ -48,7 +48,7 @@ function detectGetSelection() {
   } else {
     if (window.getSelection) {
       return () => {
-        let sel = window.getSelection();
+        const sel = window.getSelection();
         return sel.anchorNode && sel.isCollapsed
           && { node: sel.anchorNode, caretPos: sel.anchorOffset };
       };
@@ -58,8 +58,8 @@ function detectGetSelection() {
 
 function viewportFix() {
   if (platform.mobile) {
-    let getVhPx = () => {
-      let height = document.documentElement.clientHeight;
+    const getVhPx = () => {
+      const height = document.documentElement.clientHeight;
       return (height * 0.01) + "px";
     };
 
@@ -82,7 +82,7 @@ function blockPinchZoom(e) {
 // }
 
 const MenuItem = props => {
-  let { label, className, spanClassName, close, onClick } = props;
+  const { label, className, spanClassName, close, onClick } = props;
   return (
     <div
       className={cx(styles.menuItem,className)}
@@ -95,22 +95,20 @@ export default class App extends Component {
   constructor(props) {
     super(props);
 
-    let transcriberData = window.transcriberData || {};
-    this.editMode = transcriberData.mode === "edit";
+    this.editMode = props.mode === "edit";
 
     this.state = {
-      archiveItem: transcriberData.archiveItem,
-      script: transcriberData.script || "bali",
+      archiveItem: props.archiveItem,
       transliteration: "",
       transliterationOpen: false,
       imageLoading: false,
     };
-    this.state.transliteratorAvailable = !!transliterators[this.state.script];
+    this.state.transliteratorAvailable = !!transliterators[this.props.script];
 
-    this.state.font = window.localStorage.getItem(`font-${this.state.script}`);
+    this.state.font = window.localStorage.getItem(`font-${this.props.script}`);
     if (!this.state.font) {
-      this.state.font = scriptFont[this.state.script]
-        ? scriptFont[this.state.script].default
+      this.state.font = scriptFont[this.props.script]
+        ? scriptFont[this.props.script].default
         : "defaultFont";
     }
 
@@ -122,15 +120,14 @@ export default class App extends Component {
       this.state = {
         ...this.state,
         open: this.checkTags(),
-        imageUrl: transcriberData.imageUrl,
-        iiifDimensions: transcriberData.iiifDimensions,
-        keyboardAvailable: !!layouts[this.state.script],
+        imageUrl: props.imageUrl,
+        iiifDimensions: props.iiifDimensions,
+        keyboardAvailable: !!layouts[this.props.script],
       };
-      this.state.keyboardOpen = this.state.keyboardAvailable && !(window.localStorage.getItem(`keyboardOpen-${this.state.script}`) === "false");
+      this.state.keyboardOpen = this.state.keyboardAvailable && !(window.localStorage.getItem(`keyboardOpen-${this.props.script}`) === "false");
       this.state.emulateTextEdit = platform.mobile && this.state.keyboardOpen;
     } else {
-      this.imageData = transcriberData.imageData;
-      const currentLeaf = this.imageData[this.state.archiveItem.leaf];
+      const currentLeaf = props.imageData[this.state.archiveItem.leaf];
 
       this.state = {
         ...this.state,
@@ -146,8 +143,8 @@ export default class App extends Component {
       this.state = { ...this.state, ...this.finalizeOpen() };
     }
 
-    /*if (scriptFont[this.state.script]) {
-      document.body.style.setProperty("font-family", `"${scriptFont[this.state.script].default}", ${window.getComputedStyle(document.body).getPropertyValue("font-family")}`);
+    /*if (scriptFont[this.props.script]) {
+      document.body.style.setProperty("font-family", `"${scriptFont[this.props.script].default}", ${window.getComputedStyle(document.body).getPropertyValue("font-family")}`);
     }*/
   }
 
@@ -165,8 +162,8 @@ export default class App extends Component {
 
   checkTags() {
     let shouldOpen = true;
-    let openTags = this.textbox.value.match(/<transcription>/g);
-    let closeTags = this.textbox.value.match(/<\/transcription>/g);
+    const openTags = this.textbox.value.match(/<transcription>/g);
+    const closeTags = this.textbox.value.match(/<\/transcription>/g);
     if ((openTags || closeTags) &&
       (!(openTags && openTags.length === 1 && closeTags && closeTags.length === 1) ||
       !(this.textbox.value.indexOf("<transcription>") < this.textbox.value.indexOf("</transcription>")))
@@ -195,7 +192,7 @@ export default class App extends Component {
   }
 
   finalizeState(archiveItem) {
-    let newState = {};
+    const newState = {};
 
     if (archiveItem) {
       newState.archiveItem = archiveItem;
@@ -207,9 +204,9 @@ export default class App extends Component {
     newState.iiifUrl = `${iiifBaseUrl}/${archiveItem.id}%24${archiveItem.leaf}`;
 
     if (this.editMode) {
-      let matches = this.textbox.value.match(/(?:.*<transcription>)(.*?)(?:<\/transcription>.*)/s);
+      const matches = this.textbox.value.match(/(?:.*<transcription>)(.*?)(?:<\/transcription>.*)/s);
       if (matches) {
-        let text = matches[1].trim();
+        const text = matches[1].trim();
         setTimeout(() => this.checkStoredText(text), 1000);
         newState.text = text;
         newState.caretPos = text.length;
@@ -218,7 +215,7 @@ export default class App extends Component {
         newState.caretPos = 0;
       }
     } else {
-      let elt = document.getElementById(archiveItem.leaf === 0 ? 'Front_and_Back_Covers' : `Leaf_${archiveItem.leaf}`);
+      let elt = document.getElementById(archiveItem.leaf === 0 ? "Front_and_Back_Covers" : `Leaf_${archiveItem.leaf}`);
       if (elt) {
         elt = elt.parentElement;
         while ((elt = elt.nextElementSibling)) {
@@ -251,7 +248,7 @@ export default class App extends Component {
       if (savedText) {
         savedText = savedText.trim();
         if (savedText !== text) {
-          let useSaved = window.confirm("It looks like your work was interrupted. Do you want to restore your previous work?");
+          const useSaved = window.confirm("It looks like your work was interrupted. Do you want to restore your previous work?");
           if (useSaved) {
             this.setState({ text: savedText, caretPos: savedText.length });
           }
@@ -262,8 +259,8 @@ export default class App extends Component {
   }
 
   saveTranscription = () => {
-    let transcription = (this.state.text).trim();
-    let matches = this.textbox.value.match(/(.*<transcription>).*(<\/transcription>.*)/s);
+    const transcription = (this.state.text).trim();
+    const matches = this.textbox.value.match(/(.*<transcription>).*(<\/transcription>.*)/s);
     if (matches) {
       this.textbox.value = [matches[1], transcription, matches[2]].join("\n");
     } else {
@@ -287,7 +284,7 @@ export default class App extends Component {
           this.setLeaf(this.state.archiveItem.leaf - 1);
         }
       } else if (e.key === "ArrowRight") {
-        if (this.state.archiveItem.leaf < this.imageData.length-1) {
+        if (this.state.archiveItem.leaf < this.props.imageData.length-1) {
           this.setLeaf(this.state.archiveItem.leaf + 1);
         }
       }
@@ -306,12 +303,12 @@ export default class App extends Component {
   }
 
   handleKeyPress = preText => {
-    let ta = this.textAreaRef.current;
+    const ta = this.textAreaRef.current;
     this.setState({ text: preText + ta.value.slice(ta.selectionEnd), caretPos: preText.length });
   }
 
   handleCaretMove = e => {
-    let sel = getSelection && getSelection(e);
+    const sel = getSelection && getSelection(e);
     if (sel) {
       let { node, caretPos } = sel;
 
@@ -330,11 +327,11 @@ export default class App extends Component {
 
   updateCaret() {
     if (this.state.emulateTextEdit) {
-      let caret = this.caretRef.current;
+      const caret = this.caretRef.current;
       caret.offsetParent.scrollTop = caret.offsetTop;
     } else {
-      let ta = this.textAreaRef.current;
-      let { caretPos } = this.state;
+      const ta = this.textAreaRef.current;
+      const { caretPos } = this.state;
       if (ta.selectionStart !== caretPos) {
         ta.setSelectionRange(caretPos, caretPos);
       }
@@ -345,17 +342,17 @@ export default class App extends Component {
   }
 
   focusTextArea() {
-    let ta = this.textAreaRef.current;
+    const ta = this.textAreaRef.current;
     if (!platform.mobile && document.activeElement !== ta) {
       ta.focus();
     }
   }
 
   toggleKeyboard = () => {
-    let keyboardOpen = !this.state.keyboardOpen;
-    let emulateTextEdit = platform.mobile && keyboardOpen;
+    const keyboardOpen = !this.state.keyboardOpen;
+    const emulateTextEdit = platform.mobile && keyboardOpen;
 
-    let changedState = { keyboardOpen };
+    const changedState = { keyboardOpen };
     if (emulateTextEdit !== this.state.emulateTextEdit) {
       changedState.emulateTextEdit = emulateTextEdit;
     }
@@ -364,13 +361,13 @@ export default class App extends Component {
     }
 
     this.setState(changedState);
-    window.localStorage.setItem(`keyboardOpen-${this.state.script}`, keyboardOpen);
+    window.localStorage.setItem(`keyboardOpen-${this.props.script}`, keyboardOpen);
   }
 
   setFont = font => {
     if (this.state.font !== font) {
       this.setState({ font });
-      window.localStorage.setItem(`font-${this.state.script}`, font);
+      window.localStorage.setItem(`font-${this.props.script}`, font);
     }
   }
 
@@ -397,7 +394,7 @@ export default class App extends Component {
             action: "transliterate",
             format: "json",
             origin: "*",
-            transliterator: transliterators[this.state.script],
+            transliterator: transliterators[this.props.script],
             text: this.state.text
           })
         }).then(res => {
@@ -405,9 +402,9 @@ export default class App extends Component {
         }, reject);
       });
     } else {
-      let elt = this.state.transcriptionElt.nextElementSibling;
+      const elt = this.state.transcriptionElt.nextElementSibling;
       if (elt.className === "transliteration") {
-        return new Promise((resolve, reject) => resolve(elt.innerText));
+        return new Promise((resolve) => resolve(elt.innerText));
       } else {
         return new Promise((resolve, reject) => reject());
       }
@@ -415,7 +412,7 @@ export default class App extends Component {
   }
 
   setLeaf(leaf) {
-    const currentLeaf = this.imageData[leaf];
+    const currentLeaf = this.props.imageData[leaf];
 
     this.setState({
       imageUrl: currentLeaf.url,
@@ -428,8 +425,9 @@ export default class App extends Component {
 
   render() {
     const editMode = this.editMode;
+    const { script } = this.props;
     const {
-      open, text, caretPos, emulateTextEdit, script, font,
+      open, text, caretPos, emulateTextEdit, font,
       keyboardAvailable, keyboardOpen, transliteratorAvailable, transliterationOpen,
       imageUrl, iiifUrl, iiifDimensions, imageLoading,
     } = this.state;
@@ -466,7 +464,7 @@ export default class App extends Component {
               <textarea
                 className={cx(styles.text, styles[font], !keyboardOpen && styles.expanded)}
                 value={text}
-                spellcheck="false"
+                spellCheck="false"
                 ref={this.textAreaRef}
                 onChange={e => this.handleTextChange(e.target.value, e.target.selectionStart)}
                 onSelect={keyboardOpen ? (e => this.handleTextChange(null, e.target.selectionStart)) : undefined}
@@ -485,7 +483,7 @@ export default class App extends Component {
                   <FontAwesomeIcon icon={faChevronLeft} />
                 </button>
               }
-              {leaf < this.imageData.length-1 &&
+              {leaf < this.props.imageData.length-1 &&
                 <button
                   className={cx(styles.button,styles.next)}
                   onClick={() => this.setLeaf(leaf + 1)}
@@ -532,7 +530,7 @@ export default class App extends Component {
             {(transliteratorAvailable || (editMode && keyboardAvailable) || (scriptFont[script] && scriptFont[script].fonts)) &&
               <Popup
                 on="click"
-                contentStyle={{width: '14em'}}
+                contentStyle={{width: "14em"}}
                 trigger={<button className={styles.button}><FontAwesomeIcon icon={faEllipsisV} /></button>}
                 position="bottom right"
               >
