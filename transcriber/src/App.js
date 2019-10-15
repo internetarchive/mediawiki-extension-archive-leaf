@@ -12,7 +12,7 @@ import transliterators from "./transliterator.json";
 
 const iiifBaseUrl = "https://iiif.archivelab.org/iiif";
 const mediawikiApi = process.env.NODE_ENV === "development"
-  ? "http://palmleaf.org/w/api.php"
+  ? "https://palmleaf.org/w/api.php"
   : "/w/api.php";
 
 const scriptFont = {
