@@ -114,9 +114,9 @@ class ArchiveLeafHooks {
 
             $editor->textbox1 = preg_replace( '/<transliteration>.*?<\/transliteration>/', '', $editor->textbox1 );
 
-            $wikitext = $editor->getArticle()->getPage()->getContent()->getNativeData();
+            $content = $editor->getArticle()->getPage()->getContent();
 
-            if ( preg_match( '/\bScript=(\S+)/', $wikitext, $matches ) ) {
+            if ( $content && preg_match( '/\bScript=(\S+)/', $content->getNativeData(), $matches ) ) {
 
                 $script = strtolower( $matches[1] );
                 $transliterator_map = ArchiveLeaf::getData( 'transliterator' );
