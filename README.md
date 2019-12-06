@@ -10,7 +10,7 @@ ArchiveLeaf is a [MediaWiki](https://mediawiki.org) extension which implements e
 
 ## Installation
 
-1. Clone the repository or extract files into a directory `ArchiveLeaf` inside the MediaWiki install’s `extensions` directory.
+1. Clone the repository, or extract the downloaded zip file, into a directory `ArchiveLeaf` inside the MediaWiki install’s `extensions` directory.
 2. From the `ArchiveLeaf` directory:
     * Run `maintenance/transcriber-install` to install the transcriber’s dependencies with `yarn`.
     * Run `maintenance/transcriber-build` to create a production build of the transcriber React app.
