@@ -1,3 +1,4 @@
 #!/bin/bash
 
-transcriber/node_modules/.bin/node-sass --output-style compressed modules/ext.archiveleaf.common.scss > modules/ext.archiveleaf.common.css
+touch scss/fonts-custom.scss
+transcriber/node_modules/.bin/node-sass --output-style compressed scss/ext.archiveleaf.common.scss > modules/ext.archiveleaf.common.css
