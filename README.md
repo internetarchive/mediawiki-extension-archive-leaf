@@ -96,6 +96,10 @@ img.thumbimage {
 }
 ```
 
+### Webfonts (optional)
+
+If you wish to load webfonts from custom locations, you can edit `scss/fonts-custom.scss` and provide custom values that will override one or more of the variables in `scss/fonts.scss`. You will need to re-run `maintenance/transcriber-build` to apply the changes.
+
 ## Usage
 
 * To import items from Archive.org, navigate to wiki page `Special:ArchiveLeaf`. When the import completes, a link to the imported page will appear.
