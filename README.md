@@ -60,6 +60,7 @@ $wgGroupPermissions['user']['archiveleaf'] = true;
 
 $wgArchiveLeafBaseURL = 'https://archive.org'; # base URL (default shown)
 $wgArchiveLeafApiURL = 'https://api.archivelab.org'; # API URL (default shown)
+$wgArchiveLeafIiifBaseUrl = 'https://iiif.archivelab.org/iiif'; # IIIF base URL for image enhancement (default shown)
 $wgArchiveLeafTemplateName = 'Entry'; # primary template (default shown)
 $wgArchiveLeafTemplateImageName = 'EntryImage'; # per-image template (default shown)
 

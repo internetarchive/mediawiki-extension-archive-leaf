@@ -71,7 +71,7 @@ class ArchiveLeafHooks {
 
     public static function onShowEditForm( EditPage &$editor, OutputPage &$out ) {
 
-        global $wgArchiveLeafAutoTransliterate;
+        global $wgArchiveLeafAutoTransliterate, $wgArchiveLeafIiifBaseUrl;
 
         if ( !($editor->preview || $editor->diff)
           && preg_match( '/\{\{EntryImage/', $editor->textbox1 )
@@ -92,6 +92,10 @@ class ArchiveLeafHooks {
                         'imageUrl'          =>  $file->getUrl(),
                         'iiifDimensions'    =>  array('width' => $matches[3], 'height' => $matches[4]),
                     );
+
+                    if ( $wgArchiveLeafIiifBaseUrl ) {
+                        $transcriberData['iiifBaseUrl'] = $wgArchiveLeafIiifBaseUrl;
+                    }
 
                     $wikitext = $editor->getArticle()->getPage()->getContent()->getNativeData();
                     if ( preg_match( '/\bScript=(\S+)/', $wikitext, $matches ) ) {

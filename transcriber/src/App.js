@@ -10,7 +10,6 @@ import Keyboard from "./Keyboard";
 import layouts from "./layouts.js";
 import transliterators from "./transliterator.json";
 
-const iiifBaseUrl = "https://iiif.archivelab.org/iiif";
 const mediawikiApi = process.env.NODE_ENV === "development"
   ? "https://palmleaf.org/w/api.php"
   : "/w/api.php";
@@ -201,7 +200,7 @@ export default class App extends Component {
     }
 
     newState.archiveItemKey = archiveItem.id + "$" + archiveItem.leaf;
-    newState.iiifUrl = `${iiifBaseUrl}/${archiveItem.id}%24${archiveItem.leaf}`;
+    newState.iiifUrl = `${this.props.iiifBaseUrl}/${archiveItem.id}%24${archiveItem.leaf}`;
 
     if (this.editMode) {
       const matches = this.textbox.value.match(/(?:.*<transcription>)(.*?)(?:<\/transcription>.*)/s);
