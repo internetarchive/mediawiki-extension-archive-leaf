@@ -66,6 +66,9 @@ $wgArchiveLeafTemplateImageName = 'EntryImage'; # per-image template (default sh
 
 # script to run after importing IA item as a new wiki page. item identifier is passed as an argument.
 $wgArchiveLeafImportScript = '/path/to/script';
+
+# target to rewrite archive.org links to (be sure to include url scheme, as shown)
+$wgArchiveLeafArchiveOrgLinkTarget = 'http://localhost';
 ```
 
 ### Web server

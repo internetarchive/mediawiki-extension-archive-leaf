@@ -66,7 +66,13 @@ class ArchiveLeafHooks {
     }
 
     public static function onBeforePageDisplay( OutputPage &$out, Skin &$skin ) {
+        global $wgArchiveLeafArchiveOrgLinkTarget;
+
         $out->addModules( 'ext.archiveleaf.common' );
+
+        if ( $wgArchiveLeafArchiveOrgLinkTarget ) {
+            $out->mBodytext = preg_replace( '#\bhttps?://archive.org\b#', $wgArchiveLeafArchiveOrgLinkTarget, $out->mBodytext );
+        }
     }
 
     public static function onShowEditForm( EditPage &$editor, OutputPage &$out ) {
