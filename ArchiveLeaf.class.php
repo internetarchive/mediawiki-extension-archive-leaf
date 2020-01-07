@@ -139,9 +139,6 @@ class ArchiveLeaf {
                                 // Pre-generate thumb for 400px to be used in page template
                                 $localFile->createThumb(400);
 
-                                //TODO: apparently thumb being purged during deferred update for uploaded files
-                                //DeferredUpdates::clearPendingUpdates();
-
                                 $log[] = "Image was imported successfully.";
                             } else {
                                 $log[] = "Error importing image: {$uploadStatus->getMessage()}";
