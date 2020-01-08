@@ -13,9 +13,7 @@
     "ArchiveLeafBaseURL": "https://archive.org",
     "ArchiveLeafApiURL": "https://api.archivelab.org",
     "ArchiveLeafTemplateName": "Entry",
-    "ArchiveLeafTemplateImageName": "EntryImage",
-    "ArchiveLeafAutoTransliterate": "1",
-    "ArchiveLeafTransliterateUrl": "http://localhost:3000"
+    "ArchiveLeafTemplateImageName": "EntryImage"
   },
   "AutoloadClasses": {
     "ArchiveLeaf": "ArchiveLeaf.class.php",

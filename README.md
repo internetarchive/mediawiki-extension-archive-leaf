@@ -68,7 +68,7 @@ $wgArchiveLeafTemplateImageName = 'EntryImage'; # per-image template (default sh
 $wgArchiveLeafImportScript = '/path/to/script';
 
 # target host to rewrite archive.org links to (be sure to include url scheme, as shown)
-$wgArchiveLeafArchiveOrgLinkTarget = 'http://localhost';
+$wgArchiveLeafArchiveOrgRewrite = 'http://localhost';
 ```
 
 ### Web server
