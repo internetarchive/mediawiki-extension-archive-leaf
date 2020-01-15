@@ -200,7 +200,9 @@ export default class App extends Component {
     }
 
     newState.archiveItemKey = archiveItem.id + "$" + archiveItem.leaf;
-    newState.iiifUrl = `${this.props.iiifBaseUrl}/${archiveItem.id}%24${archiveItem.leaf}`;
+    if (this.props.iiifBaseUrl) {
+      newState.iiifUrl = `${this.props.iiifBaseUrl}/${archiveItem.id}%24${archiveItem.leaf}`;
+    }
 
     if (this.editMode) {
       const matches = this.textbox.value.match(/(?:.*<transcription>)(.*?)(?:<\/transcription>.*)/s);

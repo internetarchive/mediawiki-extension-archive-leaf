@@ -60,7 +60,7 @@ $wgGroupPermissions['user']['archiveleaf'] = true;
 
 $wgArchiveLeafBaseURL = 'https://archive.org'; # base URL (default shown)
 $wgArchiveLeafApiURL = 'https://api.archivelab.org'; # API URL (default shown)
-$wgArchiveLeafIiifBaseUrl = 'https://iiif.archivelab.org/iiif'; # IIIF base URL for image enhancement (default shown)
+$wgArchiveLeafIiifBaseUrl = 'https://iiif.archivelab.org/iiif'; # IIIF base URL for image enhancement (default shown; NULL to disable)
 $wgArchiveLeafTemplateName = 'Entry'; # primary template (default shown)
 $wgArchiveLeafTemplateImageName = 'EntryImage'; # per-image template (default shown)
 
@@ -69,6 +69,17 @@ $wgArchiveLeafImportScript = '/path/to/script';
 
 # target host to rewrite archive.org links to (be sure to include url scheme, as shown)
 $wgArchiveLeafArchiveOrgRewrite = 'http://localhost';
+```
+
+If you have set up [https://github.com/longnow/icu-transliterator-service](icu-transliterator-service), you can use it to transliterate non-Latin scripts that this extension knows about (see `data/transliterator.json`). You can configure transliteration with the following settings:
+
+```php
+# automatically (re-)transliterate non-Latin text every time a page is saved.
+# do not allow any manual editing of transliterations.
+$wgArchiveLeafAutoTransliterate = true;
+
+# url of icu-transliterate-service server
+$wgArchiveLeafTransliterateUrl = 'http://localhost:3000';
 ```
 
 ### Web server
@@ -189,4 +200,4 @@ Imported pages have the following structure:
 </transcription>
 ```
 
-Transcribed text should be placed in the `<transcription>` tag. The transcriber does this automatically, but manual editing is also possible.
+Transcribed text should be placed in the `<transcription>` tag. The transcriber does this automatically on, but manual editing is also possible.

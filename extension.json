@@ -12,6 +12,7 @@
   "config": {
     "ArchiveLeafBaseURL": "https://archive.org",
     "ArchiveLeafApiURL": "https://api.archivelab.org",
+    "ArchiveLeafIiifBaseUrl": "https://iiif.archivelab.org/iiif",
     "ArchiveLeafTemplateName": "Entry",
     "ArchiveLeafTemplateImageName": "EntryImage"
   },
