@@ -1,0 +1,3 @@
+#!/bin/bash
+
+perl -0777 -pi -e 's/<div( id="jump-to-nav".+?)<\/div>/<!--div$1<\/div-->/s' ../../skins/Metrolook/MetrolookTemplate.php
