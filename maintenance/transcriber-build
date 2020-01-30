@@ -3,7 +3,7 @@
 maintenance/css
 
 cd transcriber
-yarn build
+npm run build
 
 cd build/static/js
 cat <(echo "/*@nomin*/") runtime*.js <(echo) [0-9]*.js <(echo) main*.js > transcriber.js

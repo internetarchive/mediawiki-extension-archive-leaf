@@ -6,13 +6,13 @@ ArchiveLeaf is a [MediaWiki](https://mediawiki.org) extension which implements e
 
 * Mediawiki 1.32+
 * PHP 7+
-* [node.js](https://nodejs.org) 12+ and [yarn](https://yarnpkg.com)
+* [node.js](https://nodejs.org) 12+
 
 ## Installation
 
 1. Clone the repository, or extract the downloaded zip file, into a directory `ArchiveLeaf` inside the MediaWiki install’s `extensions` directory.
 2. From the `ArchiveLeaf` directory:
-    * Run `maintenance/transcriber-install` to install the transcriber’s dependencies with `yarn`.
+    * Run `maintenance/transcriber-install` to install the transcriber’s dependencies with `npm`.
     * Run `maintenance/transcriber-build` to create a production build of the transcriber React app.
     * Run `maintenance/templates-import` to import the required `Template:Entry` and `Template:EntryImage` pages into MediaWiki.
 3. Install the [Metrolook](https://www.mediawiki.org/wiki/Skin:Metrolook) skin into the MediaWiki install’s `skins` directory (as `Metrolook`).
