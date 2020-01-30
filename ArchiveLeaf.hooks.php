@@ -183,6 +183,10 @@ class ArchiveLeafHooks {
                     'mediawikiApi'  => $wgScriptPath . '/api.php',
                 );
 
+                if ( $wgArchiveLeafIiifBaseUrl ) {
+                    $transcriberData['iiifBaseUrl'] = $wgArchiveLeafIiifBaseUrl;
+                }
+
                 if ( preg_match( '/\bScript=(\S+)/', $wikitext, $matches ) ) {
                     $transcriberData['script'] = strtolower( $matches[1] );
                 }
