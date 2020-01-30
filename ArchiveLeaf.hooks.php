@@ -77,7 +77,7 @@ class ArchiveLeafHooks {
 
     public static function onShowEditForm( EditPage &$editor, OutputPage &$out ) {
 
-        global $wgArchiveLeafAutoTransliterate, $wgArchiveLeafIiifBaseUrl;
+        global $wgArchiveLeafAutoTransliterate, $wgArchiveLeafIiifBaseUrl, $wgScriptPath;
 
         if ( !($editor->preview || $editor->diff)
           && preg_match( '/\{\{EntryImage/', $editor->textbox1 )
@@ -154,6 +154,8 @@ class ArchiveLeafHooks {
     }
 
     public static function onArticleViewFooter( $article, $patrolFooterShown ) {
+
+        global $wgScriptPath;
 
         $wikitext = $article->getPage()->getContent()->getNativeData();
 
