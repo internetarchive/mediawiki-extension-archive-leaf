@@ -10,10 +10,6 @@ import Keyboard from "./Keyboard";
 import layouts from "./layouts.js";
 import transliterators from "./transliterator.json";
 
-const mediawikiApi = process.env.NODE_ENV === "development"
-  ? "https://palmleaf.org/w/api.php"
-  : "/w/api.php";
-
 const scriptFont = {
   "bali": {
     "fonts": ["Pustaka","Vimala"],
@@ -389,7 +385,7 @@ export default class App extends Component {
   getTransliteration() {
     if (this.editMode) {
       return new Promise((resolve, reject) => {
-        window.fetch(mediawikiApi, {
+        window.fetch(this.props.mediawikiApi || "/w/api.php", {
           method: "POST",
           body: new URLSearchParams({
             action: "transliterate",
