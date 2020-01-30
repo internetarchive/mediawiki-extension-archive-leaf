@@ -155,7 +155,7 @@ class ArchiveLeafHooks {
 
     public static function onArticleViewFooter( $article, $patrolFooterShown ) {
 
-        global $wgScriptPath;
+        global $wgArchiveLeafIiifBaseUrl, $wgScriptPath;
 
         $wikitext = $article->getPage()->getContent()->getNativeData();
 
