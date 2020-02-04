@@ -50,14 +50,16 @@
       "styles": [
         "modules/ext.archiveleaf.special.css"
       ],
-      "position": "top"
+      "position": "top",
+      "target": ["desktop","mobile"]
     },
     "ext.archiveleaf.common": {
       "scripts": [],
       "styles": [
         "modules/ext.archiveleaf.common.css"
       ],
-      "position": "top"
+      "position": "top",
+      "target": ["desktop","mobile"]
     },
     "ext.archiveleaf.transcriber": {
       "scripts": [
@@ -66,7 +68,8 @@
       "styles": [
         "transcriber/build/static/css/transcriber.css"
       ],
-      "position": "top"
+      "position": "top",
+      "target": ["desktop","mobile"]
     }
   },
   "ResourceFileModulePaths": {
