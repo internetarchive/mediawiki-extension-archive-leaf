@@ -51,7 +51,7 @@
         "modules/ext.archiveleaf.special.css"
       ],
       "position": "top",
-      "target": ["desktop","mobile"]
+      "targets": ["desktop","mobile"]
     },
     "ext.archiveleaf.common": {
       "scripts": [],
@@ -59,7 +59,7 @@
         "modules/ext.archiveleaf.common.css"
       ],
       "position": "top",
-      "target": ["desktop","mobile"]
+      "targets": ["desktop","mobile"]
     },
     "ext.archiveleaf.transcriber": {
       "scripts": [
@@ -69,7 +69,7 @@
         "transcriber/build/static/css/transcriber.css"
       ],
       "position": "top",
-      "target": ["desktop","mobile"]
+      "targets": ["desktop","mobile"]
     }
   },
   "ResourceFileModulePaths": {
