@@ -34,6 +34,7 @@
     "BeforePageDisplay": "ArchiveLeafHooks::onBeforePageDisplay",
     "EditPage::showEditForm:initial": "ArchiveLeafHooks::onShowEditForm",
     "EditPage::attemptSave": "ArchiveLeafHooks::onAttemptSave",
+    "LinkerMakeExternalLink": "ArchiveLeafHooks::onLinkerMakeExternalLink",
     "ParserFirstCallInit": "ArchiveLeafHooks::onParserFirstCallInit",
     "ParserBeforeInternalParse": "ArchiveLeafHooks::onParserBeforeInternalParse"
   },
