@@ -42,6 +42,21 @@ body.noscroll {
   display: flex;
   align-items: center;
   justify-content: center;
+
+  color: buttontext;
+  background-color: buttonface;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgb(216,216,216) rgb(209,209,209) rgb(186,186,186);
+  border-image: initial;
+  -webkit-apperance: button;
+
+  &:active {
+    border-style: inset;
+  }
+  &:focus {
+    outline: -webkit-focus-ring-color auto 5px;
+  }
 }
 
 .button.open, .button.prev {
