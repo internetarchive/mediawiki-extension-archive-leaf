@@ -2,6 +2,7 @@ import "react-app-polyfill/stable";
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
+import styles from "./App.module.scss";
 import * as serviceWorker from "./serviceWorker";
 
 const mobileFrontend = !!(window.mw && window.mw.config.get("wgMFMode"));
@@ -13,7 +14,7 @@ if (mobileFrontend) {
   let transcriberEdit, observer;
 
   window.mw.hook("mobileFrontend.editorOpened").add(() => {
-    transcriber.style.display = "none";
+    transcriber.classList.add(styles.closed);
 
     if (!transcriberEdit) {
       transcriberEdit = document.createElement("div");
@@ -39,7 +40,11 @@ if (mobileFrontend) {
     const header = document.querySelector(".editor-overlay .initial-header");
     if (header) {
       observer = new MutationObserver(() => {
-        transcriberEdit.style.display = header.classList.contains("hidden") ? "none" : "block";
+        if (header.classList.contains("hidden")) {
+          transcriberEdit.classList.add(styles.closed);
+        } else {
+          transcriberEdit.classList.remove(styles.closed);
+        }
       });
 
       observer.observe(header, { attributes: true, attributeFilter: ["class"] });
@@ -54,7 +59,7 @@ if (mobileFrontend) {
     if (observer) {
       observer.disconnect();
     }
-    transcriber.style.display = "block";
+    transcriber.classList.remove(styles.closed);
   });
 }
 
