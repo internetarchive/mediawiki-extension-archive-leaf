@@ -4,13 +4,13 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
-const mobileFrontend = (window.mw && window.mw.config.get("wgMFMode")) ? true : false;
+const mobileFrontend = !!(window.mw && window.mw.config.get("wgMFMode"));
 const transcriber = document.createElement("div");
 document.body.appendChild(transcriber);
 ReactDOM.render(<App {...window.transcriberData} mobileFrontend={mobileFrontend} />, transcriber);
 
 if (mobileFrontend) {
-  let transcriberEdit = null;
+  let transcriberEdit, observer;
 
   window.mw.hook("mobileFrontend.editorOpened").add(() => {
     transcriber.style.display = "none";
@@ -35,20 +35,26 @@ if (mobileFrontend) {
       iiifDimensions={{width: imageData.w, height: imageData.h}}
       mediawikiApi={window.transcriberData.mediawikiApi}
     />, transcriberEdit);
+
+    const header = document.querySelector(".editor-overlay .initial-header");
+    if (header) {
+      observer = new MutationObserver(() => {
+        transcriberEdit.style.display = header.classList.contains("hidden") ? "none" : "block";
+      });
+
+      observer.observe(header, { attributes: true, attributeFilter: ["class"] });
+    }
+
   });
 
   window.mw.hook("mobileFrontend.editorClosed").add(() => {
     if (transcriberEdit) {
       ReactDOM.unmountComponentAtNode(transcriberEdit);
     }
-
-    transcriber.style.display = "block";
-  });
-
-  window.mw.trackSubscribe("mf.schemaEditAttemptStep", (topic, data) => {
-    if (data && data.action && data.action === "saveIntent" && transcriberEdit) {
-      transcriberEdit.style.display = "none";
+    if (observer) {
+      observer.disconnect();
     }
+    transcriber.style.display = "block";
   });
 }
 
