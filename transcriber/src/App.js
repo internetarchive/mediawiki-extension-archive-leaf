@@ -214,12 +214,24 @@ export default class App extends Component {
     } else {
       let elt = document.getElementById(archiveItem.leaf === 0 ? "Front_and_Back_Covers" : `Leaf_${archiveItem.leaf}`);
       if (elt) {
-        elt = elt.parentElement;
-        while ((elt = elt.nextElementSibling)) {
-          if (elt.className === "transcription") {
-            newState.text = elt.innerText;
-            newState.transcriptionElt = elt;
-            break;
+        if (this.props.mobileFrontend) {
+          elt = document.getElementById(elt.parentElement.getAttribute("aria-controls"));
+          if (elt) {
+            elt = elt.querySelector(".transcription");
+            if (elt) {
+              newState.text = elt.innerText;
+              newState.transcriptionElt = elt;
+            }
+          }
+        } else {
+          elt = elt.parentElement;
+
+          while ((elt = elt.nextElementSibling)) {
+            if (elt.className === "transcription") {
+              newState.text = elt.innerText;
+              newState.transcriptionElt = elt;
+              break;
+            }
           }
         }
       }

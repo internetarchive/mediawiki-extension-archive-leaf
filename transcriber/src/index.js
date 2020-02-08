@@ -4,11 +4,12 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
+const mobileFrontend = (window.mw && window.mw.config.get("wgMFMode")) ? true : false;
 const transcriber = document.createElement("div");
 document.body.appendChild(transcriber);
-ReactDOM.render(<App {...window.transcriberData} />, transcriber);
+ReactDOM.render(<App {...window.transcriberData} mobileFrontend={mobileFrontend} />, transcriber);
 
-if (window.mw && window.mw.config.get("wgMFMode")) {
+if (mobileFrontend) {
   let transcriberEdit = null;
 
   window.mw.hook("mobileFrontend.editorOpened").add(() => {
@@ -28,7 +29,7 @@ if (window.mw && window.mw.config.get("wgMFMode")) {
 
     ReactDOM.render(<App
       mode="edit"
-      mobileFrontend={true}
+      mobileFrontend={mobileFrontend}
       archiveItem={{id: window.transcriberData.archiveItem.id, leaf}}
       imageUrl={imageData.url}
       iiifDimensions={{width: imageData.w, height: imageData.h}}
