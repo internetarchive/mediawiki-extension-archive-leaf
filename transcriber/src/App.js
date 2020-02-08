@@ -110,7 +110,7 @@ export default class App extends Component {
     if (this.editMode) {
       this.caretRef = React.createRef();
       this.textAreaRef = React.createRef();
-      this.textbox = document.getElementById("wpTextbox1");
+      this.textbox = document.getElementById(this.props.mobileFrontend ? "wikitext-editor" : "wpTextbox1");
 
       this.state = {
         ...this.state,
@@ -255,13 +255,24 @@ export default class App extends Component {
     }
   }
 
-  saveTranscription = () => {
-    const transcription = (this.state.text).trim();
+  saveTranscription() {
+    let changed = true;
+    const transcription = this.state.text.trim();
     const matches = this.textbox.value.match(/(.*<transcription>).*(<\/transcription>.*)/s);
     if (matches) {
-      this.textbox.value = [matches[1], transcription, matches[2]].join("\n");
+      const newValue = [matches[1], transcription, matches[2]].join("\n");
+      if (newValue === this.textbox.value) {
+        changed = false;
+      } else {
+        this.textbox.value = newValue;
+      }
     } else {
       this.textbox.value += "\n<transcription>\n" + transcription + "\n</transcription>";
+    }
+
+    if (changed && this.props.mobileFrontend) {
+      document.querySelectorAll(".header-action .continue, .header-action .submit")
+        .forEach(elt => elt.disabled = false);
     }
 
     if (this.state.archiveItemKey) {

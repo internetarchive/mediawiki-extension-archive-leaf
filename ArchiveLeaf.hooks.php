@@ -99,7 +99,7 @@ class ArchiveLeafHooks {
                         'archiveItem'       =>  array('id' => $matches[1], 'leaf' => $matches[2]),
                         'imageUrl'          =>  $file->getUrl(),
                         'iiifDimensions'    =>  array('width' => $matches[3], 'height' => $matches[4]),
-                        'mediawikiApi'      => $wgScriptPath . '/api.php',
+                        'mediawikiApi'      =>  $wgScriptPath . '/api.php',
                     );
 
                     if ( $wgArchiveLeafIiifBaseUrl ) {
