@@ -12,7 +12,7 @@ class ArchiveLeafTransliterateApi extends ApiBase {
             $txt = ArchiveLeaf::transliterate($params["transliterator"], $params["text"]);
             $result->addValue(null, 'transliteration', $txt);
         } else {
-            $this->dieWithError( ApiMessage::create( 'apierror-moduledisabled', null, ['transliterate'] ) );
+            $this->dieWithError( ApiMessage::create( ['apierror-moduledisabled', 'transliterate'] ) );
         }
 
     }
