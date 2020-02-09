@@ -418,7 +418,7 @@ export default class App extends Component {
             text: this.state.text
           })
         }).then(res => {
-          res.json().then(json => resolve(json.transliteration), reject);
+          res.json().then(json => (json.error ? reject : resolve(json.transliteration)), reject);
         }, reject);
       });
     } else {
