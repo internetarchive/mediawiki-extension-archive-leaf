@@ -3,11 +3,17 @@
 class ArchiveLeafTransliterateApi extends ApiBase {
     public function execute() {
 
-        $params = $this->extractRequestParams();
-        $result = $this->getResult();
+        global $wgArchiveLeafTransliterateUrl;
 
-        $txt = ArchiveLeaf::transliterate($params["transliterator"], $params["text"]);
-        $result->addValue(null, 'transliteration', $txt);
+        if ( $wgArchiveLeafTransliterateUrl ) {
+            $params = $this->extractRequestParams();
+            $result = $this->getResult();
+
+            $txt = ArchiveLeaf::transliterate($params["transliterator"], $params["text"]);
+            $result->addValue(null, 'transliteration', $txt);
+        } else {
+            $this->dieWithError( ApiMessage::create( 'apierror-moduledisabled', null, ['transliterate'] ) );
+        }
 
     }
 

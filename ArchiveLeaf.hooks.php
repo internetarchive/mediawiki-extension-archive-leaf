@@ -79,13 +79,13 @@ class ArchiveLeafHooks {
 
     public static function onShowEditForm( EditPage &$editor, OutputPage &$out ) {
 
-        global $wgArchiveLeafAutoTransliterate, $wgArchiveLeafIiifBaseUrl, $wgScriptPath;
+        global $wgArchiveLeafAutoTransliterate, $wgArchiveLeafTransliterateUrl, $wgArchiveLeafIiifBaseUrl, $wgScriptPath;
 
         if ( !($editor->preview || $editor->diff)
           && preg_match( '/\{\{EntryImage/', $editor->textbox1 )
           && preg_match( '/\bEntryID=(\S+).*?\bTitle=(\S+).*?\bFullSize=([0-9]+)x([0-9]+).*?\bLocalFileName=(\S+)/s', $editor->textbox1, $matches ) ) {
 
-            if ( $wgArchiveLeafAutoTransliterate ) {
+            if ( $wgArchiveLeafAutoTransliterate && $wgArchiveLeafTransliterateUrl ) {
                 $editor->textbox1 = preg_replace( '/<transliteration>.*?<\/transliteration>/s', '', $editor->textbox1 );
             }
 
@@ -121,9 +121,9 @@ class ArchiveLeafHooks {
 
     public static function onAttemptSave( EditPage $editor ) {
 
-        global $wgArchiveLeafAutoTransliterate;
+        global $wgArchiveLeafAutoTransliterate, $wgArchiveLeafTransliterateUrl;
 
-        if ( $wgArchiveLeafAutoTransliterate ) {
+        if ( $wgArchiveLeafAutoTransliterate && $wgArchiveLeafTransliterateUrl ) {
 
             $editor->textbox1 = preg_replace( '/<transliteration>.*?<\/transliteration>/', '', $editor->textbox1 );
 

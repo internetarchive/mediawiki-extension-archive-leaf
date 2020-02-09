@@ -2,8 +2,9 @@
   "name": "ArchiveLeaf",
   "version": "0.0.4",
   "author": [
+    "David Kamholz",
+    "Ben Yang",
     "Alexey",
-    "David Kamholz"
   ],
   "url": "https://www.mediawiki.org/wiki/Extension:ArchiveLeaf",
   "descriptionmsg": "archiveleaf-desc",
@@ -14,7 +15,11 @@
     "ArchiveLeafApiURL": "https://api.archivelab.org",
     "ArchiveLeafIiifBaseUrl": "https://iiif.archivelab.org/iiif",
     "ArchiveLeafTemplateName": "Entry",
-    "ArchiveLeafTemplateImageName": "EntryImage"
+    "ArchiveLeafTemplateImageName": "EntryImage",
+    "ArchiveLeafImportScript": null,
+    "ArchiveLeafArchiveOrgRewrite": null,
+    "ArchiveLeafAutoTransliterate": false,
+    "ArchiveLeafTransliterateUrl": null
   },
   "AutoloadClasses": {
     "ArchiveLeaf": "ArchiveLeaf.class.php",
