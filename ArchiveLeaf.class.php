@@ -1,5 +1,6 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
 use MediaWiki\Revision\SlotRecord;
 
 /**
@@ -10,19 +11,205 @@ use MediaWiki\Revision\SlotRecord;
  */
 class ArchiveLeaf {
 
+    public static function onParserFirstCallInit( Parser &$parser ) {
+        $parser->setFunctionHook( 'sanitize_leaf_title', [ self::class, 'renderFunctionSanitize' ] );
+
+        $parser->setHook( 'transcription', self::renderTag( 'transcription' ) );
+        $parser->setHook( 'transliteration', self::renderTag( 'transliteration', 'Auto-transliteration' ) );
+        $parser->setHook( 'translation', self::renderTag( 'translation', [ self::class, 'getTranslationHeading' ] ) );
+    }
+
+    public static function onParserBeforeInternalParse( Parser &$parser, &$text, StripState &$stripState ) {
+        $text = preg_replace( '/\n{2,}(<(?:transcription|transliteration|translation)[> ])/', "\n$1", $text );
+        $text = preg_replace( '/(<\/(?:transcription|transliteration|translation)>)\n{2,}/', "$1\n", $text );
+        return true;
+    }
+
+    /**
+     * @param Parser $parser
+     * @param string $value
+     *
+     * @return mixed
+     */
+    public static function renderFunctionSanitize( $parser, $value ) {
+        global $wgOut, $wgSitename;
+        $sanitized = self::sanitizeValue($value);
+        $wgOut->setHTMLTitle( $sanitized .' - ' . $wgSitename );
+        return $sanitized;
+    }
+
+    public static function renderTag( $tagName, $headingTitle = NULL ) {
+        return function ( $input, array $args, Parser $parser, PPFrame $frame ) use ( $tagName, $headingTitle ) {
+            $html = '<div class="' . $tagName . '">';
+
+            if ( isset( $headingTitle ) ) {
+                if ( is_callable( $headingTitle ) ) {
+                    $headingTitle = $headingTitle( $args );
+                }
+
+                $html .= "<div class='heading-small'><strong>$headingTitle</strong></div>";
+            }
+
+            $html .= trim( $input ) . '</div>';
+
+            return array( $html, 'markerType' => 'nowiki' );
+        };
+    }
+
+    public static function getTranslationHeading( $args ) {
+        if ( array_key_exists( 'language', $args ) ) {
+            $iso639 = self::getData( 'iso-639-3' );
+
+            if ( array_key_exists( $args['language'], $iso639 ) ) {
+                return $iso639[ $args['language'] ] . ' translation';
+            }
+        }
+
+        return 'Translation';
+    }
+
+    public static function onBeforePageDisplay( OutputPage &$out, Skin &$skin ) {
+        $out->addModules( 'ext.archiveleaf.common' );
+    }
+
+    public static function onLinkerMakeExternalLink( &$url, &$text, &$link, &$attribs, $linkType ) {
+        $config = ConfigFactory::getDefaultInstance()->makeConfig( 'archiveleaf' );
+
+        if ( $config->get( 'ArchiveOrgRewrite' ) ) {
+            $url = preg_replace( '#^https?://archive.org\b#', $config->get( 'ArchiveOrgRewrite' ), $url );
+        }
+    }
+
+    public static function onShowEditForm( EditPage &$editor, OutputPage &$out ) {
+        $config = ConfigFactory::getDefaultInstance()->makeConfig( 'archiveleaf' );
+
+        if ( !($editor->preview || $editor->diff)
+          && preg_match( '/\{\{EntryImage/', $editor->textbox1 )
+          && preg_match( '/\bEntryID=(\S+).*?\bTitle=(\S+).*?\bFullSize=([0-9]+)x([0-9]+).*?\bLocalFileName=(\S+)/s', $editor->textbox1, $matches ) ) {
+
+            if ( $config->get( 'AutoTransliterate' ) && $config->get( 'TransliterateUrl' ) ) {
+                $editor->textbox1 = preg_replace( '/<transliteration>.*?<\/transliteration>/s', '', $editor->textbox1 );
+            }
+
+            if ( $editor->section ) {
+
+                $file = wfFindFile( $matches[5] );
+
+                if ( $file && $file->exists() ) {
+                    $transcriberData = array(
+                        'mode'              =>  'edit',
+                        'archiveItem'       =>  array('id' => $matches[1], 'leaf' => $matches[2]),
+                        'imageUrl'          =>  $file->getUrl(),
+                        'iiifDimensions'    =>  array('width' => $matches[3], 'height' => $matches[4]),
+                        'mediawikiApi'      =>  $wgScriptPath . '/api.php',
+                    );
+
+                    if ( $config->get( 'IiifBaseUrl' ) ) {
+                        $transcriberData['iiifBaseUrl'] = $config->get( 'IiifBaseUrl' );
+                    }
+
+                    $wikitext = $editor->getArticle()->getPage()->getContent()->getNativeData();
+                    if ( preg_match( '/\bScript=(\S+)/', $wikitext, $matches ) ) {
+                        $transcriberData['script'] = strtolower( $matches[1] );
+                    }
+
+                    $out->addHTML( '<script>var transcriberData = ' . json_encode($transcriberData) . ';</script>' );
+                    $out->addModules( 'ext.archiveleaf.transcriber' );
+                }
+
+            }
+        }
+    }
+
+    public static function onAttemptSave( EditPage $editor ) {
+        $config = ConfigFactory::getDefaultInstance()->makeConfig( 'archiveleaf' );
+
+        if ( $config->get( 'AutoTransliterate' ) && $config->get( 'TransliterateUrl' ) ) {
+
+            $editor->textbox1 = preg_replace( '/<transliteration>.*?<\/transliteration>/', '', $editor->textbox1 );
+
+            $content = $editor->getArticle()->getPage()->getContent();
+
+            if ( $content && preg_match( '/\bScript=(\S+)/', $content->getNativeData(), $matches ) ) {
+
+                $script = strtolower( $matches[1] );
+                $transliterator_map = self::getData( 'transliterator' );
+
+                if ( array_key_exists( $script, $transliterator_map ) ) {
+
+                    $transliterator = $transliterator_map[$script];
+
+                    $editor->textbox1 = preg_replace_callback( '/<transcription>\s*(.*?)\s*<\/transcription>/s', function( $match ) use ( $transliterator ) {
+                        if (strlen( $match[1] ) ) {
+                            return $match[0] . '<transliteration>' . self::transliterate( $transliterator, $match[1] ) . '</transliteration>';
+                        } else {
+                            return $match[0];
+                        }
+
+                    }, $editor->textbox1 );
+
+                }
+
+            }
+
+        }
+
+    }
+
+    public static function onArticleViewFooter( $article, $patrolFooterShown ) {
+        $config = ConfigFactory::getDefaultInstance()->makeConfig( 'archiveleaf' );
+        $wikitext = $article->getPage()->getContent()->getNativeData();
+
+        if ( preg_match_all( '/\bFullSize=([0-9]+)x([0-9]+).*?\bLocalFileName=(\S+)/s', $wikitext, $match_sets, PREG_SET_ORDER ) ) {
+
+            $imageData = array();
+
+            foreach ( $match_sets as $matches ) {
+                $file = wfFindFile( $matches[3] );
+
+                if ( $file && $file->exists() ) {
+                    array_push( $imageData, array (
+                        'url' => $file->getUrl(),
+                        'w'   => $matches[1],
+                        'h'   => $matches[2],
+                    ) );
+                }
+            }
+
+            if ( count ( $imageData ) ) {
+                $transcriberData = array(
+                    'mode'          => 'view',
+                    'imageData'     => $imageData,
+                    'archiveItem'   => array('id' => $article->getTitle()->getText(), 'leaf' => 0),
+                    'mediawikiApi'  => $wgScriptPath . '/api.php',
+                );
+
+                if ( $config->get( 'IiifBaseUrl' ) ) {
+                    $transcriberData['iiifBaseUrl'] = $config->get( 'IiifBaseUrl' );
+                }
+
+                if ( preg_match( '/\bScript=(\S+)/', $wikitext, $matches ) ) {
+                    $transcriberData['script'] = strtolower( $matches[1] );
+                }
+
+                $out = $article->getContext()->getOutput();
+                $out->addHTML('<script>var transcriberData = ' . json_encode($transcriberData) . ';</script>');
+                $out->addModules( 'ext.archiveleaf.transcriber' );
+            }
+
+        }
+
+    }
+
     /**
      * @param string $id
      *
      * @return bool
      */
     public static function checkRemoteID( $id ) {
-
-        global $wgArchiveLeafApiURL;
-
-        $response = @file_get_contents( $wgArchiveLeafApiURL.'/books/'.$id.'/ia_manifest' );
-
-        return $response ? true : false;
-
+        $config = ConfigFactory::getDefaultInstance()->makeConfig( 'archiveleaf' );
+        $response = @file_get_contents( $config->get( 'ApiURL' ).'/books/'.$id.'/ia_manifest' );
+        return !!$response;
     }
 
     /**
@@ -31,13 +218,9 @@ class ArchiveLeaf {
      * @return bool|array('title' => Title, 'collection' => WikiPage)
      */
     public static function importItemByID( $id ) {
-
-        global $wgArchiveLeafBaseURL, $wgArchiveLeafApiURL, $wgArchiveLeafTemplateName,
-               $wgArchiveLeafTemplateImageName, $wgArchiveLeafImportScript, $wgUser;
-
+        $config = ConfigFactory::getDefaultInstance()->makeConfig( 'archiveleaf' );
         $log = array();
-
-        $response = @file_get_contents( $wgArchiveLeafApiURL.'/books/'.$id.'/ia_manifest' );
+        $response = @file_get_contents( $config->get( 'ApiURL' ).'/books/'.$id.'/ia_manifest' );
 
         if ( !$response ) {
             return false;
@@ -86,7 +269,7 @@ class ArchiveLeaf {
             }
         }
 
-        $template = "{{" . $wgArchiveLeafTemplateName;
+        $template = "{{" . $config->get( 'TemplateName' );
         $template .= "\n|Title=" . $id;
         $template .= "\n|Url=" . $remoteUrl;
         if ( $script_code ) {
@@ -103,11 +286,11 @@ class ArchiveLeaf {
 
             //$log[] = "Generating template for leaf #{$leaf}";
 
-            $leafBrowseUrl = $wgArchiveLeafBaseURL.'/stream/'.$id.'/'.$subPrefix.'#page/n'.$imageNum.'/mode/1up';
+            $leafBrowseUrl = $config->get( 'BaseURL' ).'/stream/'.$id.'/'.$subPrefix.'#page/n'.$imageNum.'/mode/1up';
 
             // import images
             // not efficient to import large images into wiki, shrink to 2000px
-            $imageUrlFull = $wgArchiveLeafBaseURL.'/download/'.$id.'/page/leaf'.$leaf.'_w2000.jpg';
+            $imageUrlFull = $config->get( 'BaseURL' ).'/download/'.$id.'/page/leaf'.$leaf.'_w2000.jpg';
             $uploader = new UploadFromUrl();
             $localFileName = '';
 
@@ -160,11 +343,11 @@ class ArchiveLeaf {
                 $template .= "\n==== Leaf {$imageNum} ====";
             }
 
-            $template .= "\n{{" . $wgArchiveLeafTemplateImageName;
+            $template .= "\n{{" . $config->get( 'TemplateImageName' );
             $template .= "\n|EntryID=" . $id;
             $template .= "\n|Title=" . $imageNum;
-            //$template .= "\n|Image=" . $wgArchiveLeafBaseURL.'/download/'.$id.'/page/leaf'.$leaf.'_w400.jpg';
-            //$template .= "\n|ImageBig=" . $wgArchiveLeafBaseURL.'/download/'.$id.'/page/leaf'.$leaf.'_w800.jpg';
+            //$template .= "\n|Image=" . $config->get( 'BaseURL' ).'/download/'.$id.'/page/leaf'.$leaf.'_w400.jpg';
+            //$template .= "\n|ImageBig=" . $config->get( 'BaseURL' ).'/download/'.$id.'/page/leaf'.$leaf.'_w800.jpg';
             $template .= "\n|FullSize=" . $response['pageWidths'][$imageNum] . 'x' . $response['pageHeights'][$imageNum];
             $template .= "\n|ImageBrowse=" . $leafBrowseUrl;
             $template .= "\n|LocalFileName=" . $localFileName;
@@ -200,8 +383,8 @@ class ArchiveLeaf {
         }
 
         # update IA item metadata
-        if ( $wgArchiveLeafImportScript ) {
-            exec( $wgArchiveLeafImportScript . ' ' . escapeshellarg( $id ) . ' &' );
+        if ( $config->get( 'ImportScript' ) ) {
+            exec( $config->get( 'ImportScript' ) . ' ' . escapeshellarg( $id ) . ' &' );
         }
 
         return array(
@@ -220,10 +403,7 @@ class ArchiveLeaf {
      */
     public static function isPageExists( $value ) {
         $title = Title::newFromText($value);
-        if ( $title && $title->exists() ) {
-            return true;
-        }
-        return false;
+        return !!( $title && $title->exists() );
     }
 
     /**
@@ -283,7 +463,7 @@ class ArchiveLeaf {
     }
 
     public static function transliterate( $transliterator, $str ) {
-        global $wgArchiveLeafTransliterateUrl;
+        $config = ConfigFactory::getDefaultInstance()->makeConfig( 'archiveleaf' );
 
         $opts = array('http' =>
             array(
@@ -292,7 +472,7 @@ class ArchiveLeaf {
             )
         );
 
-        return @file_get_contents( $wgArchiveLeafTransliterateUrl.'/'.$transliterator, false, stream_context_create($opts) );
+        return @file_get_contents( $config->get( 'TransliterateUrl' ).'/'.$transliterator, false, stream_context_create($opts) );
     }
 
     private static $data;

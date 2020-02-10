@@ -21,9 +21,11 @@
     "ArchiveLeafAutoTransliterate": false,
     "ArchiveLeafTransliterateUrl": null
   },
+  "ConfigRegistry": {
+    "archiveleaf": "GlobalVarConfig::newInstance"
+  },
   "AutoloadClasses": {
     "ArchiveLeaf": "ArchiveLeaf.class.php",
-    "ArchiveLeafHooks": "ArchiveLeaf.hooks.php",
     "ArchiveLeafTransliterateApi": "ArchiveLeaf.transliterate.api.php",
     "SpecialArchiveLeaf": "specials/SpecialArchiveLeaf.php"
   },
@@ -35,13 +37,13 @@
     "ArchiveLeafMagic": "ArchiveLeaf.i18n.magic.php"
   },
   "Hooks": {
-    "ArticleViewFooter": "ArchiveLeafHooks::onArticleViewFooter",
-    "BeforePageDisplay": "ArchiveLeafHooks::onBeforePageDisplay",
-    "EditPage::showEditForm:initial": "ArchiveLeafHooks::onShowEditForm",
-    "EditPage::attemptSave": "ArchiveLeafHooks::onAttemptSave",
-    "LinkerMakeExternalLink": "ArchiveLeafHooks::onLinkerMakeExternalLink",
-    "ParserFirstCallInit": "ArchiveLeafHooks::onParserFirstCallInit",
-    "ParserBeforeInternalParse": "ArchiveLeafHooks::onParserBeforeInternalParse"
+    "ArticleViewFooter": "ArchiveLeaf::onArticleViewFooter",
+    "BeforePageDisplay": "ArchiveLeaf::onBeforePageDisplay",
+    "EditPage::showEditForm:initial": "ArchiveLeaf::onShowEditForm",
+    "EditPage::attemptSave": "ArchiveLeaf::onAttemptSave",
+    "LinkerMakeExternalLink": "ArchiveLeaf::onLinkerMakeExternalLink",
+    "ParserFirstCallInit": "ArchiveLeaf::onParserFirstCallInit",
+    "ParserBeforeInternalParse": "ArchiveLeaf::onParserBeforeInternalParse"
   },
   "MessagesDirs": {
     "ArchiveLeaf": [
@@ -93,5 +95,5 @@
       "archiveleaf": true
     }
   },
-  "manifest_version": 1
+  "manifest_version": 2
 }

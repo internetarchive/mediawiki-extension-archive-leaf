@@ -1,11 +1,12 @@
 <?php
 
+use MediaWiki\MediaWikiServices;
+
 class ArchiveLeafTransliterateApi extends ApiBase {
     public function execute() {
+        $config = ConfigFactory::getDefaultInstance()->makeConfig( 'archiveleaf' );
 
-        global $wgArchiveLeafTransliterateUrl;
-
-        if ( $wgArchiveLeafTransliterateUrl ) {
+        if ( $config->get( 'TransliterateUrl' ) ) {
             $params = $this->extractRequestParams();
             $result = $this->getResult();
 
