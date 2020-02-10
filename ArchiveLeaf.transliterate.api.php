@@ -6,7 +6,7 @@ class ArchiveLeafTransliterateApi extends ApiBase {
     public function execute() {
         $config = ConfigFactory::getDefaultInstance()->makeConfig( 'archiveleaf' );
 
-        if ( $config->get( 'TransliterateUrl' ) ) {
+        if ( $config->get( 'ArchiveLeafTransliterateUrl' ) ) {
             $params = $this->extractRequestParams();
             $result = $this->getResult();
 
