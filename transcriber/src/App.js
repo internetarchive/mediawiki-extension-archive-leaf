@@ -101,28 +101,32 @@ export default class App extends Component {
       transliterationOpen: false,
       imageLoading: false,
     };
-    this.state.transliteratorAvailable = !!transliterators[this.props.script];
+    this.state.transliteratorAvailable = !!transliterators[props.script];
 
-    this.state.font = window.localStorage.getItem(`font-${this.props.script}`);
+    const savedFont = window.localStorage.getItem(`font-${props.script}`);
+    if (scriptFont[props.script] && scriptFont[props.script].fonts.some(item => item === savedFont)) {
+      this.state.font = savedFont;
+    }
+
     if (!this.state.font) {
-      this.state.font = scriptFont[this.props.script]
-        ? scriptFont[this.props.script].default
+      this.state.font = scriptFont[props.script]
+        ? scriptFont[props.script].default
         : "defaultFont";
     }
 
     if (this.editMode) {
       this.caretRef = React.createRef();
       this.textAreaRef = React.createRef();
-      this.textbox = document.getElementById(this.props.mobileFrontend ? "wikitext-editor" : "wpTextbox1");
+      this.textbox = document.getElementById(props.mobileFrontend ? "wikitext-editor" : "wpTextbox1");
 
       this.state = {
         ...this.state,
         open: this.checkTags(),
         imageUrl: props.imageUrl,
         iiifDimensions: props.iiifDimensions,
-        keyboardAvailable: !!layouts[this.props.script],
+        keyboardAvailable: !!layouts[props.script],
       };
-      this.state.keyboardOpen = this.state.keyboardAvailable && !(window.localStorage.getItem(`keyboardOpen-${this.props.script}`) === "false");
+      this.state.keyboardOpen = this.state.keyboardAvailable && !(window.localStorage.getItem(`keyboardOpen-${props.script}`) === "false");
       this.state.emulateTextEdit = platform.mobile && this.state.keyboardOpen;
     } else {
       const currentLeaf = props.imageData[this.state.archiveItem.leaf];
