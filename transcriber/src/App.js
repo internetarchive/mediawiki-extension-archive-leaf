@@ -104,7 +104,7 @@ export default class App extends Component {
     this.state.transliteratorAvailable = !!transliterators[props.script];
 
     const savedFont = window.localStorage.getItem(`font-${props.script}`);
-    if (scriptFont[props.script] && scriptFont[props.script].fonts.some(item => item === savedFont)) {
+    if (scriptFont[props.script] && scriptFont[props.script].fonts.some(item => item[0] === savedFont)) {
       this.state.font = savedFont;
     }
 
