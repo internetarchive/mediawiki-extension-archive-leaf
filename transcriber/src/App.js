@@ -12,10 +12,13 @@ import transliterators from "./transliterator.json";
 
 const scriptFont = {
   "bali": {
-    "fonts": ["Pustaka","Vimala"],
-    "default": "Vimala"
+    "fonts": ["Pustaka_Bali","Vimala_Eka","Vimala_Rwa"],
+    "default": "Vimala_Rwa"
   }
 };
+for (const script in scriptFont) {
+  scriptFont[script].fonts = scriptFont[script].fonts.map(item => [item, item.replace(/_/g," ")]);
+}
 
 const platform = detectPlatform();
 const getSelection = detectGetSelection();
@@ -572,16 +575,16 @@ export default class App extends Component {
                       <>
                         <MenuItem close={close} label="Set Font:" className={styles.disabled} />
                         {scriptFont[script].fonts.map(item =>
-                          item === font ?
+                          item[0] === font ?
                             <MenuItem close={close}
-                              label={item}
+                              label={item[1]}
                               spanClassName={cx(styles.indented,styles.checked)}
                             />
                           :
                             <MenuItem close={close}
-                              label={item}
+                              label={item[1]}
                               spanClassName={styles.indented}
-                              onClick={() => this.setFont(item)}
+                              onClick={() => this.setFont(item[0])}
                             />
                         )}
                       </>
