@@ -17,7 +17,7 @@ const scriptFont = {
   }
 };
 for (const script in scriptFont) {
-  scriptFont[script].fonts = scriptFont[script].fonts.map(item => [item, item.replace(/_/g," ")]);
+  scriptFont[script].fonts = scriptFont[script].fonts.map(x => [x, x.replace(/_/g," ")]);
 }
 
 const platform = detectPlatform();
@@ -92,7 +92,7 @@ const MenuItem = props => {
 export default class App extends Component {
   constructor(props) {
     super(props);
-
+    const { script } = props;
     this.editMode = props.mode === "edit";
 
     this.state = {
@@ -101,16 +101,16 @@ export default class App extends Component {
       transliterationOpen: false,
       imageLoading: false,
     };
-    this.state.transliteratorAvailable = !!transliterators[props.script];
+    this.state.transliteratorAvailable = !!transliterators[script];
 
-    const savedFont = window.localStorage.getItem(`font-${props.script}`);
-    if (scriptFont[props.script] && scriptFont[props.script].fonts.some(item => item[0] === savedFont)) {
+    const savedFont = window.localStorage.getItem(`font-${script}`);
+    if (scriptFont[script] && scriptFont[script].fonts.some(([name,displayName]) => name === savedFont)) {
       this.state.font = savedFont;
     }
 
     if (!this.state.font) {
-      this.state.font = scriptFont[props.script]
-        ? scriptFont[props.script].default
+      this.state.font = scriptFont[script]
+        ? scriptFont[script].default
         : "defaultFont";
     }
 
@@ -124,9 +124,9 @@ export default class App extends Component {
         open: this.checkTags(),
         imageUrl: props.imageUrl,
         iiifDimensions: props.iiifDimensions,
-        keyboardAvailable: !!layouts[props.script],
+        keyboardAvailable: !!layouts[script],
       };
-      this.state.keyboardOpen = this.state.keyboardAvailable && !(window.localStorage.getItem(`keyboardOpen-${props.script}`) === "false");
+      this.state.keyboardOpen = this.state.keyboardAvailable && !(window.localStorage.getItem(`keyboardOpen-${script}`) === "false");
       this.state.emulateTextEdit = platform.mobile && this.state.keyboardOpen;
     } else {
       const currentLeaf = props.imageData[this.state.archiveItem.leaf];
@@ -145,8 +145,8 @@ export default class App extends Component {
       this.state = { ...this.state, ...this.finalizeOpen() };
     }
 
-    /*if (scriptFont[this.props.script]) {
-      document.body.style.setProperty("font-family", `"${scriptFont[this.props.script].default}", ${window.getComputedStyle(document.body).getPropertyValue("font-family")}`);
+    /*if (scriptFont[script]) {
+      document.body.style.setProperty("font-family", `"${scriptFont[script].default}", ${window.getComputedStyle(document.body).getPropertyValue("font-family")}`);
     }*/
   }
 
@@ -578,17 +578,19 @@ export default class App extends Component {
                     {scriptFont[script] && scriptFont[script].fonts &&
                       <>
                         <MenuItem close={close} label="Set Font:" className={styles.disabled} />
-                        {scriptFont[script].fonts.map(item =>
-                          item[0] === font ?
+                        {scriptFont[script].fonts.map(([name,displayName]) =>
+                          name === font ?
                             <MenuItem close={close}
-                              label={item[1]}
+                              key={name}
+                              label={displayName}
                               spanClassName={cx(styles.indented,styles.checked)}
                             />
                           :
                             <MenuItem close={close}
-                              label={item[1]}
+                              key={name}
+                              label={displayName}
                               spanClassName={styles.indented}
-                              onClick={() => this.setFont(item[0])}
+                              onClick={() => this.setFont(name)}
                             />
                         )}
                       </>
