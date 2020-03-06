@@ -12,8 +12,8 @@ import transliterators from "./transliterator.json";
 
 const scriptFont = {
   "bali": {
-    "fonts": ["Pustaka_Bali","Vimala_Eka","Vimala_Rwa"],
-    "default": "Vimala_Rwa"
+    "fonts": ["Pustaka_Bali","Vimala"],
+    "default": "Vimala"
   }
 };
 for (const script in scriptFont) {
