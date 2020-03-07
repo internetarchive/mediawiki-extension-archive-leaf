@@ -57,11 +57,11 @@ class ArchiveLeaf {
     }
 
     public static function getTranslationHeading( $args ) {
-        if ( array_key_exists( 'language', $args ) ) {
+        if ( isset( $args['language'] ) ) {
             $iso639 = self::getData( 'iso-639-3' );
 
-            if ( array_key_exists( $args['language'], $iso639 ) ) {
-                return $iso639[ $args['language'] ] . ' translation';
+            if ( isset( $iso639[$args['language']] ) ) {
+                return $iso639[$args['language']] . ' translation';
             }
         }
 
@@ -137,7 +137,7 @@ class ArchiveLeaf {
                 $script = strtolower( $matches[1] );
                 $transliterator_map = self::getData( 'transliterator' );
 
-                if ( array_key_exists( $script, $transliterator_map ) ) {
+                if ( isset( $transliterator_map[$script] ) ) {
 
                     $transliterator = $transliterator_map[$script];
 
@@ -234,7 +234,7 @@ class ArchiveLeaf {
 
         $response = json_decode( $response, true );
 
-        if ( !$response || !array_key_exists('leafNums', $response) || !count($response['leafNums']) ) {
+        if ( !$response || !isset( $response['leafNums'] ) || !count( $response['leafNums'] ) ) {
             return false;
         }
 
@@ -247,18 +247,18 @@ class ArchiveLeaf {
 
         // look up collection page
         $collection_map = self::getData( 'collection' );
-        if ( array_key_exists( $response['collection'], $collection_map ) ) {
-            $collection = $collection_map[ $response['collection'] ];
+        if ( isset( $collection_map[$response['collection']] ) ) {
+            $collection = $collection_map[$response['collection']];
             $collection_wikipage = new WikiPage( Title::newFromText( $collection['wikipage'] ) );
         }
 
         // look up language (for category)
         $language_name_map = self::getData( 'language_name' );
-        if ( $response['language'] && preg_match( '/^(?:[a-z]{3}|[A-Z]{3})$/', $response['language'] ) ) {
+        if ( isset( $response['language'] ) && preg_match( '/^(?:[a-z]{3}|[A-Z]{3})$/', $response['language'] ) ) {
             $language_code = strtolower( $response['language'] );
-        } elseif ( $response['language'] && array_key_exists( $response['language'], $language_name_map ) ) {
-            $language_code = $language_name_map[ $response['language'] ];
-        } elseif ( $collection && $collection['language'] ) {
+        } elseif ( isset( $response['language'] ) && isset( $language_name_map[$response['language']] ) ) {
+            $language_code = $language_name_map[$response['language']];
+        } elseif ( $collection && isset( $collection['language'] ) ) {
             $language_code = $collection['language'];
         }
         if ( $language_code ) {
@@ -266,12 +266,12 @@ class ArchiveLeaf {
             $language = $iso639[ $language_code ];
         }
 
-        if ( $response['script'] && preg_match( '/^[A-Z][a-z]{3}$/', $response['language'] ) ) {
+        if ( isset( $response['script'] ) && isset( $response['language'] ) && preg_match( '/^[A-Z][a-z]{3}$/', $response['language'] ) ) {
             $script_code = $response['script'];
         } elseif ( $language_code ) {
             $language_script = self::getData( 'language_script' );
-            if ( array_key_exists( $language_code, $language_script ) ) {
-                $script_code = $language_script[ $language_code ];
+            if ( isset( $language_script[$language_code] ) ) {
+                $script_code = $language_script[$language_code];
             }
         }
 
@@ -370,7 +370,7 @@ class ArchiveLeaf {
         if ( isset($language) ) {
             $template .= "[[Category:" . $language . "]]\n";
         }
-        if ( array_key_exists( 'category', $collection ) ) {
+        if ( isset( $collection['category'] ) ) {
             $template .= "[[Category:" . $collection['category'] . "]]\n";
         }
 
@@ -421,7 +421,7 @@ class ArchiveLeaf {
     public static function addLinkOnCollectionPage( $title, $page ) {
         global $wgUser;
 
-        if ( ! isset( $page ) ) return;
+        if ( !isset( $page ) ) return;
 
         $key = $title->getDBKey();
 
@@ -483,10 +483,10 @@ class ArchiveLeaf {
     private static $data;
 
     public static function getData( $id ) {
-        if ( !( self::$data && array_key_exists( $id, self::$data ) ) ) {
-            self::$data[ $id ] = json_decode( file_get_contents( "extensions/ArchiveLeaf/data/${id}.json" ), true );
+        if ( !( self::$data && isset( self::$data[$id] ) ) ) {
+            self::$data[$id] = json_decode( file_get_contents( "extensions/ArchiveLeaf/data/${id}.json" ), true );
         }
 
-        return self::$data[ $id ];
+        return self::$data[$id];
     }
 }
