@@ -11,15 +11,33 @@
   "license-name": "MIT",
   "type": "other",
   "config": {
-    "ArchiveLeafBaseURL": { "value": "https://archive.org" },
-    "ArchiveLeafApiURL": { "value": "https://api.archivelab.org" },
-    "ArchiveLeafIiifBaseUrl": { "value": "https://iiif.archivelab.org/iiif" },
-    "ArchiveLeafTemplateName": { "value": "Entry" },
-    "ArchiveLeafTemplateImageName": { "value": "EntryImage" },
-    "ArchiveLeafImportScript": { "value": null },
-    "ArchiveLeafArchiveOrgRewrite": { "value": null },
-    "ArchiveLeafAutoTransliterate": { "value": false },
-    "ArchiveLeafTransliterateUrl": { "value": null }
+    "ArchiveLeafBaseURL": {
+      "value": "https://archive.org"
+    },
+    "ArchiveLeafApiURL": {
+      "value": "https://api.archivelab.org"
+    },
+    "ArchiveLeafIiifBaseUrl": {
+      "value": "https://iiif.archivelab.org/iiif"
+    },
+    "ArchiveLeafTemplateName": {
+      "value": "Entry"
+    },
+    "ArchiveLeafTemplateImageName": {
+      "value": "EntryImage"
+    },
+    "ArchiveLeafImportScript": {
+      "value": null
+    },
+    "ArchiveLeafArchiveOrgRewrite": {
+      "value": null
+    },
+    "ArchiveLeafAutoTransliterate": {
+      "value": false
+    },
+    "ArchiveLeafTransliterateUrl": {
+      "value": null
+    }
   },
   "ConfigRegistry": {
     "archiveleaf": "GlobalVarConfig::newInstance"
