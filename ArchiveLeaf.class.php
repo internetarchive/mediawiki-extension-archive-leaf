@@ -81,6 +81,8 @@ class ArchiveLeaf {
     }
 
     public static function onShowEditForm( EditPage &$editor, OutputPage &$out ) {
+        global $wgScriptPath;
+
         $config = ConfigFactory::getDefaultInstance()->makeConfig( 'archiveleaf' );
 
         if ( !($editor->preview || $editor->diff)
@@ -157,6 +159,8 @@ class ArchiveLeaf {
     }
 
     public static function onArticleViewFooter( $article, $patrolFooterShown ) {
+        global $wgScriptPath;
+
         $config = ConfigFactory::getDefaultInstance()->makeConfig( 'archiveleaf' );
         $wikitext = $article->getPage()->getContent()->getNativeData();
 
@@ -218,6 +222,8 @@ class ArchiveLeaf {
      * @return bool|array('title' => Title, 'collection' => WikiPage)
      */
     public static function importItemByID( $id ) {
+        global $wgUser;
+
         $config = ConfigFactory::getDefaultInstance()->makeConfig( 'archiveleaf' );
         $log = array();
         $response = @file_get_contents( $config->get( 'ArchiveLeafApiURL' ).'/books/'.$id.'/ia_manifest' );
@@ -413,10 +419,9 @@ class ArchiveLeaf {
      * @param WikiPage $page
      */
     public static function addLinkOnCollectionPage( $title, $page ) {
+        global $wgUser;
 
         if ( ! isset( $page ) ) return;
-
-        global $wgUser;
 
         $key = $title->getDBKey();
 
@@ -478,7 +483,7 @@ class ArchiveLeaf {
     private static $data;
 
     public static function getData( $id ) {
-        if ( !array_key_exists( $id, self::$data ) ) {
+        if ( !( self::$data && array_key_exists( $id, self::$data ) ) ) {
             self::$data[ $id ] = json_decode( file_get_contents( "extensions/ArchiveLeaf/data/${id}.json" ), true );
         }
 
