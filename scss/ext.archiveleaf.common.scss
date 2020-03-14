@@ -3,10 +3,10 @@
 @import './fonts-custom.scss';
 
 @font-face {
-    font-family: "Vimala";
-    src: url(#{$vimala}.woff2?v#{$vimala_ver}) format('woff2'),
-         url(#{$vimala}.woff?v#{$vimala_ver}) format('woff'),
-         url(#{$vimala}.ttf?v#{$vimala_ver}) format('truetype');
+    font-family: "Kadiriyan";
+    src: url(#{$kadiriyan}.woff2?v#{$kadiriyan_ver}) format('woff2'),
+         url(#{$kadiriyan}.woff?v#{$kadiriyan_ver}) format('woff'),
+         url(#{$kadiriyan}.ttf?v#{$kadiriyan_ver}) format('truetype');
     unicode-range: U+1B00-1B7F;
 }
 
@@ -15,6 +15,14 @@
     src: url(#{$pustaka_bali}.woff2?v#{$pustaka_bali_ver}) format('woff2'),
          url(#{$pustaka_bali}.woff?v#{$pustaka_bali_ver}) format('woff'),
          url(#{$pustaka_bali}.ttf?v#{$pustaka_bali_ver}) format('truetype');
+    unicode-range: U+1B00-1B7F;
+}
+
+@font-face {
+    font-family: "Vimala";
+    src: url(#{$vimala}.woff2?v#{$vimala_ver}) format('woff2'),
+         url(#{$vimala}.woff?v#{$vimala_ver}) format('woff'),
+         url(#{$vimala}.ttf?v#{$vimala_ver}) format('truetype');
     unicode-range: U+1B00-1B7F;
 }
 
