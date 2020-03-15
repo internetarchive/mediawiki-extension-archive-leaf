@@ -3,10 +3,10 @@
 @import './fonts-custom.scss';
 
 @font-face {
-    font-family: "Kadiriyan";
-    src: url(#{$kadiriyan}.woff2?v#{$kadiriyan_ver}) format('woff2'),
-         url(#{$kadiriyan}.woff?v#{$kadiriyan_ver}) format('woff'),
-         url(#{$kadiriyan}.ttf?v#{$kadiriyan_ver}) format('truetype');
+    font-family: "Kadiri";
+    src: url(#{$kadiri}.woff2?v#{$kadiri_ver}) format('woff2'),
+         url(#{$kadiri}.woff?v#{$kadiri_ver}) format('woff'),
+         url(#{$kadiri}.ttf?v#{$kadiri_ver}) format('truetype');
     unicode-range: U+1B00-1B7F;
 }
 
