@@ -11,6 +11,14 @@
 }
 
 @font-face {
+    font-family: "Natya";
+    src: url(#{$natya}.woff2?v#{$natya_ver}) format('woff2'),
+         url(#{$natya}.woff?v#{$natya_ver}) format('woff'),
+         url(#{$natya}.ttf?v#{$natya_ver}) format('truetype');
+    unicode-range: U+1B00-1B7F;
+}
+
+@font-face {
     font-family: "Pustaka Bali";
     src: url(#{$pustaka_bali}.woff2?v#{$pustaka_bali_ver}) format('woff2'),
          url(#{$pustaka_bali}.woff?v#{$pustaka_bali_ver}) format('woff'),
