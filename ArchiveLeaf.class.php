@@ -359,11 +359,11 @@ class ArchiveLeaf {
      * @param string $id
      * @param int $leaf
      * @param string $remoteUrl
-     * @param string[] $log
+     * @param array $log
      *
      * @return string
      */
-    public static function importSingleLeaf( $id, $leaf, $remoteUrl, $log ) {
+    public static function importSingleLeaf( $id, $leaf, $remoteUrl, &$log ) {
         global $wgUser;
         $config = ConfigFactory::getDefaultInstance()->makeConfig( 'archiveleaf' );
 
