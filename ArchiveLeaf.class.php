@@ -294,52 +294,7 @@ class ArchiveLeaf {
 
             $leafBrowseUrl = $config->get( 'ArchiveLeafBaseURL' ).'/stream/'.$id.'/'.$subPrefix.'#page/n'.$imageNum.'/mode/1up';
 
-            // import images
-            // not efficient to import large images into wiki, shrink to 2000px
-            $imageUrlFull = $config->get( 'ArchiveLeafBaseURL' ).'/download/'.$id.'/page/leaf'.$leaf.'_w2000.jpg';
-            $uploader = new UploadFromUrl();
-            $localFileName = '';
-
-            try {
-                $uploader->initialize( $id . '_' . $leaf, $imageUrlFull );
-                $downloadStatus = $uploader->fetchFile();
-
-                if ( $downloadStatus->isOK() ) {
-                    $verification = $uploader->verifyUpload();
-                    if ( $verification['status'] === UploadBase::OK ) {
-                        $localFile = $uploader->getLocalFile();
-
-                        // check if exact file already exists
-                        if ( $localFile && $localFile->getSha1() === $uploader->getTempFileSha1Base36() ) {
-                            $localFileName = $localFile->getName();
-                            $uploader->cleanupTempFile();
-
-                            $log[] = "Exact image already exists so it was not re-imported.";
-                        } else {
-                            $imageText = "Original page: {$remoteUrl}\nOriginal file: [{$imageUrlFull} see]";
-
-                            $uploadStatus = $uploader->performUpload( 'imported by ArchiveLeaf', $imageText, false, $wgUser );
-
-                            if ( $uploadStatus->isOK() ) {
-
-                                $localFile = $uploader->getLocalFile();
-                                $localFileName = $localFile->getName();
-
-                                // Pre-generate thumb for 400px to be used in page template
-                                $localFile->createThumb(400);
-
-                                $log[] = "Image was imported successfully.";
-                            } else {
-                                $log[] = "Error importing image: {$uploadStatus->getMessage()}";
-                            }
-                        }
-                    }
-                } else {
-                    $log[] = "Error downloading file from url.";
-                }
-            } catch(Exception $e) {
-                $log[] = "Exception during image downloading: '{$e->getMessage()}' !";
-            }
+            $localFileName = self::importSingleLeaf( $id, $leaf, $remoteUrl, $log );
 
             // Create template markup
 
@@ -398,6 +353,68 @@ class ArchiveLeaf {
             'collection'    => $collection_wikipage,
         );
 
+    }
+
+    /**
+     * @param string $id
+     * @param int $leaf
+     * @param string $remoteUrl
+     * @param string[] $log
+     *
+     * @return string
+     */
+    public static function importSingleLeaf( $id, $leaf, $remoteUrl, $log ) {
+        global $wgUser;
+        $config = ConfigFactory::getDefaultInstance()->makeConfig( 'archiveleaf' );
+
+        // import images
+        // not efficient to import large images into wiki, shrink to 2000px
+        $imageUrlFull = $config->get( 'ArchiveLeafBaseURL' ).'/download/'.$id.'/page/leaf'.$leaf.'_w2000.jpg';
+        $uploader = new UploadFromUrl();
+        $localFileName = '';
+
+        try {
+            $uploader->initialize( $id . '_' . $leaf, $imageUrlFull );
+            $downloadStatus = $uploader->fetchFile();
+
+            if ( $downloadStatus->isOK() ) {
+                $verification = $uploader->verifyUpload();
+                if ( $verification['status'] === UploadBase::OK ) {
+                    $localFile = $uploader->getLocalFile();
+
+                    // check if exact file already exists
+                    if ( $localFile && $localFile->getSha1() === $uploader->getTempFileSha1Base36() ) {
+                        $localFileName = $localFile->getName();
+                        $uploader->cleanupTempFile();
+
+                        $log[] = "Exact image already exists so it was not re-imported.";
+                    } else {
+                        $imageText = "Original page: {$remoteUrl}\nOriginal file: [{$imageUrlFull} see]";
+
+                        $uploadStatus = $uploader->performUpload( 'imported by ArchiveLeaf', $imageText, false, $wgUser );
+
+                        if ( $uploadStatus->isOK() ) {
+
+                            $localFile = $uploader->getLocalFile();
+                            $localFileName = $localFile->getName();
+
+                            // Pre-generate thumb for 400px to be used in page template
+                            $localFile->createThumb(400);
+
+                            $log[] = "Image was imported successfully.";
+                        } else {
+                            $log[] = "Error importing image: {$uploadStatus->getMessage()}";
+                        }
+                    }
+                }
+            } else {
+                $log[] = "Error downloading file from url.";
+            }
+        } catch(Exception $e) {
+            $log[] = "Exception during image downloading: '{$e->getMessage()}' !";
+        }
+
+        return $localFileName;
     }
 
     /**
