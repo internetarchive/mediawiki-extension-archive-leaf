@@ -21,7 +21,7 @@ const stringInsert = (string, addition, caretPos) => {
     }
   }
   return [preString, postString];
-}
+};
 
 const Key = props => {
   const [zoom, setZoom] = useState(false);
@@ -44,14 +44,14 @@ const Key = props => {
     >
       {props.img ? <img src={props.img} alt={props.text} /> : props.text}
     </div>
-  )
-}
+  );
+};
 
 const gridToStyle = grid => ({
   gridTemplateAreas: grid.map(row => `"${row.join(" ")}"`).join("\n"),
   gridTemplateRows: `repeat(${grid.length}, ${100 / grid.length}%)`,
   gridTemplateColumns: `repeat(${grid[0].length}, ${100 / grid[0].length}%)`
-})
+});
 
 export default class Keyboard extends Component {
   constructor(props) {
@@ -62,7 +62,7 @@ export default class Keyboard extends Component {
       currLayout: {},
       layoutMatches: {},
       shiftLevel: 0,
-    }
+    };
   }
 
   componentDidMount() {
@@ -102,7 +102,7 @@ export default class Keyboard extends Component {
         } else {
           return false;
         }
-      })
+      });
     }
     this.setState({ currLayout, layoutMatches });
   }
@@ -253,7 +253,7 @@ export default class Keyboard extends Component {
           <input id="phys-key-buffer" ref={this.physBufferRef} onKeyUp={this.handlePhysBufferInput} onInput={this.handlePhysBufferInput} />
         }
       </div>
-    )
+    );
   }
 
 }

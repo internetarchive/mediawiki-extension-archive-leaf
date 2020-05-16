@@ -86,8 +86,8 @@ const MenuItem = props => {
       className={cx(styles.menuItem,className)}
       onClick={e => { close(); onClick && onClick(e); }}
     >{spanClassName && <span className={spanClassName}></span>}{label}</div>
-  )
-}
+  );
+};
 
 export default class App extends Component {
   constructor(props) {
@@ -104,7 +104,7 @@ export default class App extends Component {
     this.state.transliteratorAvailable = !!transliterators[script];
 
     const savedFont = window.localStorage.getItem(`font-${script}`);
-    if (scriptFont[script] && scriptFont[script].fonts.some(([name,displayName]) => name === savedFont)) {
+    if (scriptFont[script] && scriptFont[script].fonts.some(([name]) => name === savedFont)) {
       this.state.font = savedFont;
     }
 
